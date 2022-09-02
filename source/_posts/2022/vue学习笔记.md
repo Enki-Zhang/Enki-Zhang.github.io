@@ -276,3 +276,109 @@ sessionStorage关闭浏览器 清空
 import组件的组件为父组件 被import的为子组件
 
 默认插槽`<slot>`
+
+vue3.0对应的是vuex的4版本 vue2.0对应vuex的3版本 
+
+![asset_img](vue学习笔记/2022-09-01-14-09-58.png)
+
+>流程
+vue Components分发请求
+```vue
+
+
+<script>
+export default {
+  name: " ",
+  data() {
+    return {
+      n: 1,
+      //   sum: 0,
+    };
+  },
+  methods: {
+    plus() {
+      //   this.sum += this.n;
+      this.$store.dispatch(`plus`, this.n);
+    },
+    reduction() {
+      //   this.sum -= this.n;
+    },
+    isOdd() {
+      /* if (this.sum % 2 != 0) {
+        this.sum++;
+      } */
+    },
+    waiting() {
+      setTimeout(() => {
+        // this.sum++;
+      }, 3000);
+    },
+  },
+};
+</script>
+
+
+```
+states中响应数据
+~~~js
+// 存储数据
+const state = { sum: 0 };
+~~~
+到action中选择方法计算
+~~~js
+//响应组件的动作
+const actions = {
+  plus(context, value) {
+    console.log(`actions参数显示`, context, value);
+    // 将plus大写提示在mutation中的函数
+    context.commit(`PLUS`, value);
+  },
+};
+~~~
+![asset_img](vue学习笔记/2022-09-01-14-16-38.png)
+到mutations中操作数据
+~~~js
+// 操作数据
+const mutations = {
+  PLUS(state, value) {
+    console.log(`mutations中的plus的参数显示`, state, value);
+    // 操作state
+    state.sum += value;
+  },
+};
+~~~
+![asset_img](vue学习笔记/2022-09-01-14-19-03.png)
+render到模板中
+![asset_img](vue学习笔记/2022-09-01-14-21-55.png)
+
+>>actions中的函数没有意义可以直接在组件中commit
+![asset_img](vue学习笔记/2022-09-01-14-43-59.png)
+
+getters使用
+当state中的数据需要经过加工后再使用时，可以使用getters加工。（类似于computed）
+```js
+//将state数据进行加工
+const getters = {
+  bigSum(state) {
+    return state.sum * 10;
+  },
+};
+```
+组件中读取数据：```$store.getters.bigSum```
+
+mapState使用 ```computed: { ...mapState([`sum`, `schoolName`]) },``` ES6简写
+表示```sum(){return this.$state.sum}``` ```schoolName(){return this.$state.schoolName}```vue将重复的部分省去使得开发者只需要写函数名和重要的函数体部分
+
+>...mapState({sum,schoolName}) 等同于 ...mapState({sum:sum,schoolName:sum})sum取出来的是变量sum,而不是 sum:`sum`
+
+mapMutations ```...mapMutations({ plus: `PLUS` }),```
+![asset_img](vue学习笔记/2022-09-01-20-23-31.png)
+>this.value值需要在模板中传```<button @click="plus(n)">+</button>```
+平时如果不写plus()写成plus表示plus(event)默认传入的event
+
+简写形式```...mapMutations([`PLUS`]),``` 修改模板中的方法
+![asset_img](vue学习笔记/2022-09-01-21-21-09.png)
+
+mapActions```...mapActions({ isOdd: `isOdd` }),```
+简写形式```...mapActions([`isOdd`]),```
+![asset_img](vue学习笔记/2022-09-01-21-33-37.png)
