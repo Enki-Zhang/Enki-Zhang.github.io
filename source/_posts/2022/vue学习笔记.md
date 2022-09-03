@@ -282,6 +282,7 @@ vue3.0对应的是vuex的4版本 vue2.0对应vuex的3版本
 ![asset_img](vue学习笔记/2022-09-01-14-09-58.png)
 
 >流程
+
 vue Components分发请求
 ```vue
 
@@ -369,8 +370,8 @@ const getters = {
 mapState使用 ```computed: { ...mapState([`sum`, `schoolName`]) },``` ES6简写
 表示```sum(){return this.$state.sum}``` ```schoolName(){return this.$state.schoolName}```vue将重复的部分省去使得开发者只需要写函数名和重要的函数体部分
 
->...mapState({sum,schoolName}) 等同于 ...mapState({sum:sum,schoolName:sum})sum取出来的是变量sum,而不是 sum:`sum`
-
+>...mapState({sum,schoolName}) 等同于 ...mapState({sum:sum,schoolName:sum})sum取出来的是变量sum,而不是 sum:`sum` 用在computed中其他的map用在methods中
+不需要经过action直接commit的情况
 mapMutations ```...mapMutations({ plus: `PLUS` }),```
 ![asset_img](vue学习笔记/2022-09-01-20-23-31.png)
 >this.value值需要在模板中传```<button @click="plus(n)">+</button>```
@@ -379,6 +380,125 @@ mapMutations ```...mapMutations({ plus: `PLUS` }),```
 简写形式```...mapMutations([`PLUS`]),``` 修改模板中的方法
 ![asset_img](vue学习笔记/2022-09-01-21-21-09.png)
 
-mapActions```...mapActions({ isOdd: `isOdd` }),```
+mapActions```...mapActions({ isOdd: `isOdd` }),```相当于```this.$store.dispatch(`isOdd`, this.$store.state.sum);```
 简写形式```...mapActions([`isOdd`]),```
 ![asset_img](vue学习笔记/2022-09-01-21-33-37.png)
+
+
+modules管理：
+将store进行模块化管理
+
+![asset_img](vue学习笔记/2022-09-02-14-40-56.png)
+```js
+const childQ = {
+  namespaced: true,
+  state: { sum: 1, schoolName: `上学` },
+  actions: {
+    isOdd(context, value) {
+      if (context.state.sum % 2) {
+        context.commit(`ISODD`, value);
+      }
+    },
+    waiting(context, value) {
+      setTimeout(() => {
+        context.commit(`WAITING`);
+      }, 3000);
+    },
+  },
+  mutations: {
+    PLUS(state, value) {
+      console.log(`mutations中的plus的参数显示`, state, value);
+      state.sum += value;
+    },
+    ISODD(state, value) {
+      state.sum++;
+    },
+    REDUCTION(state, value) {
+      state.sum--;
+    },
+    WAITING(state, value) {
+      state.sum++;
+    },
+  },
+};
+
+export default childQ;
+```
+在index.js中使用
+```js
+export default new vuex.Store({
+  modules: {
+    childQ,
+    person,
+  },
+});
+```
+![asset_img](vue学习笔记/2022-09-02-14-43-46.png)
+
+vue-router和vue的版本需要匹配否则报错
+![asset_img](vue学习笔记/2022-09-02-15-41-56.png)
+
+route
+1.路由组件通常存放在pages文件夹，一般组件通常存放在components文件夹。
+2.通过切换，“隐藏”了的路由组件，默认是被销毁掉的，需要的时候再去挂载。
+3.每个组件都有自己的$oute属性，里面存储着自己的路由信息。
+4.整个应用只有一个router,可以通过组件的$router属性获取到。
+
+
+children路由
+
+```js
+{
+      path: "/login",
+      component: Login,
+      meta: { show: false },
+      children: [
+        {
+          path: "demo03", //不加/
+          component: Demo03,
+        },
+      ],
+    },
+```
+路由参数
+~~~js
+    <!-- 跳转路由 字符串写法 -->
+    <router-link
+      :to="{
+        path: `/home01/message/detail`,
+        query: {
+          id: 1,
+          title: `zhangsan`,
+        },
+      }"
+    >
+      <button>跳转</button>
+    </router-link>
+~~~
+
+命名路由
+简化路由路径
+![asset_img](vue学习笔记/2022-09-02-21-23-32.png)
+![asset_img](vue学习笔记/2022-09-02-21-25-18.png)
+
+param参数
+![asset_img](vue学习笔记/2022-09-02-21-34-14.png)
+特别注意：路由携带params:参数时，若使用to的对象写法，则不能使用path配置项，必须使用name配置
+
+![asset_img](vue学习笔记/2022-09-02-21-48-14.png)
+![asset_img](vue学习笔记/2022-09-02-21-53-11.png)
+
+>params方式和query方式的区别
+query方式生成的url为/xx?id=id，params方式生成的url为xx/id
+path只能使用query方式
+params方式需要注意的是需要定义路由信息如：path: '/xx/:id',这样才能进行携带参数跳转，否则url不会进行变化，并且再次刷新页面后参数会读取不到
+
+replace 将当前路径替换掉历史记录 push将历史记录保存
+
+`<router-link>`的replace属性
+1.作用：控制路由跳转时操作浏览器历史记录的模式
+2.浏览器的历史记录有两种写入方式：分别为push和replace,
+push是追加历史记录，replace是替换当前记。路由跳转时候
+默认为push
+3.如何开启replace模式：
+`<router-link replace .......>`News`</router-link>`
