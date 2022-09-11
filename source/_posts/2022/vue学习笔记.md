@@ -121,11 +121,17 @@ module.exports = {
 };
 ```
 
-声明式导航 出现卡顿  会一直将router-link组件不断创建实例 耗费内存出现卡顿
-编程式导航+事件委派 事件委派 全部子节点的事件委派到父节点 点击a标签时进行路由跳转 如何确定点击的是a标签？ 在子标签中加上标示 自定义属性 可以获取当前节点 利用节点的dataset获取标示
-如何确定是几级标签
+## 事件委派
 
-2)组件name属性的作用?
+声明式导航 出现卡顿  会一直将router-link组件不断创建实例 耗费内存出现卡顿
+编程式导航+事件委派 事件委派 全部子节点的事件委派到父节点 
+通过自定义属性标记各级子节点，为以后路由跳转传递参数
+>```<a :data-categoryName="c1.categoryName" :data-category1Id="c1.categoryId">{{c1.categoryName}}</a>```
+>```:data-categoryName```即为自定义绑定属性
+
+
+
+>2)组件name属性的作用?
 2.1开发者工具中可以看见组件的名字
 2.2注册全局组件的时候，可以通过组件实例获取相应组件的名字
 
@@ -341,26 +347,66 @@ vue-router和vue的版本需要匹配否则报错
 节流 在规定的间隔时间范围内不会重复触发回调 只有大于这个时间间隔才会触发回调 把频繁的触发变为少量的触发 _.throttle()
 
 ```js
- onSearch: _.debounce(function () {
-      console.log(`发送请求`);
-    }, 1000),
+ onSearch: _.debounce(function() {
+     console.log(`发送请求`);
+ }, 1000),
 ```
+
 防抖  前面的所有触发都被取消 最后一次执行在规定的时间之后才会触发 ***连续快速触发 只会执行一次***
+
 ```js
-    add: _.throttle(function () {
-      this.count++;
-      console.log(`节流执行`);
+    add: _.throttle(function() {
+        this.count++;
+        console.log(`节流执行`);
     }, 10000),
 ```
 
->利用lodash 插件 包含防抖和节流业务
+> 利用lodash 插件 包含防抖和节流业务
+
 对外暴露的函数为_function 不用箭头函数
 按需引入 优化项目
 
+## 自定义指令
 
+对象式
 
+![asset_img](vue学习笔记/2022-09-09-10-43-42.png)
+
+函数式
+
+![asset_img](vue学习笔记/2022-09-09-10-44-29.png)
+
+```js
+ directives: {
+     focus: function(el, value) {},
+ },
+```
+
+## 事件委派
+
+当事件的循环次数很大，并且每次循环的事件都有绑定事件时，会非常消耗内存。这时候可以利用冒泡的机制和事件流的特性将事件绑定在父节点上
 数据绑定
 
+## mock数据
+
+拦截ajax请求 
+新建mock文件夹 创建json数据
+
+![asset_img](vue学习笔记/2022-09-09-16-42-33.png)
+
+创建api文件
+
+![asset_img](vue学习笔记/2022-09-09-16-43-04.png)
+
+ajax请求
+
+```js
+export const reqBannerList = () => {
+    return mockRequest.get("/banner");
+};
+```
+
+在组件中向vuex请求数据
 v-model
 
 > 语法糖：指计算机语言中添加的某种语法，这种语法对语言的功能并没有影响，但是更方便程序员使用。通常来说使用语法糖能够增加程序的可读性，从而减少程序代码出错的机会。
