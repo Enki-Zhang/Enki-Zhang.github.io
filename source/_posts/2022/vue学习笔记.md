@@ -126,10 +126,11 @@ module.exports = {
 声明式导航 出现卡顿  会一直将router-link组件不断创建实例 耗费内存出现卡顿
 编程式导航+事件委派 事件委派 全部子节点的事件委派到父节点 
 通过自定义属性标记各级子节点，为以后路由跳转传递参数
->```<a :data-categoryName="c1.categoryName" :data-category1Id="c1.categoryId">{{c1.categoryName}}</a>```
+
+> ```<a :data-categoryName="c1.categoryName" :data-category1Id="c1.categoryId">{{c1.categoryName}}</a>
+
+```
 >```:data-categoryName```即为自定义绑定属性
-
-
 
 >2)组件name属性的作用?
 2.1开发者工具中可以看见组件的名字
@@ -405,6 +406,8 @@ export const reqBannerList = () => {
     return mockRequest.get("/banner");
 };
 ```
+>注意![asset_img](vue学习笔记/2022-09-15-16-36-44.png)
+不能写成 this.state
 
 在组件中向vuex请求数据
 v-model
@@ -469,7 +472,7 @@ vm重要的钩子
 2.beforeDestroy: 清除定时器、解绑自定义事件、取消订阅消息等【收尾工作】。
 关于销毁Vue实例
 1, 销毁后借ue开发者工具看不到任何信息。
-2. 销毁后自定义事件会失效，但原生D0州事件依然有效。
+2. 销毁后自定义事件会失效，但原生dom事件依然有效。
 3. 一般不会再beforeDestroy操作数据，因为即便操作数据，也不会再触发更新流程了。
 
 组件
@@ -500,7 +503,9 @@ data函数、methods中的函数、watch中的函数、computed中的函数它�
 ![asset_img](vue学习笔记/2022-08-30-20-10-17.png)
 
 表示动态绑定中的""中时js表达式
-
+## 组件传递信息
+![asset_img](vue学习笔记/2022-09-15-16-16-18.png)
+![asset_img](vue学习笔记/2022-09-15-16-17-56.png)
 props, 是只读的，Vue底层会监测你对props的修改，如果进行了修改，就会发出警告，若业务需求确实需要修改，那么请复制props的内容到data中一份，然后去修改data中的数据。
 
 mixin 混入
@@ -523,10 +528,10 @@ vue3.0对应的是vuex的4版本 vue2.0对应vuex的3版本
 
 route
 
-1. 路由组件通常存放在pages文件夹，一般组件通常存放在components文件夹。
-2. 通过切换，“隐藏”了的路由组件，默认是被销毁掉的，需要的时候再去挂载。
-3. 每个组件都有自己的$oute属性，里面存储着自己的路由信息。
-4. 整个应用只有一个router, 可以通过组件的$router属性获取到。
+    1. 路由组件通常存放在pages文件夹，一般组件通常存放在components文件夹。
+    2. 通过切换，“隐藏”了的路由组件，默认是被销毁掉的，需要的时候再去挂载。
+    3. 每个组件都有自己的$oute属性，里面存储着自己的路由信息。
+    4. 整个应用只有一个router, 可以通过组件的$router属性获取到。
 
 children路由
 
@@ -596,24 +601,7 @@ push是追加历史记录，replace是替换当前记。路由跳转时候默认
 3. 如何开启replace模式：
 `<router-link replace .......>` News `</router-link>`
 
-路由缓存防止路由跳转后数据消失 ` `  ` <keep-alive include="组件名称"> `  ` ` 缓存多个用数组
+路由缓存防止路由跳转后数据消失 ``` <keep-alive include="组件名称"> ``` 缓存多个用数组
 路由守卫
 对路由权限的校验
-路由元信息 可以设置页面title
-后置路由守卫在切换完之后调用
-路径中#表示不会作为路径的一部分发送给服务器 model:hash
 
-1. 对于一个url来说，什么是hash值？一
-# 及其后面的内容就是hash值」
-
-2.hash值不会包含在HTTP请求中，即：hash值不会带给服务器。
-3.hash模式：I
-1. 地址中永远带着#号，不美观。
-2. 若以后将地址通过第三方手机app分享，若app校验严格，则地址会被标记为不合法。
-3. 兼容性较好。
-4.history模式：
-1. 地址干净，美观。
-2. 兼容性和hash模式相比略差。
-3. 应用部署上线时需要后端人员支持，解决刷新页面服务端404的问题。
-build 后出现dist文件夹出现原始的HTML js css文件
--

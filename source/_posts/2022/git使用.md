@@ -10,19 +10,20 @@ summary:
 tags:
 categories:
 ---
+
 #git
->结合vscode
-将已有项目推送到gitHub上
+
+> 结合 vscode
+> 将已有项目推送到 gitHub 上
 
 在当前项目的一级目录下不要在任何子文件中，
 
-
-~~~git
+```git
 连接用户名和邮件
 git config --global user.name Enki-Zhang
 git config --global user.email 17855378518@163.com
 然后初始化git
-git init 
+git init
 提交代码到暂存区
 git add -A
 commit代码 并注释 此后再修改代码 vscode 代码左侧出现竖条提示修改
@@ -49,15 +50,17 @@ git commit -m 'add new feature'
 git checkout master
 合并分支 将需要合并的分支合并如主分支 总在分支上修改代码 确定之后再融入主分支
 git merge new-feature
-~~~
+```
+
 push code to github
-在github上创建新项目名字随意
-若要将已有项目push到此仓库中不要选择创建readme文件(github也有该提示)
-复制已有仓库的git remote add origin...语句
+在 github 上创建新项目名字随意
+若要将已有项目 push 到此仓库中不要选择创建 readme 文件(github 也有该提示)
+复制已有仓库的 git remote add origin...语句
 ![asset_img](git使用/2022-08-28-14-59-36.png)
-~~~git
+
+```git
 连接远程仓库
-git remote add origin git@github.com:Enki-Zhang/vue-learing-demo.git
+git remote add origin git@github.com:Enki-Zhang/P3-bate.git
 push到origin(remote 分支的名字)的一个分支master上
 git push origin master
 push 到origin的新分支new-feature上
@@ -68,9 +71,15 @@ commit提交
 git commit -m 'modify  readme.txt'
 push 到远程仓库的master上
 git push origin master
-~~~
+```
 
-
->没有项目 可以先在github上新建仓库在push代码
-
-
+> 没有项目 可以先在 github 上新建仓库在 push 代码
+> his 定义表单的版本
+> 历史 保存 info 查看 info
+> ![asset_img](git使用/2022-10-01-14-17-19.png) info
+> 保存按钮 info
+> 表单没有审批流程 只有保存
+> 有审批流程没有人审批 可以保存 提交不可用 1
+> 已经有审批且通过不能提交和保存
+> 流程设计返回当前进度
+> ![asset_img](git使用/2022-10-01-14-30-03.png)
