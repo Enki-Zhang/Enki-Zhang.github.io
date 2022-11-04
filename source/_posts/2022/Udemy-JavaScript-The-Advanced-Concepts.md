@@ -19,7 +19,7 @@ categories:
 ![asset_img](Udemy-JavaScript-The-Advanced-Concepts/2022-08-08-10-20-32.png)
 javascript interpreter and 编译器
 解析器随着解析语句的增加而变慢，编译器预先将代码文件编译为低级语言代码，不需要对重复的代码不断的解析，使得速度上会更快
-
+  <!-- more -->
 JIT Compiler将两者结合
 
 
