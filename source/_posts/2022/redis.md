@@ -25,6 +25,14 @@ NoSql 数据库减少内存和 IO 压力
 
 4.图形数据库。该类数据库使用图形理论来存储实体之间的关系信息，最主要的组成部分是：结点集、连接节点的关系。常用的有 Neo4j。
 
+<!--more-->
+
+### redis 数据结构
+
+## redis 常用命令
+
+https://blog.csdn.net/Lzy410992/article/details/116094703
+
 ## 使用场景
 
 数据并发读写
@@ -191,3 +199,47 @@ QUEUED
 (error) EXECABORT Transaction discarded because of previous errors.
 
 ```
+
+### watch 监视
+
+使用 watch 监视一个或者多个 key,跟踪 key 的 value 修改情况，如果有 key 的 value 值在事务 EXEC 执行之前被修改了，整个事务被取消。EXEC 返回提示信息，表示
+事务已经失败。（采用了乐观锁机制）
+当两个线程同时操作一个 key 时 添加 watch 如下
+
+```shell
+127.0.0.1:6379> watch a
+OK
+127.0.0.1:6379> multi
+OK
+127.0.0.1:6379(TX)> incrby a 10
+QUEUED
+127.0.0.1:6379(TX)> exec
+1) (integer) 25
+```
+
+```shell
+127.0.0.1:6379> watch a
+OK
+127.0.0.1:6379> multi
+OK
+127.0.0.1:6379(TX)> incrby a 10
+QUEUED
+127.0.0.1:6379(TX)> exec
+(nil)
+```
+
+取消监视 unwatch
+
+### redis 的事务特性
+
+- 单独的隔离操作。
+  事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。
+
+- 没有隔离级别的概念。
+  队列中的命令没有提交之前都不会实际被执行，因为事务提交前任何指令都
+  不会被实际执行。
+
+* 不保证原子性
+  事务中如果有一条命令执行失败，其后的命令仍然会被执行，没有回滚。
+
+### 秒杀
