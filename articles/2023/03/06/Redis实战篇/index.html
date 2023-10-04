@@ -5,152 +5,152 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 6.2.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/Enki-Zhang/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/Enki-Zhang/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/Enki-Zhang/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/Enki-Zhang/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/Enki-Zhang/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/Enki-Zhang/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"github.com","root":"/Enki-Zhang/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="实战篇 Redis开篇导读亲爱的小伙伴们大家好，马上咱们就开始实战篇的内容了，相信通过本章的学习，小伙伴们就能理解各种 redis 的使用啦，接下来咱们来一起看看实战篇我们要学习一些什么样的内容  短信登录  这一块我们会使用 redis 共享 session 来实现  商户查询缓存  通过本章节，我们会理解缓存击穿，缓存穿透，缓存雪崩等问题，让小伙伴的对于这些概念的理解不仅仅是停留在概念上，更是">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Enki">
-<meta property="og:url" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/index.html">
+<meta property="og:url" content="https://github.com/Enki-Zhang/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/index.html">
 <meta property="og:site_name" content="Enki">
 <meta property="og:description" content="实战篇 Redis开篇导读亲爱的小伙伴们大家好，马上咱们就开始实战篇的内容了，相信通过本章的学习，小伙伴们就能理解各种 redis 的使用啦，接下来咱们来一起看看实战篇我们要学习一些什么样的内容  短信登录  这一块我们会使用 redis 共享 session 来实现  商户查询缓存  通过本章节，我们会理解缓存击穿，缓存穿透，缓存雪崩等问题，让小伙伴的对于这些概念的理解不仅仅是停留在概念上，更是">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653056228879.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653057872536.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653059409865.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653060237073.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653060337562.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653060588190.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653066208144.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653067054461.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653068196656.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653068874258.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653069893050.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653319261433.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653319474181.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653320822964.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653320764547.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C%E9%81%BF%E9%9C%87%E5%99%A8.gif">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5Cimage-20220523214414123.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5Cimage-20220523212915666.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653322097736.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653322190155.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653322506393.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653322857620.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653323595206.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653325871232.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653325929549.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653326156516.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653327124561.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653327884526.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653328022622.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653328288627.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653328663897.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653357522914.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653357860001.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653360308731.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653360807133.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653360864839.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653362612286.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653363100502.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/2023-03-14-15-11-10.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653365145124.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653365839526.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653366238564.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653368335155.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653368562591.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653369268550.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653370271627.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653371854389.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653373434815.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653383810643.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653373887844.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653373908620.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653374044740.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653374296906.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653381992018.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653382219377.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653382669900.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653382830810.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1656079017728.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653385920025.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653387398820.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653387764938.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653392181413.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653392218531.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653392438917.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653393304844.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653546070602.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653546736063.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653548087334.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653553998403.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653554055048.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653553093967.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653560986599.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653561657295.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653562234886.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1656080546603.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653574849336.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653575176451.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653575506373.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577301737.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577349691.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577445413.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577643629.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577659166.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577689129.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577801668.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577984924.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653578211854.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653578560691.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1656082824939.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653578992639.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653579931626.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653581590453.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653805077118.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653805203758.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653806140822.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653806253817.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653806706296.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653806973212.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653808641260.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653808993693.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653809450816.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653809875208.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653812346852.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653813047671.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653813462834.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653819821591.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653822036941.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653822021827.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653823145495.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653824498278.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653833970361.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653834455899.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653835784444.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653836416586.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653836578970.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653837988985.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653838053608.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653056228879.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653057872536.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653059409865.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653060237073.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653060337562.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653060588190.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653066208144.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653067054461.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653068196656.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653068874258.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653069893050.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653319261433.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653319474181.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653320822964.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653320764547.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C%E9%81%BF%E9%9C%87%E5%99%A8.gif">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5Cimage-20220523214414123.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5Cimage-20220523212915666.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653322097736.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653322190155.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653322506393.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653322857620.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653323595206.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653325871232.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653325929549.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653326156516.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653327124561.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653327884526.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653328022622.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653328288627.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653328663897.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653357522914.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653357860001.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653360308731.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653360807133.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653360864839.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653362612286.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653363100502.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/2023-03-14-15-11-10.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653365145124.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653365839526.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653366238564.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653368335155.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653368562591.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653369268550.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653370271627.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653371854389.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653373434815.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653383810643.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653373887844.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653373908620.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653374044740.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653374296906.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653381992018.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653382219377.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653382669900.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653382830810.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1656079017728.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653385920025.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653387398820.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653387764938.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653392181413.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653392218531.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653392438917.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653393304844.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653546070602.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653546736063.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653548087334.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653553998403.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653554055048.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653553093967.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653560986599.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653561657295.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653562234886.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1656080546603.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653574849336.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653575176451.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653575506373.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577301737.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577349691.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577445413.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577643629.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577659166.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577689129.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577801668.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653577984924.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653578211854.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653578560691.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1656082824939.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653578992639.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653579931626.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653581590453.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653805077118.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653805203758.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653806140822.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653806253817.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653806706296.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653806973212.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653808641260.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653808993693.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653809450816.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653809875208.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653812346852.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653813047671.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653813462834.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653819821591.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653822036941.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653822021827.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653823145495.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653824498278.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653833970361.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653834455899.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653835784444.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653836416586.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653836578970.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653837988985.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653838053608.png">
 <meta property="article:published_time" content="2023-03-06T12:56:22.652Z">
 <meta property="article:modified_time" content="2023-04-26T01:14:02.352Z">
 <meta property="article:author" content="Enki">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653056228879.png">
+<meta name="twitter:image" content="https://github.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/.%5CRedis%E5%AE%9E%E6%88%98%E7%AF%87.assets%5C1653056228879.png">
 
-<link rel="canonical" href="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/">
+<link rel="canonical" href="https://github.com/Enki-Zhang/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/">
 
 
 <script id="page-configurations">
@@ -212,7 +212,7 @@
 
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
+    <a href="/Enki-Zhang/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">Enki</h1>
       <span class="logo-line-after"><i></i></span>
@@ -233,22 +233,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/Enki-Zhang/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/Enki-Zhang/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/Enki-Zhang/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/Enki-Zhang/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
   </ul>
@@ -279,10 +279,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Enki-Zhang/articles/2023/03/06/Redis%E5%AE%9E%E6%88%98%E7%AF%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/Enki-Zhang/images/avatar.gif">
       <meta itemprop="name" content="Enki">
       <meta itemprop="description" content="个人博客">
     </span>
@@ -1421,11 +1421,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/articles/2023/03/03/%E5%A4%96%E5%8D%96%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE/" rel="prev" title="外卖平台项目">
+    <a href="/Enki-Zhang/articles/2023/03/03/%E5%A4%96%E5%8D%96%E5%B9%B3%E5%8F%B0%E9%A1%B9%E7%9B%AE/" rel="prev" title="外卖平台项目">
       <i class="fa fa-chevron-left"></i> 外卖平台项目
     </a></div>
       <div class="post-nav-item">
-    <a href="/articles/2023/03/06/Redis/" rel="next" title="">
+    <a href="/Enki-Zhang/articles/2023/03/06/Redis/" rel="next" title="">
        <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -1498,7 +1498,7 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
+          <a href="/Enki-Zhang/archives/">
         
           <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">日志</span>
@@ -1557,19 +1557,19 @@
   </div>
 
   
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/Enki-Zhang/lib/anime.min.js"></script>
+  <script src="/Enki-Zhang/lib/velocity/velocity.min.js"></script>
+  <script src="/Enki-Zhang/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/js/utils.js"></script>
+<script src="/Enki-Zhang/js/utils.js"></script>
 
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
+<script src="/Enki-Zhang/js/motion.js"></script>
 
 
-<script src="/js/next-boot.js"></script>
+<script src="/Enki-Zhang/js/schemes/pisces.js"></script>
+
+
+<script src="/Enki-Zhang/js/next-boot.js"></script>
 
 
 

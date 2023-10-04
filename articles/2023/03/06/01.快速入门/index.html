@@ -5,76 +5,76 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 6.2.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/Enki-Zhang/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/Enki-Zhang/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/Enki-Zhang/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/Enki-Zhang/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/Enki-Zhang/css/main.css">
 
 
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/Enki-Zhang/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"github.com","root":"/Enki-Zhang/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="Redis快速入门Redis的常见命令和客户端使用 1.初识RedisRedis是一种键值型的NoSql数据库，这里有两个关键字：  键值型  NoSql   其中键值型，是指Redis中存储的数据都是以key、value对的形式存储，而value的形式多种多样，可以是字符串、数值、甚至json：  而NoSql则是相对于传统关系型数据库而言，有很大差异的一种数据库。 1.1.认识NoSQLNoS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Enki">
-<meta property="og:url" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:url" content="https://github.com/Enki-Zhang/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="Enki">
 <meta property="og:description" content="Redis快速入门Redis的常见命令和客户端使用 1.初识RedisRedis是一种键值型的NoSql数据库，这里有两个关键字：  键值型  NoSql   其中键值型，是指Redis中存储的数据都是以key、value对的形式存储，而value的形式多种多样，可以是字符串、数值、甚至json：  而NoSql则是相对于传统关系型数据库而言，有很大差异的一种数据库。 1.1.认识NoSQLNoS">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/6U1Rhxo.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/4tUgFo6.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/GdqOSsj.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/zBBQfcc.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/zBnKxWf.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/tXYSl5x.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/AzaHOTF.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/J1MqOJM.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/kZP40dQ.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/SyjanS5.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/01DTNCf.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/8V6zvCD.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/6U1Rhxo.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/4tUgFo6.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/GdqOSsj.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/zBBQfcc.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/zBnKxWf.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/tXYSl5x.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/AzaHOTF.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/J1MqOJM.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/kZP40dQ.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/SyjanS5.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/01DTNCf.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/8V6zvCD.png">
 <meta property="og:image" content="https://i.imgur.com/YSxkGm7.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/v7xWsqC.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/image-20211211082225509.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/OYYWPNo.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/BZ4Agbi.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/hguGHbX.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/hwK5LQ8.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/6hUqslY.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/9qTGyoN.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/DshNnKC.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/A2cOm7Q.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/ja8Fd9s.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/8tli2o9.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/5Lcr3BE.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/suevOIR.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/VZqpv73.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/InWMfeD.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/x2zDBjf.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/VF2EPt0.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/ha8x86R.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/L9vTv2X.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/9f68ivq.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/image-20220609102817435-165735883948534.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/UFlNIV0.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/OEMcbuu.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/5FjtWk5.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/XOAq3cN.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/Ip9TKSY.png">
-<meta property="og:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/zXH6Qn6.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/v7xWsqC.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/image-20211211082225509.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/OYYWPNo.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/BZ4Agbi.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/hguGHbX.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/hwK5LQ8.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/6hUqslY.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/9qTGyoN.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/DshNnKC.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/A2cOm7Q.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/ja8Fd9s.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/8tli2o9.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/5Lcr3BE.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/suevOIR.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/VZqpv73.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/InWMfeD.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/x2zDBjf.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/VF2EPt0.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/ha8x86R.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/L9vTv2X.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/9f68ivq.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/image-20220609102817435-165735883948534.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/UFlNIV0.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/OEMcbuu.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/5FjtWk5.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/XOAq3cN.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/Ip9TKSY.png">
+<meta property="og:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/zXH6Qn6.png">
 <meta property="article:published_time" content="2023-03-06T13:00:13.139Z">
 <meta property="article:modified_time" content="2023-03-06T12:47:48.424Z">
 <meta property="article:author" content="Enki">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/6U1Rhxo.png">
+<meta name="twitter:image" content="https://github.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/6U1Rhxo.png">
 
-<link rel="canonical" href="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+<link rel="canonical" href="https://github.com/Enki-Zhang/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
 
 
 <script id="page-configurations">
@@ -136,7 +136,7 @@
 
   <div class="site-meta">
 
-    <a href="/" class="brand" rel="start">
+    <a href="/Enki-Zhang/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">Enki</h1>
       <span class="logo-line-after"><i></i></span>
@@ -157,22 +157,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/Enki-Zhang/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/Enki-Zhang/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/Enki-Zhang/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/Enki-Zhang/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
   </ul>
@@ -203,10 +203,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Enki-Zhang/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/Enki-Zhang/images/avatar.gif">
       <meta itemprop="name" content="Enki">
       <meta itemprop="description" content="个人博客">
     </span>
@@ -420,9 +420,9 @@
 </ul>
 <p>不指定commond时，会进入<code>redis-cli</code>的交互控制台：</p>
 <p><img src="/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/OYYWPNo.png"></p>
-<h3 id="1-4-2-图形化桌面客户端"><a href="#1-4-2-图形化桌面客户端" class="headerlink" title="1.4.2.图形化桌面客户端"></a>1.4.2.图形化桌面客户端</h3><p>GitHub上的大神编写了Redis的图形化桌面客户端，地址：<a target="_blank" rel="noopener" href="https://github.com/uglide/RedisDesktopManager">https://github.com/uglide/RedisDesktopManager</a></p>
+<h3 id="1-4-2-图形化桌面客户端"><a href="#1-4-2-图形化桌面客户端" class="headerlink" title="1.4.2.图形化桌面客户端"></a>1.4.2.图形化桌面客户端</h3><p>GitHub上的大神编写了Redis的图形化桌面客户端，地址：<a href="https://github.com/uglide/RedisDesktopManager">https://github.com/uglide/RedisDesktopManager</a></p>
 <p>不过该仓库提供的是RedisDesktopManager的源码，并未提供windows安装包。</p>
-<p>在下面这个仓库可以找到安装包：<a target="_blank" rel="noopener" href="https://github.com/lework/RedisDesktopManager-Windows/releases">https://github.com/lework/RedisDesktopManager-Windows/releases</a></p>
+<p>在下面这个仓库可以找到安装包：<a href="https://github.com/lework/RedisDesktopManager-Windows/releases">https://github.com/lework/RedisDesktopManager-Windows/releases</a></p>
 <h3 id="1-4-3-安装"><a href="#1-4-3-安装" class="headerlink" title="1.4.3.安装"></a>1.4.3.安装</h3><p>在课前资料中可以找到Redis的图形化桌面客户端：</p>
 <p><img src="/articles/2023/03/06/01.%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/BZ4Agbi.png"></p>
 <p>解压缩后，运行安装程序即可安装：</p>
@@ -656,7 +656,7 @@
 <li>Jedis和Lettuce：这两个主要是提供了Redis命令对应的API，方便我们操作Redis，而SpringDataRedis又对这两种做了抽象和封装，因此我们后期会直接以SpringDataRedis来学习。</li>
 <li>Redisson：是在Redis基础上实现了分布式的可伸缩的java数据结构，例如Map、Queue等，而且支持跨进程的同步机制：Lock、Semaphore等待，比较适合用来实现特殊的功能需求。</li>
 </ul>
-<h2 id="3-1-Jedis客户端"><a href="#3-1-Jedis客户端" class="headerlink" title="3.1.Jedis客户端"></a>3.1.Jedis客户端</h2><p>Jedis的官网地址： <a target="_blank" rel="noopener" href="https://github.com/redis/jedis">https://github.com/redis/jedis</a></p>
+<h2 id="3-1-Jedis客户端"><a href="#3-1-Jedis客户端" class="headerlink" title="3.1.Jedis客户端"></a>3.1.Jedis客户端</h2><p>Jedis的官网地址： <a href="https://github.com/redis/jedis">https://github.com/redis/jedis</a></p>
 <h3 id="3-1-1-快速入门"><a href="#3-1-1-快速入门" class="headerlink" title="3.1.1.快速入门"></a>3.1.1.快速入门</h3><p>我们先来个快速入门：</p>
 <p>1）引入依赖：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--jedis--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>redis.clients<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jedis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.7.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--单元测试--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.junit.jupiter<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit-jupiter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.7.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -759,11 +759,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/articles/2023/03/06/Redis/" rel="prev" title="">
+    <a href="/Enki-Zhang/articles/2023/03/06/Redis/" rel="prev" title="">
       <i class="fa fa-chevron-left"></i> 
     </a></div>
       <div class="post-nav-item">
-    <a href="/articles/2023/03/09/MySQL45%E8%AE%B2/" rel="next" title="MySQL45讲">
+    <a href="/Enki-Zhang/articles/2023/03/09/MySQL45%E8%AE%B2/" rel="next" title="MySQL45讲">
       MySQL45讲 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -836,7 +836,7 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/archives/">
+          <a href="/Enki-Zhang/archives/">
         
           <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">日志</span>
@@ -895,19 +895,19 @@
   </div>
 
   
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/Enki-Zhang/lib/anime.min.js"></script>
+  <script src="/Enki-Zhang/lib/velocity/velocity.min.js"></script>
+  <script src="/Enki-Zhang/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/js/utils.js"></script>
+<script src="/Enki-Zhang/js/utils.js"></script>
 
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/pisces.js"></script>
+<script src="/Enki-Zhang/js/motion.js"></script>
 
 
-<script src="/js/next-boot.js"></script>
+<script src="/Enki-Zhang/js/schemes/pisces.js"></script>
+
+
+<script src="/Enki-Zhang/js/next-boot.js"></script>
 
 
 
