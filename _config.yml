@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Enki
-subtitle: "这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。"
-description: "个人博客"
+title: 学习博客
+subtitle: "慎终如始，则无败事"
+description: "学习是件很幸福的事情"
 keywords:
-# author: Enki
+author: Enki
 language: zh-CN
 timezone: ""
 

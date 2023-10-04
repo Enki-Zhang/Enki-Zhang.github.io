@@ -1,5 +1,5 @@
 ---
-title: 八股--linux
+title: linux
 top: false
 cover: false
 toc: true
@@ -7,8 +7,8 @@ mathjax: true
 date: 2023-08-30 14:05:51
 password:
 summary:
-tags:
-categories:
+tags: 八股
+categories: 操作系统
 ---
 
 ## 如何在 Linux 上部署项目

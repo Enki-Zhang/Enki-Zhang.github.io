@@ -1,5 +1,5 @@
 ---
-title: 八股--Mysql
+title: Mysql
 top: false
 cover: false
 toc: true
@@ -7,8 +7,8 @@ mathjax: true
 date: 2023-08-19 14:30:37
 password:
 summary:
-tags:
-categories:
+tags: 八股
+categories: MySQL
 ---
 
 ## 范式

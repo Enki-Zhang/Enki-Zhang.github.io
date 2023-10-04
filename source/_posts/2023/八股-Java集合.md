@@ -1,5 +1,5 @@
 ---
-title: 八股--Java集合
+title: Java集合
 top: false
 cover: false
 toc: true
@@ -7,8 +7,8 @@ mathjax: true
 date: 2023-09-05 16:29:03
 password:
 summary:
-tags:
-categories:
+tags: 八股
+categories: Java
 ---
 
 ## 框架

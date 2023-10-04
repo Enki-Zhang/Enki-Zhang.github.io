@@ -1,5 +1,5 @@
 ---
-title: 八股--JVM
+title: JVM
 top: false
 cover: false
 toc: true
@@ -7,8 +7,8 @@ mathjax: true
 date: 2023-09-22 14:15:27
 password:
 summary:
-tags:
-categories:
+tags: 八股
+categories: JVM
 ---
 
 ### 了解 JVM 内存结构、垃圾回收等内容
