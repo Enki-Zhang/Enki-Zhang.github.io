@@ -53,7 +53,7 @@ git add -A
 git commit -m 'add new feature'
 选择主分支
 git checkout master
-合并分支 将需要合并的分支合并如主分支 总在分支上修改代码 确定之后再融入主分支
+合并分支 将需要合并的分支合并如主分支 总在分支上修改代码 确定之后再融入主分支（分支上的代码commit之后再融合）
 git merge new-feature
 ```
 

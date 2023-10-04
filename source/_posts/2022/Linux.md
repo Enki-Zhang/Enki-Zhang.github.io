@@ -11,8 +11,14 @@ tags:
 categories:
 ---
 
+## linux 文件
+
+文件目录结构 ：
+![asset_img](Linux/2023-06-19-16-50-26.png)
+
 ## Vim
 
+![asset_img](Linux/2023-06-19-16-53-00.png)
 esc 普通模式 i 插入模式 ：命令行模式
 常用快捷键
 普通模式
@@ -38,7 +44,8 @@ esc 普通模式 i 插入模式 ：命令行模式
 
 ## 关机重启
 
-shutdown -h now/halt 关机
+shutdown -h now 关机
+halt 关机
 shutdown -h 1 一分钟后关机 也是 shutdown 的默认操作
 shutdown -r now / reboot 立刻重新启动
 sync 将内存同步到磁盘
@@ -46,19 +53,19 @@ sync 将内存同步到磁盘
 
 ## 登录注销
 
-切换用户 su - 用户名
+切换用户 `su - 用户名`
 注销：logout 可以从 root 用户切换到之前的用户（注销指令在图形化系统中无效）
 
 ## 用户管理
 
-useradd 用户名
+ubuntu 使用
+adduser 用户名
 添加的用户 aa 默认在 /home/aa
 用 aa 登录时自动切换到 aa 目录
 新的用户名并指定家目录
 
-```shell
-useradd -d 指定用户目录
-```
+> ubuntu 使用 useradd 会不创建目录的问题
+> https://blog.csdn.net/weixin_43410435/article/details/108434002
 
 #### 修改密码
 
@@ -66,10 +73,13 @@ useradd -d 指定用户目录
 passwd 用户名
 ```
 
-#### 删除密码
+#### 删除用户
+
+centos：
 
 ```shell
 userdel 用户名
+userdel -r 用户名[删除用户有及其用户主目录]
 ```
 
 #### 查询用户信息
@@ -88,6 +98,11 @@ whoami
 
 类似角色,系统可以对共性的用户进行统一管理
 新增组
+
+用户（user）的配置文件，记录用户的各种信息
+/etc/passwd
+每行的含义：用户名:口令:用户标识号:组标识号:注释性描述:主目录:登录 Shell
+![asset_img](Linux/2022-11-24-19-57-27.png)
 
 ```shell
 groupadd 组名
@@ -125,14 +140,46 @@ systemctl get-default
 查看当前运行级别
 
 ```shell
-systemctl get
+runlevel
 ```
 
 设置默认运行级别
 
+```shell
+systemctl set-default graphical.target
+```
+
+#### 系统启动流程
+
+![asset_img](Linux/2022-11-23-16-13-13.png)
+
 ### 找回密码
 
+直接重置密码
+
+```
+sudo passwd 新密码
+```
+
+### 帮助指令
+
+man help info 的关系[https://mounui.com/560.html]
+
+```
+man []
+```
+
 ### 文件目录类
+
+在 Linux 或 Unix 操作系统中，所有的文件和目录都被组织成以一个根节点开始的倒置的树状结构。
+文件系统的最顶层是由根目录开始的，系统使用 / 来表示根目录。在根目录之下的既可以是目录，也可以是文件，而每一个目录中又可以包含子目录文件。如此反复就可以构成一个庞大的文件系统。
+
+在 Linux 文件系统中有两个特殊的目录，一个用户所在的工作目录，也叫当前目录，可以使用一个点 . 来表示；
+另一个是当前目录的上一级目录，也叫父目录，可以使用两个点 .. 来表示。
+
+- . ：代表当前的目录，也可以使用 ./ 来表示；
+- .. ：代表上一层目录，也可以 ../ 来代表。
+  如果一个目录或文件名以一个点 . 开始，表示这个目录或文件是一个隐藏目录或文件(如：.bashrc)。即以默认方式查找时，不显示该目录或文件。
 
 #### 帮助指令
 
@@ -166,6 +213,8 @@ pwd
 
 ```shell
 ls [选项][目录/文件]
+ls ./ 当前目录
+ls ../ 上级目录
 ls -a
 ls -l
 ls -al 混合写法 al命令的顺序无关
@@ -475,6 +524,13 @@ groupadd monster
 ls -ahl
 ```
 
+#### 查看文件的权限
+
+```shell
+ls -l 文件名 查看文件权限
+ls -ld 文件名 查看文件夹权限
+```
+
 #### 修改文件/目录所在的组
 
 基本指令
@@ -488,7 +544,7 @@ ls -ahl
 第一列的 0-9 位数字
 0 位: 确定文件类型
 
-1. d :目录 相当于文件夹
+1. d :目录 相当于文件夹 （document）
 2. `-` ：普通文件
 3. c : 字符设备类文件 鼠标、键盘
 4. b :块设备如硬盘
@@ -547,3 +603,182 @@ chown -R root aaa(将aaa目录下的全部文件的所有者改为root)
 ```shell
 chgrp newgroup 文件/目录
 ```
+
+## 任务调度
+
+crontab 进行 定时任务的设置
+
+```shell
+crontab [选项]
+```
+
+选项：
+-e 编辑 crontab 定时任务
+-l 查询 crontab 任务
+-r 删除当前用户的所有 crontab 任务
+
+### shell 编程
+
+### linux 网络
+
+#### NAT 网络
+
+![asset_img](Linux/-+.png)
+![asset_img](Linux/2022-11-16-16-33-46.png)
+虚拟机和本机处在统一网段下可以相互通讯
+本地主机通过网卡代理上局域网
+在虚拟机中查看->网络编辑器中可以改变网络
+
+#### 编辑网络和虚拟机地址
+
+指定虚拟机 ip 地址
+![asset_img](Linux/2022-11-26-13-51-32.png)
+
+##### 设置主机名和 hosts 映射
+
+hostname 为主机名`vim /etc/hostname`
+
+host 映射
+通过主机名找到对应的 Linux 系统（用 hostname ping 通）
+
+```shell
+Windows在C:\Windows\System32\drivers\etc\hosts 下指定对应的地址和host即可
+```
+
+> Windows 下的可以先复制 hosts 后对源文件进行覆盖
+
+Linux 下修改 vim /etc/hosts 文件
+
+#### host 和 DNS
+
+host 记录 hostname 和 ip 的映射关系
+dns：domain name system
+是互联网的域名和 ip 地址相互映射的分布式数据库
+
+域名解析过程 浏览器先检查缓存中是否有对应的域名解析 ip 地址没有就检查 dns 解析器缓存，通过缓存返回 ip 解析这两部均为本地解析
+本地解析没有到看 hosts 文件中查是否有对应的域名 ip 解析
+都没有则查域名 dns 解析器
+
+### 进程管理
+
+![asset_img](Linux/2022-11-22-14-05-35.png)
+进程
+
+> USER -- 进程用户用户名
+> PID -- 进程的 ID
+> %CPU -- 进程占用的 CPU 百分比
+> %MEM -- 占用内存的百分比
+> VSZ -- 进程使用虚拟内存大小 kb
+> RSS -- 驻留内存中页的大小 单位 kb
+> TTY -- 终端 ID
+> STAT -- 进程的状态 其中 S-睡眠，s-表示该进程是会话的先导进程，N-表示进程拥有比普通优先级更低的优先级，R-正在运行，D-短期等待，Z-僵死进程，T-被跟踪或者被停止等等
+> START -- 启动进程的时间
+> TIME -- 实际使用 CPU 运行的时间
+> COMMAND -- 启动进程所用的命令和参数，如果过长会被截断显示
+
+#### 终止进程
+
+```
+kill 【选项】 进程号 （选项-9为强制）
+killall 进程名称 （杀死该进程和其子进程）
+```
+
+重启 sshd 服务
+
+#### 进程树
+
+```
+pstree [选项]
+
+
+```
+
+选项：
+-p 显示进程号
+-u 显示用户 id
+
+### 服务管理
+
+服务(service)本质就是进程,但是是运行在后台的,通常都会监听某个端口,等待其它程序的请求,比如(mysqld , sshd,防火墙等)，因此我们又称为守护进程，是 Linux 中非常重要的知识点。
+
+#### 服务管理命令
+
+```shell
+service 服务名[start|stop|restart|reload|status]
+> |表示可选
+```
+
+2)在 CentOS7.0 后 很多服务不再使用 service,而是 systemctl
+3)service 指令管理的服务在 /etc/init.d 查看
+![asset_img](Linux/2022-11-23-15-50-05.png)
+
+ubuntu 开启和关闭 network
+
+```shell
+service network-manager stop
+```
+
+#### 查看服务名
+
+```shell
+service --status-all
+```
+
+#### ubuntu 查看和设置防火墙
+
+```
+sudo ufw status  #查看已经开启的端口
+sudo ufw allow 22 打开端口
+sudo ufw enable 打开防火墙
+
+```
+
+#### top 命令
+
+```
+top
+```
+
+![asset_img](Linux/2022-11-26-14-36-31.png)
+
+top 信息：
+**任务队列信息**
+01:06:48 当前时间
+up 1:22 系统运行时间，格式为时:分
+1 user 当前登录用户数
+load average: 0.06, 0.60, 0.48 系统负载，即任务队列的平均长度。三个数值分别为 1 分钟、5 分钟、15 分钟前到现在的平均值。 将三个值和除以 3>0.7 说明负载过大 需要优化
+**进程和 CPU 的信息**
+total 进程总数
+running 正在运行的进程数
+sleeping 睡眠的进程数
+stopped 停止的进程数
+zombie 僵尸进程数 内存没有被释放的死进程
+Cpu(s):
+0.3% us 用户空间占用 CPU 百分比
+1.0% sy 内核空间占用 CPU 百分比
+0.0% ni 用户进程空间内改变过优先级的进程占用 CPU 百分比
+98.7% id 空闲 CPU 百分比
+0.0% wa 等待输入输出的 CPU 时间百分比
+0.0%hi：硬件 CPU 中断占用百分比
+0.0%si：软中断占用百分比
+0.0%st：虚拟机占用百分比
+
+#### top 交互排序
+
+![asset_img](Linux/2022-11-26-14-55-32.png)
+在 top 命令显示后 输入 u 选择监视的用户
+终止用户进程
+![asset_img](Linux/2022-11-26-15-02-45.png)
+输入 k 输入 9 强制删除
+
+![asset_img](Linux/2022-11-26-15-02-55.png)
+
+#### 监听网络
+
+![asset_img](Linux/2022-11-26-15-06-09.png)
+![asset_img](Linux/2022-11-26-15-29-33.png)
+
+> htop 更加美化的进程显示
+> ![asset_img](Linux/2023-06-26-20-10-54.png)
+
+### ubuntu 包管理软件

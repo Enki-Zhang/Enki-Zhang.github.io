@@ -243,3 +243,24 @@ QUEUED
   事务中如果有一条命令执行失败，其后的命令仍然会被执行，没有回滚。
 
 ### 秒杀
+
+#### linux 安装 redis
+
+在 docker 外部新建 redis.conf 文件
+
+```shell
+mkdir  -p /mydata/redis/conf
+cp redis.conf /mydata/redis/conf/redis.conf
+```
+
+修改 redis.conf 文件 源文件需要从官网下
+映射 redis 端口
+
+```
+docker run -p 6379:6379 --name myredis -v /mydata/redis/data:/data \
+-v /mydata/redis/conf/redis.conf:/etc/redis/redis.conf \
+-d redis redis-server /etc/redis/redis.conf
+```
+
+查看 docker 进程
+`docker ps`

@@ -5,6 +5,7 @@
 - MyBatis 最初是 Apache 的一个开源项目 iBatis, 2010 年 6 月这个项目由 Apache Software Foundation 迁移到了 Google Code。随着开发团队转投 Google Code 旗下，iBatis3.x 正式更名为 MyBatis。代码于 2013 年 11 月迁移到 Github
 - iBatis 一词来源于“internet”和“abatis”的组合，是一个基于 Java 的持久层框架。iBatis 提供的持久层框架包括 SQL Maps 和 Data Access Objects（DAO）
   <!-- more -->
+
 ## MyBatis 特性
 
 1. MyBatis 是支持定制化 SQL、存储过程以及高级映射的优秀的持久层框架
@@ -43,11 +44,48 @@
 - MySQL 版本：MySQL 5.7
 - MyBatis 版本：MyBatis 3.5.7
 
+> 不同版本的 mysql 的连接区别
+> MySQL 不同版本的注意事项
+> 1、驱动类 driver-class-name
+> MySQL 5 版本使用 jdbc5 驱动，驱动类使用：com.mysql.jdbc.Driver
+> MySQL 8 版本使用 jdbc8 驱动，驱动类使用：com.mysql.cj.jdbc.Driver
+> 2、连接地址 url
+> url 地址格式如下：
+> jdbc:mysql://[host:port]/[database][?参数名1][=参数值 1][&参数名2][=参数值 2]...
+
+> 常见参数：
+> | 参数 | 说明 |
+> | ---- | ------------------------------ |
+> | user | 数据库用户名（用于连接数据库） |
+> |password|用户密码（用于连接数据库）|
+> |useUnicode|是否使用 Unicode 字符集，如果参数 characterEncoding 设置为 gb2312 或 gbk，本参数值必须设置为 true (缺省为 false)|
+> |characterEncoding|当 useUnicode 设置为 true 时，指定字符编码。比如可设置为 gb2312 或 gbk(缺省为 false)|
+> |autoReconnect|当数据库连接异常中断时，是否自动重新连接？(缺省为 false)|
+> |failOverReadOnly|自动重连成功后，连接是否设置为只读？(缺省为 true)|
+> |initialTimeout|autoReconnect 设置为 true 时，两次重连之间的时间间隔，单位：秒(缺省为 2)
+> |maxReconnects|autoReconnect 设置为 true 时，重试连接的次数（缺省为 3）|
+> |connectTimeout|和数据库服务器建立 socket 连接时的超时，单位：毫秒。 0 表示永不超时，适用于 JDK 1.4 及更高版本（缺省为 0）|
+> |socketTimeout|socket 操作（读写）超时，单位：毫秒。 0 表示永不超时（缺省为 0）|
+> eg:jdbc:mysql://localhost:3306/数据库名?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+>
+> > serverTimezone：时区
+> > MySQL 5 版本的 url：
+> > jdbc:mysql://localhost:3306/ssm
+> > MySQL 8 版本的 url：
+> > jdbc:mysql://localhost:3306/ssm?serverTimezone=UTC
+> > 否则运行测试用例报告如下错误：
+> > java.sql.SQLException: The server time zone value 'ÖÐ¹ú±ê×¼Ê±¼ä' is unrecognized or
+> > represents more
+
 ## 创建 maven 工程
 
+maven 的.conf 文件注意配置本地仓库和镜像
+
 - 打包方式：jar
+  ![asset_img](MyBatis笔记/2022-12-05-14-28-02.png)
 - 引入依赖
-  ```xml
+
+```xml
   <dependencies>
   	<!-- Mybatis核心 -->
   	<dependency>
@@ -69,11 +107,11 @@
   		<version>5.1.3</version>
   		</dependency>
   </dependencies>
-  ```
+```
 
 ## 创建 MyBatis 的核心配置文件
 
-> 习惯上命名为`mybatis-config.xml`，这个文件名仅仅只是建议，并非强制要求。将来整合 Spring 之后，这个配置文件可以省略，所以大家操作时可以直接复制、粘贴。
+> 习惯上命名为 `mybatis-config.xml` ，这个文件名仅仅只是建议，并非强制要求。将来整合 Spring 之后，这个配置文件可以省略，所以大家操作时可以直接复制、粘贴。
 > 核心配置文件主要用于配置连接数据库的环境以及 MyBatis 的全局配置信息
 > 核心配置文件存放的位置是 src/main/resources 目录下
 
@@ -83,15 +121,18 @@
 PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-	<!--设置连接数据库的环境-->
+	<!--设置连接数据库的环境  可以设置多个环境 default设置为默认环境id-->
 	<environments default="development">
+	<!-- 设置单个环境 -->
 		<environment id="development">
+		<!-- 设置事务管理器  type= JDBC|MANAGED事务管理方式JDBC为原生的事务管理方式 MANAGED为被管理的方式如被spring管理 -->
 			<transactionManager type="JDBC"/>
+			<!-- 设置数据源 type数据源类型POOLED使用数据库连接池|UNPOOLED不使用***|JNDI -->
 			<dataSource type="POOLED">
 				<property name="driver" value="com.mysql.cj.jdbc.Driver"/>
 				<property name="url" value="jdbc:mysql://localhost:3306/MyBatis"/>
 				<property name="username" value="root"/>
-				<property name="password" value="123456"/>
+    <property name="password" value="123456"/>
 			</dataSource>
 		</environment>
 	</environments>
@@ -100,6 +141,165 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mappers/UserMapper.xml"/>
 	</mappers>
 </configuration>
+```
+
+### 创建 properties 文件读取数据库配置
+
+```properties
+jdbc.driver=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/mybatis_plus
+jdbc.username=root
+jdbc.password=enki
+```
+
+# mybatis-config.xml 核心配置文件详解
+
+> 核心配置文件中的标签必须按照固定的顺序(有的标签可以不写，但顺序一定不能乱)：
+> properties、settings、typeAliases、typeHandlers、objectFactory、objectWrapperFactory、reflectorFactory、plugins、environments、databaseIdProvider、mappers
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//MyBatis.org//DTD Config 3.0//EN"
+        "http://MyBatis.org/dtd/MyBatis-3-config.dtd">
+<configuration>
+    <!--引入properties文件，此时就可以${属性名}的方式访问属性值-->
+    <properties resource="jdbc.properties"></properties>
+    <settings>
+        <!--将表中字段的下划线自动转换为驼峰-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--开启延迟加载-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+    </settings>
+    <typeAliases>
+        <!--
+        typeAlias：设置某个具体的类型的别名
+        属性：
+        type：需要设置别名的类型的全类名
+        alias：设置此类型的别名，且别名不区分大小写。若不设置此属性，该类型拥有默认的别名，即类名
+        -->
+		<!-- 设置默认别名 即为类名为user不区分大小写 -->
+        <!--<typeAlias type="com.atguigu.mybatis.bean.User"></typeAlias>-->
+		<!-- 设置user类别名为user -->
+        <!--<typeAlias type="com.atguigu.mybatis.bean.User" alias="user">
+        </typeAlias>-->
+        <!--以包为单位，设置改包下所有的类型都拥有默认的别名，即类名且不区分大小写将原先类的范围提高到包 包下的每个类设置默认别名-->
+        <package name="com.atguigu.mybatis.bean"/>
+    </typeAliases>
+    <!--
+    environments：设置多个连接数据库的环境
+    属性：
+	    default：设置默认使用的环境的id
+    -->
+    <environments default="mysql_test">
+        <!--
+        environment：设置具体的连接数据库的环境信息
+        属性：
+	        id：设置环境的唯一标识，可通过environments标签中的default设置某一个环境的id，表示默认使用的环境
+        -->
+        <environment id="mysql_test">
+            <!--
+            transactionManager：设置事务管理方式
+            属性：
+	            type：设置事务管理方式，type="JDBC|MANAGED"
+	            type="JDBC"：设置当前环境的事务管理都必须手动处理
+	            type="MANAGED"：设置事务被管理，例如spring中的AOP
+            -->
+            <transactionManager type="JDBC"/>
+            <!--
+            dataSource：设置数据源
+            属性：
+	            type：设置数据源的类型，type="POOLED|UNPOOLED|JNDI"
+	            type="POOLED"：使用数据库连接池，即会将创建的连接进行缓存，下次使用可以从缓存中直接获取，不需要重新创建
+	            type="UNPOOLED"：不使用数据库连接池，即每次使用连接都需要重新创建
+	            type="JNDI"：调用上下文中的数据源
+            -->
+            <dataSource type="POOLED">
+                <!--设置驱动类的全类名-->
+                <property name="driver" value="${jdbc.driver}"/>
+                <!--设置连接数据库的连接地址-->
+                <property name="url" value="${jdbc.url}"/>
+                <!--设置连接数据库的用户名-->
+                <property name="username" value="${jdbc.username}"/>
+                <!--设置连接数据库的密码-->
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--引入映射文件-->
+    <mappers>
+        <!-- <mapper resource="UserMapper.xml"/> -->
+        <!--
+        以包为单位，将包下所有的映射文件引入核心配置文件
+        注意：
+			1. 此方式必须保证mapper接口和mapper映射文件必须在相同的包下
+			2. mapper接口要和mapper映射文件的名字一致
+        -->
+        <package name="com.atguigu.mybatis.mapper"/>
+    </mappers>
+</configuration>
+```
+
+- ![](Resources/mapper接口和mapper映射文件在同一包下.png)
+
+## mapper.xml 配置文件
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--
+      mapper为映射的根节点，用来管理DAO接口
+      namespace指定DAO接口的完整类名，表示mapper配置文件管理哪个DAO接口为Mapper接口(包.接口名)
+      mybatis会依据这个接口动态创建一个实现类去实现这个接口，而这个实现类是一个Mapper对象
+   -->
+<mapper namespace="com.enki.mappers.DeptMapper">
+    <!--
+          id = "接口中的方法名"
+          parameterType = "接口中传入方法的参数类型"
+          resultType = "返回实体类对象：包.类名"  处理结果集 自动封装
+          注意:sql语句后不要出现";"号
+              查询：select标签
+              增加：insert标签
+              修改：update标签
+              删除：delete标签
+      -->
+
+    <resultMap id="deptToemp" type="dept">
+        <id property="deptId" column="dept_id"></id>
+        <result property="empId" column="emp_id"/>
+        <result property="deptName" column="dept_name"/>
+        <collection property="emp" ofType="emp">
+            <id property="tId" column="t_id"/>
+            <result property="tAge" column="t_age"/>
+            <result property="tName" column="t_name"/>
+            <result property="msg" column="msg"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="stepFind" type="dept">
+        <id property="deptId" column="dept_id"></id>
+        <result property="empId" column="emp_id"/>
+        <result property="deptName" column="dept_name"/>
+        <!--        将emp中的t_id作为个tEmpById的参数-->
+        <association property="emp" column="emp_id" select="com.enki.mappers.EmpMapper.getEmpById"/>
+    </resultMap>
+
+    <select id="getDeptToEmp" resultMap="deptToemp">
+        select t_emp.*, emp_dept.*
+        from emp_dept
+                 left join t_emp on emp_dept.emp_id = t_emp.t_id
+        where emp_dept.dept_id = #{id};
+    </select>
+
+    <select id="getById" resultMap="stepFind">
+        select *
+        from emp_dept where dept_id=#{id};
+    </select>
+
+</mapper>
+
 ```
 
 ## 创建 mapper 接口
@@ -189,127 +389,44 @@ public class UserMapperTest {
 ## 加入 log4j 日志功能
 
 1. 加入依赖
-   ```xml
+
+```xml
    <!-- log4j日志 -->
    <dependency>
    <groupId>log4j</groupId>
    <artifactId>log4j</artifactId>
    <version>1.2.17</version>
    </dependency>
-   ```
+```
+
 2. 加入 log4j 的配置文件
    - log4j 的配置文件名为 log4j.xml，存放的位置是 src/main/resources 目录下
    - 日志的级别：FATAL(致命)>ERROR(错误)>WARN(警告)>INFO(信息)>DEBUG(调试) 从左到右打印的内容越来越详细
-   ```xml
-   <?xml version="1.0" encoding="UTF-8" ?>
-   <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-   <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
-       <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
-           <param name="Encoding" value="UTF-8" />
-           <layout class="org.apache.log4j.PatternLayout">
-   			<param name="ConversionPattern" value="%-5p %d{MM-dd HH:mm:ss,SSS} %m (%F:%L) \n" />
-           </layout>
-       </appender>
-       <logger name="java.sql">
-           <level value="debug" />
-       </logger>
-       <logger name="org.apache.ibatis">
-           <level value="info" />
-       </logger>
-       <root>
-           <level value="debug" />
-           <appender-ref ref="STDOUT" />
-       </root>
-   </log4j:configuration>
-   ```
-
-# 核心配置文件详解
-
-> 核心配置文件中的标签必须按照固定的顺序(有的标签可以不写，但顺序一定不能乱)：
-> properties、settings、typeAliases、typeHandlers、objectFactory、objectWrapperFactory、reflectorFactory、plugins、environments、databaseIdProvider、mappers
 
 ```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE configuration
-        PUBLIC "-//MyBatis.org//DTD Config 3.0//EN"
-        "http://MyBatis.org/dtd/MyBatis-3-config.dtd">
-<configuration>
-    <!--引入properties文件，此时就可以${属性名}的方式访问属性值-->
-    <properties resource="jdbc.properties"></properties>
-    <settings>
-        <!--将表中字段的下划线自动转换为驼峰-->
-        <setting name="mapUnderscoreToCamelCase" value="true"/>
-        <!--开启延迟加载-->
-        <setting name="lazyLoadingEnabled" value="true"/>
-    </settings>
-    <typeAliases>
-        <!--
-        typeAlias：设置某个具体的类型的别名
-        属性：
-        type：需要设置别名的类型的全类名
-        alias：设置此类型的别名，且别名不区分大小写。若不设置此属性，该类型拥有默认的别名，即类名
-        -->
-        <!--<typeAlias type="com.atguigu.mybatis.bean.User"></typeAlias>-->
-        <!--<typeAlias type="com.atguigu.mybatis.bean.User" alias="user">
-        </typeAlias>-->
-        <!--以包为单位，设置改包下所有的类型都拥有默认的别名，即类名且不区分大小写-->
-        <package name="com.atguigu.mybatis.bean"/>
-    </typeAliases>
-    <!--
-    environments：设置多个连接数据库的环境
-    属性：
-	    default：设置默认使用的环境的id
-    -->
-    <environments default="mysql_test">
-        <!--
-        environment：设置具体的连接数据库的环境信息
-        属性：
-	        id：设置环境的唯一标识，可通过environments标签中的default设置某一个环境的id，表示默认使用的环境
-        -->
-        <environment id="mysql_test">
-            <!--
-            transactionManager：设置事务管理方式
-            属性：
-	            type：设置事务管理方式，type="JDBC|MANAGED"
-	            type="JDBC"：设置当前环境的事务管理都必须手动处理
-	            type="MANAGED"：设置事务被管理，例如spring中的AOP
-            -->
-            <transactionManager type="JDBC"/>
-            <!--
-            dataSource：设置数据源
-            属性：
-	            type：设置数据源的类型，type="POOLED|UNPOOLED|JNDI"
-	            type="POOLED"：使用数据库连接池，即会将创建的连接进行缓存，下次使用可以从缓存中直接获取，不需要重新创建
-	            type="UNPOOLED"：不使用数据库连接池，即每次使用连接都需要重新创建
-	            type="JNDI"：调用上下文中的数据源
-            -->
-            <dataSource type="POOLED">
-                <!--设置驱动类的全类名-->
-                <property name="driver" value="${jdbc.driver}"/>
-                <!--设置连接数据库的连接地址-->
-                <property name="url" value="${jdbc.url}"/>
-                <!--设置连接数据库的用户名-->
-                <property name="username" value="${jdbc.username}"/>
-                <!--设置连接数据库的密码-->
-                <property name="password" value="${jdbc.password}"/>
-            </dataSource>
-        </environment>
-    </environments>
-    <!--引入映射文件-->
-    <mappers>
-        <!-- <mapper resource="UserMapper.xml"/> -->
-        <!--
-        以包为单位，将包下所有的映射文件引入核心配置文件
-        注意：
-			1. 此方式必须保证mapper接口和mapper映射文件必须在相同的包下
-			2. mapper接口要和mapper映射文件的名字一致
-        -->
-        <package name="com.atguigu.mybatis.mapper"/>
-    </mappers>
-</configuration>
-```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
-- ![](Resources/mapper接口和mapper映射文件在同一包下.png)
+<log4j:configuration>
+    <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+        <param name="Encoding" value="UTF-8" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p %d{MM-dd HH:mm:ss,SSS} %m (%F:%L) \n" />
+        </layout>
+    </appender>
+    <logger name="java.sql">
+        <level value="debug" />
+    </logger>
+    <logger name="org.apache.ibatis">
+        <level value="info" />
+    </logger>
+    <root>
+        <level value="debug" />
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</log4j:configuration>
+```
 
 # 默认的类型别名
 
@@ -319,40 +436,49 @@ public class UserMapperTest {
 # MyBatis 的增删改查
 
 1. 添加
-   ```xml
+
+```xml
    <!--int insertUser();-->
    <insert id="insertUser">
    	insert into t_user values(null,'admin','123456',23,'男','12345@qq.com')
    </insert>
-   ```
+```
+
 2. 删除
-   ```xml
+
+```xml
    <!--int deleteUser();-->
    <delete id="deleteUser">
        delete from t_user where id = 6
    </delete>
-   ```
+```
+
 3. 修改
-   ```xml
+
+```xml
    <!--int updateUser();-->
    <update id="updateUser">
        update t_user set username = '张三' where id = 5
    </update>
-   ```
+```
+
 4. 查询一个实体类对象
-   ```xml
+
+```xml
    <!--User getUserById();-->
    <select id="getUserById" resultType="com.atguigu.mybatis.bean.User">
    	select * from t_user where id = 2
    </select>
-   ```
+```
+
 5. 查询集合
-   ```xml
+
+```xml
    <!--List<User> getUserList();-->
    <select id="getUserList" resultType="com.atguigu.mybatis.bean.User">
    	select * from t_user
    </select>
-   ```
+```
 
 - 注意：
   1.  查询的标签 select 必须设置属性 resultType 或 resultMap，用于设置实体类和数据库表的映射关系
@@ -363,15 +489,20 @@ public class UserMapperTest {
 # MyBatis 获取参数值的两种方式（重点）
 
 - MyBatis 获取参数值的两种方式：${}和#{}
-- ${}的本质就是字符串拼接，#{}的本质就是占位符赋值
+- \${}的本质就是字符串拼接相当于直接显示数据，#{}的本质就是占位符赋值可以有效防止 sql 注入。 ${ } 的变量的替换阶段是在动态 SQL 解析阶段，而 #{ }的变量的替换是在 DBMS 中
 - ${}使用字符串拼接的方式拼接 sql，若为字符串类型或日期类型的字段进行赋值时，需要手动加单引号；但是#{}使用占位符赋值的方式拼接 sql，此时为字符串类型或日期类型的字段进行赋值时，可以自动添加单引号
+
+> 简单的 sql 注入
+> `select * from ${tableName} where name = #{name}`
+> 若传入的 tableName 为 user; delete user; --
+> 在 sql 解析后编译之前变为 `select * from user; delete user; -- where name = ?;`--为 sql 注释改变了原乡 sql 语句的本意删除了数据库 user
 
 ## 单个字面量类型的参数
 
 - 若 mapper 接口中的方法参数为单个的字面量类型，此时可以使用\${}和#{}以任意的名称（最好见名识意）获取参数的值，注意${}需要手动加单引号
 
 ```xml
-<!--User getUserByUsername(String username);-->
+<!--实体类方法 User getUserByUsername(String username);-->
 <select id="getUserByUsername" resultType="User">
 	select * from t_user where username = #{username}
 </select>
@@ -432,10 +563,10 @@ public void checkLoginByMap() {
 
 ## 实体类类型的参数
 
-- 若 mapper 接口中的方法参数为实体类对象时此时可以使用\${}和#{}，通过访问实体类对象中的属性名获取属性值，注意${}需要手动加单引号
+- 若 mapper 接口中的方法参数为实体类对象时此时可以使用\${}和#{}，通过访问实体类对象中的属性名获取属性值（有 getset 方法的为属性），注意${}需要手动加单引号
 
 ```xml
-<!--int insertUser(User user);-->
+<!--int insertUser(User user); 访问属性直接访问不需要 user.name -->
 <insert id="insertUser">
 	insert into t_user values(null,#{username},#{password},#{age},#{sex},#{email})
 </insert>
@@ -483,9 +614,11 @@ public void checkLoginByParam() {
 # MyBatis 的各种查询功能
 
 1. 如果查询出的数据只有一条，可以通过
+
    1. 实体类对象接收
    2. List 集合接收
-   3. Map 集合接收，结果`{password=123456, sex=男, id=1, age=23, username=admin}`
+   3. Map 集合接收，结果 `{password=123456, sex=男, id=1, age=23, username=admin}`
+
 2. 如果查询出的数据有多条，一定不能用实体类对象接收，会抛异常 TooManyResultsException，可以通过
    1. 实体类类型的 LIst 集合接收
    2. Map 类型的 LIst 集合接收
@@ -563,6 +696,7 @@ Map<String, Object> getUserToMap(@Param("id") int id);
 <select id="getUserToMap" resultType="map">
 	select * from t_user where id = #{id}
 </select>
+<!-- map的属性不固定 map的key==表的字段名 value==字段对应的数据	-->
 <!--结果：{password=123456, sex=男, id=1, age=23, username=admin}-->
 ```
 
@@ -599,8 +733,9 @@ List<Map<String, Object>> getAllUserToMap();
  * 查询所有用户信息为map集合
  * @return
  * 将表中的数据以map集合的方式查询，一条数据对应一个map；若有多条数据，就会产生多个map集合，并且最终要以一个map的方式返回数据，此时需要通过@MapKey注解设置map集合的键，值是每条数据所对应的map集合
+ 相当于将查询的map数据放在一个大的map中去
  */
-@MapKey("id")
+@MapKey("id")//查询的id作为 map的key 查询的map为value
 Map<String, Object> getAllUserToMap();
 ```
 
@@ -678,6 +813,10 @@ public void deleteMore() {
 ## 动态设置表名
 
 - 只能使用${}，因为表名不能加单引号
+  > `select * from #{tableName} where name = #{name};`
+  > 编译之后`select * from ? where name = ?;`
+  > 传入参数`select * from 'user' where name='ruhua';`
+  > 而实际上表名不能加上' ' 可以用\` `表示
 
 ```java
 /**
@@ -699,14 +838,14 @@ List<User> getUserByTable(@Param("tableName") String tableName);
 ## 添加功能获取自增的主键
 
 - 使用场景
-  - t_clazz(clazz_id,clazz_name)
-  - t_student(student_id,student_name,clazz_id)
+  - t_clazz(clazz_id, clazz_name)
+  - t_student(student_id, student_name, clazz_id)
   1.  添加班级信息
   2.  获取新添加的班级的 id
   3.  为班级分配学生，即将某学的班级 id 修改为新添加的班级的 id
 - 在 mapper.xml 中设置两个属性
   - useGeneratedKeys：设置使用自增的主键
-  * keyProperty：因为增删改有统一的返回值是受影响的行数，因此只能将获取的自增的主键放在传输的参数 user 对象的某个属性中
+  - keyProperty：自增主键的属性，因为增删改有统一的返回值是受影响的行数，因此只能将获取的自增的主键放在传输的参数 user 对象的某个属性中
 
 ```java
 /**
@@ -741,9 +880,12 @@ public void insertUser() {
 
 ## resultMap 处理字段和属性的映射关系
 
+> resultType 和 resultMap
+> resultType 处理简单映射 resultMap 处理复杂映射即包含多张表
+
 - resultMap：设置自定义映射
   - 属性：
-    - id：表示自定义映射的唯一标识，不能重复
+    - id：表示自定义映射的唯一标识，不能重复，在比较对象实例时使用
     - type：查询的数据要映射的实体类的类型
   - 子标签：
     - id：设置主键的映射关系
@@ -769,18 +911,25 @@ public void insertUser() {
 
 - 若字段名和实体类中的属性名不一致，但是字段名符合数据库的规则（使用\_），实体类中的属性名符合 Java 的规则（使用驼峰）。此时也可通过以下两种方式处理字段名和实体类中的属性的映射关系
   1.  可以通过为字段起别名的方式，保证和实体类中的属性名保持一致
-      ```xml
+
+![asset_img](MyBatis笔记/2022-12-07-16-27-18.png)
+![asset_img](MyBatis笔记/2022-12-07-16-27-35.png)
+
+````xml
       <!--List<Emp> getAllEmp();-->
       <select id="getAllEmp" resultType="Emp">
       	select eid,emp_name empName,age,sex,email from t_emp
       </select>
       ```
-  2.  可以在 MyBatis 的核心配置文件中的`setting`标签中，设置一个全局配置信息 mapUnderscoreToCamelCase，可以在查询表中数据时，自动将\_类型的字段名转换为驼峰，例如：字段名 user_name，设置了 mapUnderscoreToCamelCase，此时字段名就会转换为 userName。[核心配置文件详解](#核心配置文件详解)
-      ```xml
+
+  2.  可以在 MyBatis 的核心配置文件中的`setting`标签中，设置一个全局配置信息 mapUnderscoreToCamelCase，可以在查询表中数据时，自动将_类型的字段名转换为驼峰，例如：字段名 user_name，设置了 mapUnderscoreToCamelCase，此时字段名就会转换为 userName。[核心配置文件详解](#核心配置文件详解)
+
+
+```xml
       <settings>
           <setting name="mapUnderscoreToCamelCase" value="true"/>
       </settings>
-      ```
+````
 
 ## 多对一映射处理
 
@@ -819,8 +968,8 @@ public class Emp {
 ### 使用 association 处理映射关系
 
 - association：处理多对一的映射关系
-- property：需要处理多对的映射关系的属性名
-- javaType：该属性的类型
+- property：用于指定需要映射的 UserBean 的属性名
+- javaType：指定 property 属性指定的 JavaBean 属性的 Java 类型
 
 ```xml
 <resultMap id="empAndDeptResultMapTwo" type="Emp">
@@ -844,7 +993,7 @@ public class Emp {
 
 #### 1. 查询员工信息
 
-- select：设置分布查询的 sql 的唯一标识（namespace.SQLId 或 mapper 接口的全类名.方法名）
+- select：设置分布查询的 sql 的唯一标识（namespace. SQLId 或 mapper 接口的全类名. 方法名）需要联查的表的属性名 并将 column 的作为 select 的参数进行查询 由 mybatis 自动映射查询 其中的 property 的值为 select 映射方法的返回值
 - column：设置分步查询的条件
 
 ```java
@@ -916,7 +1065,7 @@ public class Dept {
 ### collection
 
 - collection：用来处理一对多的映射关系
-- ofType：表示该属性对饮的集合中存储的数据的类型
+- ofType：表示 property 指定的 JavaBean 属性对应的集合中存储的数据的类型
 
 ```xml
 <resultMap id="DeptAndEmpResultMap" type="Dept">
@@ -937,7 +1086,7 @@ public class Dept {
 ```
 
 ### 分步查询
-
+一个部门对应多个员工
 #### 1. 查询部门信息
 
 ```java
@@ -990,7 +1139,7 @@ List<Emp> getDeptAndEmpByStepTwo(@Param("did") Integer did);
 - 分步查询的优点：可以实现延迟加载，但是必须在核心配置文件中设置全局配置信息：
   - lazyLoadingEnabled：延迟加载的全局开关。当开启时，所有关联对象都会延迟加载
   - aggressiveLazyLoading：当开启时，任何方法的调用都会加载该对象的所有属性。 否则，每个属性会按需加载
-- 此时就可以实现按需加载，获取的数据是什么，就只会执行相应的 sql。此时可通过 association 和 collection 中的 fetchType 属性设置当前的分步查询是否使用延迟加载，fetchType="lazy(延迟加载)|eager(立即加载)"
+- 此时就可以实现按需加载，获取的数据是什么，就只会执行相应的 sql。此时可通过 association 和 collection 中的 fetchType 属性设置全局环境中的某一个分步查询是否使用延迟加载，fetchType="lazy(延迟加载)|eager(立即加载)"
 
 ```xml
 <settings>
@@ -1027,7 +1176,8 @@ public void getEmpAndDeptByStepOne() {
 
 - 开启后，需要用到查询 dept 的时候才会调用相应的 SQL 语句![](Resources/延迟加载测试3.png)
 - fetchType：当开启了全局的延迟加载之后，可以通过该属性手动控制延迟加载的效果，fetchType="lazy(延迟加载)|eager(立即加载)"
-  ```xml
+
+```xml
   <resultMap id="empAndDeptByStepResultMap" type="Emp">
   	<id property="eid" column="eid"></id>
   	<result property="empName" column="emp_name"></result>
@@ -1039,7 +1189,7 @@ public void getEmpAndDeptByStepOne() {
   				 column="did"
   				 fetchType="lazy"></association>
   </resultMap>
-  ```
+```
 
 # 动态 SQL
 
@@ -1101,7 +1251,8 @@ public void getEmpAndDeptByStepOne() {
 ```
 
 - 注意：where 标签不能去掉条件后多余的 and/or
-  ```xml
+
+```xml
   <!--这种用法是错误的，只能去掉条件前面的and/or，条件后面的不行-->
   <if test="empName != null and empName !=''">
   emp_name = #{empName} and
@@ -1109,7 +1260,7 @@ public void getEmpAndDeptByStepOne() {
   <if test="age != null and age !=''">
   	age = #{age}
   </if>
-  ```
+```
 
 ## trim
 
@@ -1157,7 +1308,7 @@ public void getEmpByCondition() {
 
 ## choose、when、otherwise
 
-- `choose、when、otherwise`相当于`if...else if..else`
+- `choose、when、otherwise`相当于 Switch
 - when 至少要有一个，otherwise 至多只有一个
 
 ```xml
@@ -1208,7 +1359,8 @@ public void getEmpByChoose() {
   - open：设置 foreach 标签中的内容的开始符
   - close：设置 foreach 标签中的内容的结束符
 - 批量删除
-  ```xml
+
+```xml
   <!--int deleteMoreByArray(Integer[] eids);-->
   <delete id="deleteMoreByArray">
   	delete from t_emp where eid in
@@ -1216,8 +1368,9 @@ public void getEmpByChoose() {
   		#{eid}
   	</foreach>
   </delete>
-  ```
-  ```java
+```
+
+```java
   @Test
   public void deleteMoreByArray() {
   	SqlSession sqlSession = SqlSessionUtils.getSqlSession();
@@ -1225,10 +1378,13 @@ public void getEmpByChoose() {
   	int result = mapper.deleteMoreByArray(new Integer[]{6, 7, 8, 9});
   	System.out.println(result);
   }
-  ```
-  ![](Resources/foreach测试结果1.png)
+```
+
+![](Resources/foreach测试结果1.png)
+
 - 批量添加
-  ```xml
+
+```xml
   <!--int insertMoreByList(@Param("emps") List<Emp> emps);-->
   <insert id="insertMoreByList">
   	insert into t_emp values
@@ -1236,8 +1392,9 @@ public void getEmpByChoose() {
   		(null,#{emp.empName},#{emp.age},#{emp.sex},#{emp.email},null)
   	</foreach>
   </insert>
-  ```
-  ```java
+```
+
+```java
   @Test
   public void insertMoreByList() {
   	SqlSession sqlSession = SqlSessionUtils.getSqlSession();
@@ -1249,8 +1406,9 @@ public void getEmpByChoose() {
   	int result = mapper.insertMoreByList(emps);
   	System.out.println(result);
   }
-  ```
-  ![](Resources/foreach测试结果2.png)
+```
+
+![](Resources/foreach测试结果2.png)
 
 ## SQL 片段
 
@@ -1409,8 +1567,8 @@ public void getEmpByChoose() {
 | maxElementsOnDisk               | 是       | 在磁盘上缓存的 element 的最大数目，若是 0 表示无穷大                                                                                                |
 | eternal                         | 是       | 设定缓存的 elements 是否永远不过期。 如果为 true，则缓存的数据始终有效， 如果为 false 那么还要根据 timeToIdleSeconds、timeToLiveSeconds 判断        |
 | overflowToDisk                  | 是       | 设定当内存缓存溢出的时候是否将过期的 element 缓存到磁盘上                                                                                           |
-| timeToIdleSeconds               | 否       | 当缓存在 EhCache 中的数据前后两次访问的时间超过 timeToIdleSeconds 的属性取值时， 这些数据便会删除，默认值是 0,也就是可闲置时间无穷大                |
-| timeToLiveSeconds               | 否       | 缓存 element 的有效生命期，默认是 0.,也就是 element 存活时间无穷大                                                                                  |
+| timeToIdleSeconds               | 否       | 当缓存在 EhCache 中的数据前后两次访问的时间超过 timeToIdleSeconds 的属性取值时， 这些数据便会删除，默认值是 0, 也就是可闲置时间无穷大               |
+| timeToLiveSeconds               | 否       | 缓存 element 的有效生命期，默认是 0., 也就是 element 存活时间无穷大                                                                                 |
 | diskSpoolBufferSizeMB           | 否       | DiskStore(磁盘缓存)的缓存区大小。默认是 30MB。每个 Cache 都应该有自己的一个缓冲区                                                                   |
 | diskPersistent                  | 否       | 在 VM 重启的时候是否启用磁盘保存 EhCache 中的数据，默认是 false                                                                                     |
 | diskExpiryThreadIntervalSeconds | 否       | 磁盘缓存的清理线程运行间隔，默认是 120 秒。每个 120s， 相应的线程会进行一次 EhCache 中数据的清理工作                                                |
@@ -1685,9 +1843,10 @@ public void testPageHelper() throws IOException {
 ```
 
 - 分页相关数据：
-  ```
+
+```xml
   Page{count=true, pageNum=1, pageSize=4, startRow=0, endRow=4, total=8, pages=2, reasonable=false, pageSizeZero=false}[Emp{eid=1, empName='admin', age=22, sex='男', email='456@qq.com', did=3}, Emp{eid=2, empName='admin2', age=22, sex='男', email='456@qq.com', did=3}, Emp{eid=3, empName='王五', age=12, sex='女', email='123@qq.com', did=3}, Emp{eid=4, empName='赵六', age=32, sex='男', email='123@qq.com', did=1}]
-  ```
+```
 
 #### 方法二使用 PageInfo
 
@@ -1711,12 +1870,14 @@ public void testPageHelper() throws IOException {
 ```
 
 - 分页相关数据：
-  ```
+
+```
   PageInfo{
   pageNum=1, pageSize=4, size=4, startRow=1, endRow=4, total=8, pages=2,
   list=Page{count=true, pageNum=1, pageSize=4, startRow=0, endRow=4, total=8, pages=2, reasonable=false, pageSizeZero=false}[Emp{eid=1, empName='admin', age=22, sex='男', email='456@qq.com', did=3}, Emp{eid=2, empName='admin2', age=22, sex='男', email='456@qq.com', did=3}, Emp{eid=3, empName='王五', age=12, sex='女', email='123@qq.com', did=3}, Emp{eid=4, empName='赵六', age=32, sex='男', email='123@qq.com', did=1}],
   prePage=0, nextPage=2, isFirstPage=true, isLastPage=false, hasPreviousPage=false, hasNextPage=true, navigatePages=5, navigateFirstPage=1, navigateLastPage=2, navigatepageNums=[1, 2]}
-  ```
+```
+
 - 其中 list 中的数据等同于方法一中直接输出的 page 数据
 
 #### 常用数据：
@@ -1731,4 +1892,8 @@ public void testPageHelper() throws IOException {
 - isFirstPage/isLastPage：是否为第一页/最后一页
 - hasPreviousPage/hasNextPage：是否存在上一页/下一页
 - navigatePages：导航分页的页码数
-- navigatepageNums：导航分页的页码，\[1,2,3,4,5]
+- navigatepageNums：导航分页的页码，\[1, 2, 3, 4, 5]
+
+```
+
+```
