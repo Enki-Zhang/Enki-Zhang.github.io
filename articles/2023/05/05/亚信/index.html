@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Mysql 的 innoDB 和 myIsam (mesen)区别？ 事务支持：InnoDB 支持事务处理，而 MyISAM 不支持。如果需要对数据进行事务处理或者需要实现行级锁定，那么应该使用 InnoDB 存储引擎。 锁机制：InnoDB 使用行级锁定，而 MyISAM 使用表级锁定。在高并发场景下，使用 InnoDB 可以更好地支持多用户并发访问，降低锁冲突。 外键支持：InnoDB 支持外">
+<meta property="og:type" content="article">
+<meta property="og:title" content="亚信">
+<meta property="og:url" content="http://example.com/articles/2023/05/05/%E4%BA%9A%E4%BF%A1/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="Mysql 的 innoDB 和 myIsam (mesen)区别？ 事务支持：InnoDB 支持事务处理，而 MyISAM 不支持。如果需要对数据进行事务处理或者需要实现行级锁定，那么应该使用 InnoDB 存储引擎。 锁机制：InnoDB 使用行级锁定，而 MyISAM 使用表级锁定。在高并发场景下，使用 InnoDB 可以更好地支持多用户并发访问，降低锁冲突。 外键支持：InnoDB 支持外">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/articles/2023/05/05/%E4%BA%9A%E4%BF%A1/2023-05-05-20-10-12.png">
+<meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-Java8%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/articles/2023/05/05/%E4%BA%9A%E4%BF%A1/2023-05-05-21-14-17.png">
+<meta property="og:image" content="http://example.com/articles/2023/05/05/%E4%BA%9A%E4%BF%A1/2023-05-05-13-58-57.png">
+<meta property="article:published_time" content="2023-05-05T11:59:50.000Z">
+<meta property="article:modified_time" content="2023-05-07T09:15:34.632Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/articles/2023/05/05/%E4%BA%9A%E4%BF%A1/2023-05-05-20-10-12.png">
+
+<link rel="canonical" href="http://example.com/articles/2023/05/05/%E4%BA%9A%E4%BF%A1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>亚信 | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/05/05/%E4%BA%9A%E4%BF%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          亚信
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-05-05 19:59:50" itemprop="dateCreated datePublished" datetime="2023-05-05T19:59:50+08:00">2023-05-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-07 17:15:34" itemprop="dateModified" datetime="2023-05-07T17:15:34+08:00">2023-05-07</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Mysql-的-innoDB-和-myIsam-mesen-区别？"><a href="#Mysql-的-innoDB-和-myIsam-mesen-区别？" class="headerlink" title="Mysql 的 innoDB 和 myIsam (mesen)区别？"></a>Mysql 的 innoDB 和 myIsam (mesen)区别？</h2><ol>
+<li>事务支持：InnoDB 支持事务处理，而 MyISAM 不支持。如果需要对数据进行事务处理或者需要实现行级锁定，那么应该使用 InnoDB 存储引擎。</li>
+<li>锁机制：InnoDB 使用行级锁定，而 MyISAM 使用表级锁定。在高并发场景下，使用 InnoDB 可以更好地支持多用户并发访问，降低锁冲突。</li>
+<li>外键支持：InnoDB 支持外键，而 MyISAM 不支持。如果需要建立关联关系，需要使用 InnoDB 存储引擎。<br>MyISAM 的索引为聚簇索引，数据结构是 B 树；InnoDB 的索引是⾮聚簇索引，数据<br>结构是 B+树。</li>
+</ol>
+<h2 id="Mysql-一条-sql-语句的执行流程？"><a href="#Mysql-一条-sql-语句的执行流程？" class="headerlink" title="Mysql 一条 sql 语句的执行流程？"></a>Mysql 一条 sql 语句的执行流程？</h2><p><img src="/articles/2023/05/05/%E4%BA%9A%E4%BF%A1/2023-05-05-20-10-12.png" alt="asset_img"></p>
+<h2 id="mybatis-中的-和-的区别"><a href="#mybatis-中的-和-的区别" class="headerlink" title="mybatis 中的#和$的区别"></a>mybatis 中的#和$的区别</h2><p>#和$都是用来表示占位符的符号 #符号用于预编译的 SQL 语句中，即在 SQL 语句中使用#符号后，预处理阶段 Mybatis 会将其替换为一个问号，到真正查询时替换为真实参数，而使用#{}传进来的参数，mybatis 默认会将其当成字符串,这种方式可以避免 SQL 注入攻击，并且能够更好地处理特殊字符。<br>而${}则是简单的替换，这可能会导致 SQL 注入<br>但假设传入的参数是表名 那么只能用${} 表名不加’’</p>
+<h2 id="对泛型的理解"><a href="#对泛型的理解" class="headerlink" title="对泛型的理解"></a>对泛型的理解</h2><p>Java 泛型是一种在编译期间实现类型安全的机制。它允许程序员在定义类、接口和方法时使用一个或多个类型参数，然后在使用这些类、接口和方法时指定实际的类型。这样可以使代码更加通用，减少类型转换和运行时错误。Java 泛型可以应用于类、接口和方法<br>封装响应类</p>
+<h2 id="hashMap"><a href="#hashMap" class="headerlink" title="hashMap"></a>hashMap</h2><p>数据结构是 数 组 + 链 表 + 红⿊树,桶数组是⽤来存储数据元素，链表是⽤来解决冲突，红⿊树是为了提⾼查询的效率<br>如果链表长度&gt;8&amp;数组⼤⼩&gt;&#x3D;64，链表转为红⿊树,如果红⿊树节点个数&lt;6 ，转为链表</p>
+<h2 id="put"><a href="#put" class="headerlink" title="put"></a>put</h2><p>计算 Key 值的 hash<br>判断 桶 是否位空或者长度为 0，如果是则进⾏扩容操作 两倍扩容<br>根据 hash 值计算下标 如果对应⼩标正好没有存放数据，则直接插⼊即可否则需要覆盖。<br>如果没有找到相同的键，则创建新的节点并插入到链表或树中，然后检查链表长度是否超过 8 超过则链表转为树。<br>最后所有元素处理完成后，判断是否超过阈值； threshold ，超过则扩容</p>
+<h2 id="hashMap-如何线程安全"><a href="#hashMap-如何线程安全" class="headerlink" title="hashMap 如何线程安全"></a>hashMap 如何线程安全</h2><p>使用 ConcurrentHashMap 类而不是 HashMap。ConcurrentHashMap 是线程安全的哈希表，适用于高并发环境。</p>
+<p>使用 Collections.synchronizedMap 方法将 HashMap 转换为线程安全的 Map。该方法返回一个同步的 Map 对象，对其所有操作都进行同步处理。</p>
+<p>使用锁来保护 HashMap 的访问。例如，可以使用 synchronized 关键字或者 ReentrantLock 来保护 HashMap 的读写操作。</p>
+<h2 id="为什么是-2-的倍数"><a href="#为什么是-2-的倍数" class="headerlink" title="为什么是 2 的倍数"></a>为什么是 2 的倍数</h2><p>hash 表中使用取模运算计算桶的位置 如果是 2 的幂次使用位运算可以替代取模运算快速的得到 hash 位置<br>可以将原先的数据很好的已经产⽣ hash 碰撞的元素在扩容后的数组中，因为 HashMap 的初始容量是 2 的次幂，扩容之后的长度是原来的⼆倍，新的容量也是 2 的次幂，所以，元素，要么在原位置，要么在原位置再移动 2 的次幂。</p>
+<h2 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h2><p>使⽤ hash 函数，获取新的哈希值 2. 计算数组下标，获取节点 3. 当前节点和 key 匹配，直接返回 4. 否则，当前节点是否为树节点，查找红⿊树 5. 否则，遍历链表查找</p>
+<h2 id="mysql-索引"><a href="#mysql-索引" class="headerlink" title="mysql 索引"></a>mysql 索引</h2><p>MySQL 的默认存储引擎是 InnoDB，它采⽤的是 B+树结构的索引<br>⾮叶⼦节点只不存储真实的数据，只存储指引搜索⽅向的<br>数据项，叶⼦节点之间使⽤双向指针连接，最底层的叶⼦节点形成了⼀个双向有序链表，只有叶⼦节点才会存储数据，可以进⾏范围查询。</p>
+<h2 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h2><p>主键索引: InnoDB 主键是默认的索引，数据列不允许重复，不允许为 NULL，⼀个表只能有⼀个<br>主键。<br>唯⼀索引: 数据列不允许重复，允许为 NULL 值，⼀个表允许多个列创建唯⼀索引。<br>普通索引: 基本的索引类型，没有唯⼀性的限制，允许为 NULL 值。<br>组合索引：多列值组成⼀个索引，⽤于组合搜索，效率⼤于索引合并</p>
+<h2 id="jvm-的内存结构"><a href="#jvm-的内存结构" class="headerlink" title="jvm 的内存结构"></a>jvm 的内存结构</h2><p><img src="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-Java8%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%9B%BE.png"></p>
+<blockquote>
+<p>栈运行，堆存储<br>由于堆是所有线程共有的，从堆里面申请内存要进行相关的加锁操作，因此申请堆内存的复杂度和时间开销比栈要大很多；从栈里面申请内存，虽然又简单又快，但是栈的大小有限，分配不了太多内存。<br>将内存分为堆和栈类似</p>
+</blockquote>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>Java 序列化是指把 Java 对象转换为字节序列的过程，而 Java 反序列化是指把字节序列恢复为 Java 对象的过程：<br>实现序列化：Java 对象序列化是将实现了 Serializable 接口的对象转换成一个字节序列<br>实现步骤 创建 ObjectOutPutStream 输出流调用 ObjectOutputStream 对象的 writeObject 得到可序列化对象。之后进行反序列化 创建 ObjectInputStream 输入流 调用 readObject 得到序列化对象<br>作用：使得数据能够在不同的程序之间进行传输或存储，并且能够被正确地重新解析和还原，这样就可以方便地实现跨平台、跨语言的数据传输和共享。此外，在一些分布式系统中，序列化也可以用于将数据存储到磁盘或内存中，以便稍后重用</p>
+<p>JSON 序列化就是将数据对象转换成 JSON 字符串</p>
+<figure class="highlight java"><figcaption><span>@Test</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">contextLoads</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">ObjectOutputStream</span> <span class="variable">objectOutputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectOutputStream</span>(<span class="keyword">new</span> <span class="title class_">FileOutputStream</span>(<span class="string">&quot;D:\\object.txt&quot;</span>));</span><br><span class="line">        <span class="type">User</span> <span class="variable">person</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="string">&quot;张三&quot;</span>, <span class="number">12</span>);</span><br><span class="line">        objectOutputStream.writeObject(person);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">input</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">ObjectInputStream</span> <span class="variable">objectInputStream</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(<span class="keyword">new</span> <span class="title class_">FileInputStream</span>(<span class="string">&quot;D:\\object.txt&quot;</span>));</span><br><span class="line">        <span class="type">User</span> <span class="variable">o</span> <span class="operator">=</span> (User)objectInputStream.readObject();</span><br><span class="line">        System.out.println(o);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Exception-和-Error-有什么区别"><a href="#Exception-和-Error-有什么区别" class="headerlink" title="Exception 和 Error 有什么区别"></a>Exception 和 Error 有什么区别</h2><p>在 Java 中，所有的异常都有⼀个共同的祖先 java.lang 包中的 Throwable 类。 Throwable 类有两个重要的⼦类:exception 和 error<br>Exception :程序本身可以处理的异常，可以通过 catch 来进⾏捕获 Exception ⼜可以分为<br>Checked Exception (受检查异常，必须处理) 和 Unchecked Exception (不受检查异常，可以不<br>处理)数组越界<br>Error 属于程序⽆法处理的错误，如 Java 虚拟机运⾏错误（ Virtual MachineError ）、虚拟机内存不够错误<br>( OutOfMemoryError )、类定义错误（ NoClassDefFoundError ）等 。这些异常发⽣时，Java 虚拟机（JVM）⼀般会选择线程终⽌<br><img src="/articles/2023/05/05/%E4%BA%9A%E4%BF%A1/2023-05-05-21-14-17.png" alt="asset_img"></p>
+<h2 id="Springboot-知道哪些注解"><a href="#Springboot-知道哪些注解" class="headerlink" title="Springboot 知道哪些注解"></a>Springboot 知道哪些注解</h2><p>@Component 声明为 bean<br>@Configuration spring 配置类组件<br>@Service 在业务层中声明为 bean 组件<br>@Controller 用于标注控制层组件类<br>@RestController 在@Controller 的基础上增加了@ResponseBody 注解，用于标注 RESTful 风格的控制层组件类<br>@RequestMapping 将 url 的请求映射到 controller 中<br>@GetMapping 用于映射 HTTP GET 请求到处理器方法上<br>@PuTMapping<br>@PostMapping<br>@RequestParam 用于获取请求参数值 从请求参数中获取参数值<br>@PathVariable 用于获取 URL 路径参数值 写在方法参数列表内<br>@RequestBody 获取请求体内容<br>@ResponseBody 封装响应体<br>restful 通过 get put post delete 统一风格的获取资源的约束</p>
+<h2 id="启动类常用注解"><a href="#启动类常用注解" class="headerlink" title="启动类常用注解"></a>启动类常用注解</h2><p>@SpringBootApplication<br>@SpringBootApplication 由以下三个注解组成：<br>@SpringBootConfiguration：指定该类是 Spring Boot 应用程序的配置类，通常放置在主类中。<br>@EnableAutoConfiguration：启用 Spring Boot 的自动配置机制，可以根据项目的依赖自动推断需要配置哪些组件。<br>@ComponentScan：指定扫描代码包的路径，查找带有@Component、</p>
+<p>@Service、@Repository、@Controller 等注解的类，并将其注册为 Spring Bean<br>@MapperScan(“mapper 接口包路径信息”) ：扫描指定包下所有的接口类<br>@EnableTransactionManagement ：开启声明式事务的支持。添加该注解后，Spring 容器会自动扫描被 @Transactional 注解的方法和类。</p>
+<h3 id="springMVC-的执行流程"><a href="#springMVC-的执行流程" class="headerlink" title="springMVC 的执行流程"></a>springMVC 的执行流程</h3><p><img src="/articles/2023/05/05/%E4%BA%9A%E4%BF%A1/2023-05-05-13-58-57.png" alt="asset_img"><br>前端请求发送到 web 容器中，通过 dispatchServlet 将请求传递给 handlerMapping 从而确定处理器，生成处理器执行链 HandlerExecutionChain(包括处理器对象和处理器拦截器)一并返回给 DispatcherServlet ，DispatcherServlet 请求处理器适配器执行对应的 controller 完成业务逻辑之后，Controller 将结果返回给 DispatcherServlet。之后 DispatcherServlet 将结果传递给视图解析器将数据和视图结合再经过 DispatcherServlet 渲染并最终响应给前端</p>
+<h2 id="ArrayList-遍历的几种方式"><a href="#ArrayList-遍历的几种方式" class="headerlink" title="ArrayList 遍历的几种方式"></a>ArrayList 遍历的几种方式</h2><p>看成数组<br>for 循环遍历<br>增强 for 循环<br>foreach 遍历<br>迭代器遍历<br>lambda 表达式流遍历</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ArrayList&lt;String&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"><span class="comment">// 添加元素到list中...</span></span><br><span class="line">list.stream().forEach((element) -&gt; &#123;</span><br><span class="line">    <span class="comment">// 对元素进行操作...</span></span><br><span class="line">&#125;);```</span><br></pre></td></tr></table></figure>
+
+<h2 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h2><p>默认 10 之后 1.5 倍扩容，将原数组拷贝到新数组中<br>为什么 1.5 倍 太大浪费空间 太小会频繁扩容<br>因为 1.5 可以充分利用移位操作，减少浮点数或者运算时间和运算次数。<br>线程安全<br>使用 collections.synchronizedList(new ArrayList());<br>使用 synchronized</p>
+<p>vector 默认为 10 两倍扩容 浪费空间 线程安全 需要连续的空间 数据太多容易失败</p>
+<h2 id="redis-应用场景有哪些"><a href="#redis-应用场景有哪些" class="headerlink" title="redis 应用场景有哪些"></a>redis 应用场景有哪些</h2><p>缓存：Redis 最常用的应用就是缓存，将经常被查询的数据放入缓存中，在下次请求时直接从缓存中获取，可以有效减少数据库的压力，提升系统的响应速度。</p>
+<p>消息队列：Redis 可以作为消息队列来使用，支持发布&#x2F;订阅模式（Pub&#x2F;Sub），多个消费者可以同时监听同一个频道，当有新消息发送到该频道时，所有订阅了该频道的消费者都会收到相应的消息。</p>
+<p>分布式锁：Redis 提供了原子性操作的特性，可以很方便地实现分布式锁的功能，在分布式环境中保证共享资源的访问互斥。</p>
+<p>计数器和排行榜：Redis 的 INCR 操作可以实现简单的计数器功能，适用于实时统计用户在线时长、网站 PV 等；同时，Redis 对有序集合的支持也可以方便地实现排行榜和 Top N 等功能。</p>
+<p>数据持久化：Redis 支持数据持久化，可以将内存中的数据定期或按照条件写入磁盘，以保证数据不会因为系统故障而丢失</p>
+<h2 id="缓存雪崩和缓存穿透是什么，怎么解决？"><a href="#缓存雪崩和缓存穿透是什么，怎么解决？" class="headerlink" title="缓存雪崩和缓存穿透是什么，怎么解决？"></a>缓存雪崩和缓存穿透是什么，怎么解决？</h2><p>缓存雪崩是指在同一时段大量的缓存 key 同时失效或者 Redis 服务宕机，导致大量请求到达数据库，带来巨大压力。</p>
+<p>穿透 用户请求的数据在缓存中和数据库中都不存在，不断发起这样的请求，给数据库带来巨大压力</p>
+<h3 id="缓存穿透的解决方案有哪些？"><a href="#缓存穿透的解决方案有哪些？" class="headerlink" title="缓存穿透的解决方案有哪些？"></a>缓存穿透的解决方案有哪些？</h3><ul>
+<li>缓存 null 值</li>
+<li>布隆过滤</li>
+<li>增强 id 的复杂度，避免被猜测 id 规律</li>
+<li>做好数据的基础格式校验</li>
+<li>加强用户权限校验</li>
+<li>做好热点参数的限流</li>
+</ul>
+<h3 id="缓存雪崩问题及解决思路"><a href="#缓存雪崩问题及解决思路" class="headerlink" title="缓存雪崩问题及解决思路"></a>缓存雪崩问题及解决思路</h3><p>缓存雪崩是指在同一时段大量的缓存 key 同时失效或者 Redis 服务宕机，导致大量请求到达数据库，带来巨大压力。</p>
+<p>解决方案：</p>
+<ul>
+<li>给不同的 Key 的 TTL 添加随机值</li>
+<li>利用 Redis 集群提高服务的可用性</li>
+<li>给缓存业务添加降级限流策略</li>
+<li>给业务添加多级缓存</li>
+</ul>
+<h3 id="2-8-缓存击穿问题及解决思路"><a href="#2-8-缓存击穿问题及解决思路" class="headerlink" title="2.8 缓存击穿问题及解决思路"></a>2.8 缓存击穿问题及解决思路</h3><p>缓存击穿问题也叫热点 Key 问题，就是一个被高并发访问并且缓存重建业务较复杂的 key 突然失效了，无数的请求访问会在瞬间给数据库带来巨大的冲击。</p>
+<p>常见的解决方案有两种：</p>
+<ul>
+<li>互斥锁</li>
+<li>逻辑过期</li>
+</ul>
+<h2 id="redis-分布式锁"><a href="#redis-分布式锁" class="headerlink" title="redis 分布式锁"></a>redis 分布式锁</h2><p>在集群情况下加锁，利用 setnx 当 key 不存在是操作，key 存在不执行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取锁</span></span><br><span class="line">  <span class="type">Boolean</span> <span class="variable">success</span> <span class="operator">=</span> stringRedisTemplate.opsForValue()</span><br><span class="line">          .setIfAbsent(KEY_PREFIX + name, threadId + <span class="string">&quot;&quot;</span>, timeoutSec, TimeUnit.SECONDS);</span><br></pre></td></tr></table></figure>
+
+<h2 id="、用-MyBatisPlus-做一个查询有哪几种写法"><a href="#、用-MyBatisPlus-做一个查询有哪几种写法" class="headerlink" title="、用 MyBatisPlus 做一个查询有哪几种写法"></a>、用 MyBatisPlus 做一个查询有哪几种写法</h2><p>利用提供的 BaseMapper 中的查询语句 selectById selectList<br>使用条件构造器 QueryWrapper<br>使用 LambdaQueryWrapper<br>QueryChainWrapper 链式查询</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查询操作链式调用</span></span><br><span class="line">List&lt;User&gt; userList = <span class="keyword">new</span> <span class="title class_">QueryChainWrapper</span>&lt;&gt;(userMapper)</span><br><span class="line">        .eq(<span class="string">&quot;age&quot;</span>, <span class="number">20</span>)</span><br><span class="line">        .like(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;Tom%&quot;</span>)</span><br><span class="line">        .list();</span><br></pre></td></tr></table></figure>
+
+<h3 id="类的加载机制"><a href="#类的加载机制" class="headerlink" title="类的加载机制"></a>类的加载机制</h3><p>Java 虚拟机把描述类的数据从 Class 文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的 Java 类型称为类的加载<br>JVM 加载类的过程分为三个步骤：加载、链接（验证，准备，解析）、初始化<br>加载阶段：</p>
+<ul>
+<li>由类的全限定名找到对应类的<strong>二进制字节流文件</strong></li>
+<li>将该字节流的静态存储数据结构转为 <strong>JVM 运行时数据区的数据结构</strong></li>
+<li>在 Java <strong>堆中生成一个代表这个类的 java.lang.Class 对象</strong>，作为对方法区中这些数据的访问入口<br>Java 类加载机制遵循<strong>双亲委派模型</strong>，即当一个类加载器收到类加载请求时，它首先将该请求委派给父类加载器处理，如果父类加载器还存在其它父类，则依次委派，直到委派到最顶层的启动类加载器。如果所有的父类加载器都无法加载该类，则该类加载器才会尝试自己加载。</li>
+</ul>
+<h3 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h3><p>JVM 的双亲委派机制是指，当一个类加载器收到了类加载请求时，它首先会把这个请求委托给它的父类加载器去完成。如果父类加载器还存在父类加载器，则再将请求向上委托，直到顶层的启动类加载器。只有当父类加载器无法完成这个加载请求（即在它的搜索范围内找不到对应的类）时，子类加载器才会尝试自己去加载这个类。<br>好处在于可以保证 Java 核心库中定义的类不会被用户自定义的类所替代，防止用户恶意篡改核心类，确保所有的类都是唯一的，保证了核心 api 的安全性，有效避免 Java 类库的重复加载，避免了资源浪费</p>
+<h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><p>Java 反射就是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；对于任意一个对象，都能够调用它的任意方法和属性；并且能改变它的属性。<br>注解利用默认无参构造方法进行实例化反射的 newInstance()无参对应类型也没有无参构造则报错</p>
+<ul>
+<li>获取 class 对象的方式的主要有三种<ul>
+<li>类名.class()</li>
+<li>对象.getClass()</li>
+<li>Class.forName(全限定类名)</li>
+</ul>
+</li>
+</ul>
+<p>获取成员变量：<br>通过 Class 类的 getDeclaredField()或 getDeclaredFields()方法获取</p>
+<p>创建实例<br>得到 class 对象<br>class1.newInstance() ;<br>向下转型<br>或者得到 class 的构造器对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Class&lt;?&gt; cls = Class.forName(<span class="string">&quot;com.example.ClassName&quot;</span>);</span><br><span class="line"><span class="comment">//写入构造器参数类型 int.class</span></span><br><span class="line">Constructor&lt;?&gt; constructor = cls.getConstructor(parameterTypes);</span><br><span class="line"><span class="type">Object</span> <span class="variable">obj</span> <span class="operator">=</span> constructor.newInstance(args);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>反射使用步骤：<br>获取想要操作的类的 Class 对象<br>调用 Class 类中的方法</p>
+<h2 id="多线程控制的计数器"><a href="#多线程控制的计数器" class="headerlink" title="多线程控制的计数器"></a>多线程控制的计数器</h2><p>CountDownLatch 能够使一个线程在等待另外一些线程完成各自工作之后，再继续执行。它相当于是一个计数器，这个计数器的初始值就是线程的数量，每当一个任务完成后，计数器的值就会减一，当计数器变为 0 时，在 CountDownLatch 上 await 的线程就会被唤醒，继续执行其他任务,它可以让某个线程等待直到其他线程完成一组操作后再继续执行</p>
+<h2 id="hashMap-1"><a href="#hashMap-1" class="headerlink" title="hashMap"></a>hashMap</h2><p>为什么两倍扩容<br>第⼀个原因是为了⽅便哈希取余<br>因为 HashMap 的初始容量是 2 的次幂，扩容之后的长度是原来的⼆倍，新的容量也是 2 的次幂，所以，元素，要么在原位置，要么在原位置再移动 2 的次幂<br>线程安全<br>hashTable<br>Collections.synchronizedMap</p>
+<h2 id="stream-流"><a href="#stream-流" class="headerlink" title="stream 流"></a>stream 流</h2><p>jdk8 新加的特性 用来<br>操作集合，是一种声明式编程 可以很好的提高代码的可读性和简洁性，操作分为惰性求值不产生新集合 和及早求值产生新集合<br>可以用来对集合进行过滤，将集合小写替换为大写 对集合进行排序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 通过Stream sorted对学生成绩进行排序</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> students 待排序学生集合</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> 排好序的学生集合</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> List&lt;Student&gt; <span class="title function_">sortedByStreamSorted</span><span class="params">(List&lt;Student&gt; students)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> students.stream()</span><br><span class="line">                   .sorted(Comparator.comparing(Student::getScore))</span><br><span class="line">                   .collect(Collectors.toList());</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>控制反转 具体实现为 DI 依赖注入 由 spring 容器负责组件的装配<br>在 Spring 中，依赖注入有多种方式，包括构造函数注入、setter 方法注入、字段注入</p>
+<h2 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h2><p>⾯向切⾯编程<br>AOP 主要应用于日志记录，性能统计，安全控制，事务处理等方面，实现公共功能性的重复使用<br>降低模块与模块之间的耦合度，提高业务代码的聚合度。（高内聚低耦合）<br>提高了代码的复用性<br>提高了代码的复用性<br>可以在不影响原有的功能基础上添加新的功能<br>使用 日志 log4j<br>概念<br>在 AOP 中有以下几个概念：</p>
+<p>AspectJ：切面，只是一个概念，没有具体的接口或类与之对应，是 Join point，Advice 和 Pointcut 的一个统称。</p>
+<p>Join point：连接点，指程序执行过程中的一个点，例如方法调用、异常处理等。在 Spring AOP 中，仅支持方法级别的连接点。</p>
+<p>Advice：通知，即我们定义的一个切面中的横切逻辑，有“around”，“before”和“after”三种类型。在很多的 AOP 实现框架中，Advice 通常作为一个拦截器，也可以包含许多个拦截器作为一条链路围绕着 Join point 进行处理。</p>
+<p>Pointcut：切点，用于匹配连接点，一个 AspectJ 中包含哪些 Join point 需要由 Pointcut 进行筛选。</p>
+<p>Introduction：引介，让一个切面可以声明被通知的对象实现任何他们没有真正实现的额外的接口。例如可以让一个代理对象代理两个目标类。</p>
+<p>Weaving：织入，在有了连接点、切点、通知以及切面，如何将它们应用到程序中呢？没错，就是织入，在切点的引导下，将通知逻辑插入到目标方法上，使得我们的通知逻辑在方法调用时得以执行。</p>
+<p>AOP proxy：AOP 代理，指在 AOP 实现框架中实现切面协议的对象。在 Spring AOP 中有两种代理，分别是 JDK 动态代理和 CGLIB 动态代理。</p>
+<p>Target object：目标对象，就是被代理的对象。</p>
+<h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2><p>首先 一个 TCP 的连接由一对套字节构成，对应每一端的（IP 地址和端口）</p>
+<ol>
+<li><p>客户端向服务器发送 SYN 报文，表示客户端发出连接请求报文段，其中标志位 SYN&#x3D;1，并指明要连接的端口号和随机选择一个初始序号 seq&#x3D;x。</p>
+</li>
+<li><p>服务器收到 SYN 报文，回复 ACK 和 SYN 报文，服务器收到客户端的 SYN 报文后，如果同意建立连接，则发出确认报文 ACK&#x3D;1，SYN&#x3D;1，确认号 ack&#x3D;x+1，将客户端发送的序列号+1 作为 ack 值这样可以防止数据丢失，同时也选择了自己的初始序列号 seq&#x3D;y，将 ACK 和 SYN 放入一个报文段中，一起发给客户端。</p>
+</li>
+<li><p>客户端收到 ACK 和 SYN 报文，回复 ACK 报文，会发送确认报文 ACK&#x3D;1，确认号 ack&#x3D;y+1，序号 seq&#x3D;x+1，将 ACK 放入报文段中，然后一起发给服务器。</p>
+</li>
+</ol>
+<h2 id="挥手"><a href="#挥手" class="headerlink" title="挥手"></a>挥手</h2><p>客户端打算关闭连接，此时会发送一个 TCP 首部 FIN 标志位被置为 1 的报文，也即 FIN 报文，之后客户端进入 FIN_WAIT_1 状态。<br>服务端收到该报文后，就向客户端发送 ACK 应答报文，接着服务端进入 CLOSE_WAIT 状态。<br>客户端收到服务端的 ACK 应答报文后，之后进入 FIN_WAIT_2 状态。<br>等待服务端处理完数据后，也向客户端发送 FIN 报文，之后服务端进入 LAST_ACK 状态。<br>客户端收到服务端的 FIN 报文后，回一个 ACK 应答报文，之后进入 TIME_WAIT 状态<br>服务端收到了 ACK 应答报文后，就进入了 CLOSE 状态，至此服务端已经完成连接的关闭。<br>客户端在经过 2MSL 一段时间后，自动进入 CLOSE 状态，至此客户端也完成连接的关闭。</p>
+<h2 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h2><p>ThreadLocal 可以解释成线程的局部变量,也就是说一个 ThreadLocal 的变量只有当前自身线程可以访问，别的线程都访问不了，那么自然就避免了线程竞争。用于登录的 session 管理</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/04/27/%E4%B8%87%E9%83%A1%E7%BB%BF%E5%BB%BA/" rel="prev" title="万郡绿建">
+      <i class="fa fa-chevron-left"></i> 万郡绿建
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/05/06/%E7%A3%81%E7%9B%98%E6%B8%85%E7%90%86/" rel="next" title="磁盘清理">
+      磁盘清理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql-%E7%9A%84-innoDB-%E5%92%8C-myIsam-mesen-%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">Mysql 的 innoDB 和 myIsam (mesen)区别？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mysql-%E4%B8%80%E6%9D%A1-sql-%E8%AF%AD%E5%8F%A5%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">Mysql 一条 sql 语句的执行流程？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mybatis-%E4%B8%AD%E7%9A%84-%E5%92%8C-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.</span> <span class="nav-text">mybatis 中的#和$的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%B3%9B%E5%9E%8B%E7%9A%84%E7%90%86%E8%A7%A3"><span class="nav-number">4.</span> <span class="nav-text">对泛型的理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hashMap"><span class="nav-number">5.</span> <span class="nav-text">hashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#put"><span class="nav-number">6.</span> <span class="nav-text">put</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hashMap-%E5%A6%82%E4%BD%95%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8"><span class="nav-number">7.</span> <span class="nav-text">hashMap 如何线程安全</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF-2-%E7%9A%84%E5%80%8D%E6%95%B0"><span class="nav-number">8.</span> <span class="nav-text">为什么是 2 的倍数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE"><span class="nav-number">9.</span> <span class="nav-text">查找</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mysql-%E7%B4%A2%E5%BC%95"><span class="nav-number">10.</span> <span class="nav-text">mysql 索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB"><span class="nav-number">11.</span> <span class="nav-text">索引分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jvm-%E7%9A%84%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="nav-number">12.</span> <span class="nav-text">jvm 的内存结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-number">13.</span> <span class="nav-text">序列化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Exception-%E5%92%8C-Error-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">14.</span> <span class="nav-text">Exception 和 Error 有什么区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Springboot-%E7%9F%A5%E9%81%93%E5%93%AA%E4%BA%9B%E6%B3%A8%E8%A7%A3"><span class="nav-number">15.</span> <span class="nav-text">Springboot 知道哪些注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E7%B1%BB%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3"><span class="nav-number">16.</span> <span class="nav-text">启动类常用注解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#springMVC-%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">16.1.</span> <span class="nav-text">springMVC 的执行流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ArrayList-%E9%81%8D%E5%8E%86%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">17.</span> <span class="nav-text">ArrayList 遍历的几种方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ArrayList"><span class="nav-number">18.</span> <span class="nav-text">ArrayList</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">19.</span> <span class="nav-text">redis 应用场景有哪些</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E5%92%8C%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E6%80%8E%E4%B9%88%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">20.</span> <span class="nav-text">缓存雪崩和缓存穿透是什么，怎么解决？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">20.1.</span> <span class="nav-text">缓存穿透的解决方案有哪些？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF"><span class="nav-number">20.2.</span> <span class="nav-text">缓存雪崩问题及解决思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-8-%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF"><span class="nav-number">20.3.</span> <span class="nav-text">2.8 缓存击穿问题及解决思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">21.</span> <span class="nav-text">redis 分布式锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E3%80%81%E7%94%A8-MyBatisPlus-%E5%81%9A%E4%B8%80%E4%B8%AA%E6%9F%A5%E8%AF%A2%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E5%86%99%E6%B3%95"><span class="nav-number">22.</span> <span class="nav-text">、用 MyBatisPlus 做一个查询有哪几种写法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">22.1.</span> <span class="nav-text">类的加载机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6"><span class="nav-number">22.2.</span> <span class="nav-text">双亲委派机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%B0%84"><span class="nav-number">22.3.</span> <span class="nav-text">反射</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6%E7%9A%84%E8%AE%A1%E6%95%B0%E5%99%A8"><span class="nav-number">23.</span> <span class="nav-text">多线程控制的计数器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#hashMap-1"><span class="nav-number">24.</span> <span class="nav-text">hashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#stream-%E6%B5%81"><span class="nav-number">25.</span> <span class="nav-text">stream 流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IOC"><span class="nav-number">26.</span> <span class="nav-text">IOC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AOP"><span class="nav-number">27.</span> <span class="nav-text">AOP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="nav-number">28.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%A5%E6%89%8B"><span class="nav-number">29.</span> <span class="nav-text">挥手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ThreadLocal"><span class="nav-number">30.</span> <span class="nav-text">ThreadLocal</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

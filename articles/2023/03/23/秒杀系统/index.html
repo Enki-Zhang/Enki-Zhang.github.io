@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="登录基于 Session 实现登录流程session 保存用户的 token，同时根据 token 将用户信息保存在 redis 中 登录拦截器隔离业务隔离：将秒杀业务独立出来，尽量不与其他业务关联，以减少对其他业务的依赖性。譬如秒杀业务只保留用户 id，商品 id，数量等重要属性，通过中间件发送给业务系统，完成后续的处理。 系统隔离：将秒杀业务单独部署，以减少对其他业务服务器的压力。 数据隔离：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="秒杀系统">
+<meta property="og:url" content="http://example.com/articles/2023/03/23/%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="登录基于 Session 实现登录流程session 保存用户的 token，同时根据 token 将用户信息保存在 redis 中 登录拦截器隔离业务隔离：将秒杀业务独立出来，尽量不与其他业务关联，以减少对其他业务的依赖性。譬如秒杀业务只保留用户 id，商品 id，数量等重要属性，通过中间件发送给业务系统，完成后续的处理。 系统隔离：将秒杀业务单独部署，以减少对其他业务服务器的压力。 数据隔离：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/articles/2023/03/23/%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F/2023-03-23-09-48-11.png">
+<meta property="article:published_time" content="2023-03-23T00:58:17.000Z">
+<meta property="article:modified_time" content="2023-04-17T11:46:09.727Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/articles/2023/03/23/%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F/2023-03-23-09-48-11.png">
+
+<link rel="canonical" href="http://example.com/articles/2023/03/23/%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>秒杀系统 | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/03/23/%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          秒杀系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-23 08:58:17" itemprop="dateCreated datePublished" datetime="2023-03-23T08:58:17+08:00">2023-03-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-17 19:46:09" itemprop="dateModified" datetime="2023-04-17T19:46:09+08:00">2023-04-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><h3 id="基于-Session-实现登录流程"><a href="#基于-Session-实现登录流程" class="headerlink" title="基于 Session 实现登录流程"></a>基于 Session 实现登录流程</h3><p>session 保存用户的 token，同时根据 token 将用户信息保存在 redis 中<br><img src="/articles/2023/03/23/%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F/2023-03-23-09-48-11.png" alt="asset_img"></p>
+<h3 id="登录拦截器"><a href="#登录拦截器" class="headerlink" title="登录拦截器"></a>登录拦截器</h3><h3 id="隔离"><a href="#隔离" class="headerlink" title="隔离"></a>隔离</h3><p>业务隔离：将秒杀业务独立出来，尽量不与其他业务关联，以减少对其他业务的依赖性。譬如秒杀业务只保留用户 id，商品 id，数量等重要属性，通过中间件发送给业务系统，完成后续的处理。</p>
+<p>系统隔离：将秒杀业务单独部署，以减少对其他业务服务器的压力。</p>
+<p>数据隔离：由于秒杀对 DB 的压力很大，将 DB 单独部署，不与其他业务 DB 放一起，避免对 DB 的压力。</p>
+<h4 id="秒杀订单"><a href="#秒杀订单" class="headerlink" title="秒杀订单"></a>秒杀订单</h4><p>当用户抢购时，就会生成订单并保存到 seckill_order 这张表中，而订单表如果使用数据库自增 ID 就存在一些问题：</p>
+<p>id 的规律性太明显<br>受单表数据量的限制<br>场景分析：如果我们的 id 具有太明显的规则，用户或者说商业对手很容易猜测出来我们的一些敏感信息，比如商城在一天时间内，卖出了多少单，这明显不合适。</p>
+<p>场景分析二：随着我们商城规模越来越大，mysql 的单表的容量不宜超过 500W，数据量过大之后，我们要进行拆库拆表，但拆分表了之后，他们从逻辑上讲他们是同一张表，所以他们的 id 是不能一样的， 于是乎我们需要保证 id 的唯一性。</p>
+<h4 id="秒杀安全优化"><a href="#秒杀安全优化" class="headerlink" title="秒杀安全优化"></a>秒杀安全优化</h4><p>当我们秒杀开始时，不会直接调秒杀接口，而是获取真正秒杀接口的地址，根据每个用户秒杀的不同商品是不一样的。这样可以避免有些人提前通过脚本准备好固定地址进行秒杀</p>
+<p><strong>原理</strong><br>拦截器拦截一个请求，看看这个请求所访问的接口方法上是否存在我们的注解@AccessLimit，如果存在，则取出注解里的相关信息（例如在多少时间内允许访问接口多少次，超过限制会提示出怎么样的内容），再从这个 request 请求中取出 ip 地址，访问的路径等组合为 key 作为一个用户的唯一标识。在 redis 中查找是否有这个 key，没有则之后以唯一标识:访问次数 map 的形式存放到 redis 中，并设置过期时间;如果存在，则取出这个 key 对应的 value 值比较是否超出我们的预定值，超出则给出提示信息，并 return false 拦截该请求（该请求结束），如果并没有超出限制，则给这个 key+1 后 return true 对该 request 进行放行</p>
+<p>提升：<br>请求时用户填验证码获取秒杀路径，减少服务器压力<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43950000/article/details/124749644?spm=1001.2101.3001.6650.5&amp;utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-5-124749644-blog-108004865.235%5Ev27%5Epc_relevant_default&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromBaidu~Rate-5-124749644-blog-108004865.235%5Ev27%5Epc_relevant_default&amp;utm_relevant_index=6">https://blog.csdn.net/qq_43950000/article/details/124749644?spm=1001.2101.3001.6650.5&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-5-124749644-blog-108004865.235%5Ev27%5Epc_relevant_default&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-5-124749644-blog-108004865.235%5Ev27%5Epc_relevant_default&amp;utm_relevant_index=6</a></p>
+<h4 id="库存的补充"><a href="#库存的补充" class="headerlink" title="库存的补充"></a>库存的补充</h4><p>不补充 redis 的库存，就会无法保证数据库和 redis 的最终一致性。这里说的是最终一致性，而不是说强一致性。很简单的道理，redis 的数量会是负数，而数据库的最多就是 0<br>即使不考虑最终一致性，那如果有订单重复、或者消费失效时，这些地方对 redis 库存进行了释放了（操作还是 incr，不过”释放”好理解）。但此处不做回补处理，那显然 stock 还是负数，这样就造成：数据库还有库存，但 redis 已经没有库存了，而这显然是不合理的。</p>
+<h4 id="大量的使用缓存，对于缓存服务器也有很大的压力，如何减少-redis-的访问"><a href="#大量的使用缓存，对于缓存服务器也有很大的压力，如何减少-redis-的访问" class="headerlink" title="大量的使用缓存，对于缓存服务器也有很大的压力，如何减少 redis 的访问"></a>大量的使用缓存，对于缓存服务器也有很大的压力，如何减少 redis 的访问</h4><p>在 redis 预减库存的时候，内存中维护一个 localOverMap 作为内存标记，当没有库存的时候，将其设置为 true；每次秒杀业务访问 redis 之前，先查一下 map 标记，如果为 true 说明没有库存，就直接返回秒杀失败，无需再去请求 redis 服务器</p>
+<h4 id="消息队列完成异步下单"><a href="#消息队列完成异步下单" class="headerlink" title="消息队列完成异步下单"></a>消息队列完成异步下单</h4><h4 id="如何防止缓存问题"><a href="#如何防止缓存问题" class="headerlink" title="如何防止缓存问题"></a>如何防止缓存问题</h4><h5 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h5><p>指查询一个一定不存在的数据，由于缓存不命中，每次请求都会去查询数据库<br>方法：将查询到空的数据缓存在 redis 中为 null</p>
+<h5 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h5><p>指缓存中的大量数据在同一时间失效，导致所有的请求都落到了数据库上。这种情况通常是由于缓存服务器宕机、网络故障、批量更新缓存等原因引起的<br>方法：解决方案：为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存，分布式缓存中每一个节点只缓存部分的数据，当某个节点宕机时可以保证其它节点的缓存仍然可用；也可以进行缓存预热，避免在系统刚启动不久由于还未将大量数据进行缓存而导致缓存雪崩<br>例如：首先针对不同的缓存设置不同的过期时间，比如 session 缓存，在 userKey 这个前缀中，设置是 30 分钟过期，并且每次用户响应的时候更新缓存时间，这样每次取 session，都会延长 30 分钟，相对来说，就减少了缓存过期的几率</p>
+<h5 id="缓存一致性"><a href="#缓存一致性" class="headerlink" title="缓存一致性"></a>缓存一致性</h5><p><strong>缓存一致性要求数据更新的同时缓存数据也能够实时更新</strong><br>由于我们的<strong>缓存的数据源来自于数据库</strong>,而数据库的<strong>数据是会发生变化的</strong>,因此,如果当数据库中<strong>数据发生变化,而缓存却没有同步</strong>,此时就会有<strong>一致性问题存在</strong>,其后果是:</p>
+<p>用户使用缓存中的过时数据,就会产生类似多线程数据安全问题,从而影响业务,产品口碑等;怎么解决呢？有如下几种方案：</p>
+<ul>
+<li><p>Cache Aside Pattern 人工编码方式：缓存调用者在更新完数据库后再去更新缓存，也称之为双写方案</p>
+</li>
+<li><p>Read&#x2F;Write Through Pattern : 由系统本身完成，数据库与缓存的问题交由系统本身去处理</p>
+</li>
+<li><p>Write Behind Caching Pattern ：调用者只操作缓存，其他线程去异步处理数据库，实现最终一致</p>
+</li>
+</ul>
+<p>具体使用第一种方法：我们可以把缓存删除，等待再次查询时，将缓存中的数据加载出来 ，更新数据库时候让缓存失效，查询时在更新缓存。<br>并且先操作数据库在删除缓存，防止多线程下 用户查询后再写入的过程中被其他线程修改缓存内容。</p>
+<h5 id="怎么保证一个用户不能重复下单"><a href="#怎么保证一个用户不能重复下单" class="headerlink" title="怎么保证一个用户不能重复下单"></a>怎么保证一个用户不能重复下单</h5><p>用户的秒杀单建立唯一索引不是随机索引，由用户 ID+商品 ID 组成，下单时判断索引是否重复。<br>或者进行分布式锁</p>
+<h4 id="保证不超卖"><a href="#保证不超卖" class="headerlink" title="保证不超卖"></a>保证不超卖</h4><p>超卖场景：不同用户在读请求的时候，发现商品库存足够，然后同时发起请求，进行秒杀操作减库存，导致库存减为负数</p>
+<h6 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h6><h4 id="流量削峰应该怎么做"><a href="#流量削峰应该怎么做" class="headerlink" title="流量削峰应该怎么做"></a>流量削峰应该怎么做</h4>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/" rel="prev" title="黑马点评网">
+      <i class="fa fa-chevron-left"></i> 黑马点评网
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/03/27/%E9%9D%A2%E7%BB%8F%E6%95%B4%E7%90%86/" rel="next" title="面经整理">
+      面经整理 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E-Session-%E5%AE%9E%E7%8E%B0%E7%99%BB%E5%BD%95%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">基于 Session 实现登录流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E6%8B%A6%E6%88%AA%E5%99%A8"><span class="nav-number">1.2.</span> <span class="nav-text">登录拦截器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%94%E7%A6%BB"><span class="nav-number">1.3.</span> <span class="nav-text">隔离</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A7%92%E6%9D%80%E8%AE%A2%E5%8D%95"><span class="nav-number">1.3.1.</span> <span class="nav-text">秒杀订单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A7%92%E6%9D%80%E5%AE%89%E5%85%A8%E4%BC%98%E5%8C%96"><span class="nav-number">1.3.2.</span> <span class="nav-text">秒杀安全优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%93%E5%AD%98%E7%9A%84%E8%A1%A5%E5%85%85"><span class="nav-number">1.3.3.</span> <span class="nav-text">库存的补充</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%A7%E9%87%8F%E7%9A%84%E4%BD%BF%E7%94%A8%E7%BC%93%E5%AD%98%EF%BC%8C%E5%AF%B9%E4%BA%8E%E7%BC%93%E5%AD%98%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B9%9F%E6%9C%89%E5%BE%88%E5%A4%A7%E7%9A%84%E5%8E%8B%E5%8A%9B%EF%BC%8C%E5%A6%82%E4%BD%95%E5%87%8F%E5%B0%91-redis-%E7%9A%84%E8%AE%BF%E9%97%AE"><span class="nav-number">1.3.4.</span> <span class="nav-text">大量的使用缓存，对于缓存服务器也有很大的压力，如何减少 redis 的访问</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E5%AE%8C%E6%88%90%E5%BC%82%E6%AD%A5%E4%B8%8B%E5%8D%95"><span class="nav-number">1.3.5.</span> <span class="nav-text">消息队列完成异步下单</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.6.</span> <span class="nav-text">如何防止缓存问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="nav-number">1.3.6.1.</span> <span class="nav-text">缓存穿透</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9"><span class="nav-number">1.3.6.2.</span> <span class="nav-text">缓存雪崩</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">1.3.6.3.</span> <span class="nav-text">缓存一致性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E4%B8%80%E4%B8%AA%E7%94%A8%E6%88%B7%E4%B8%8D%E8%83%BD%E9%87%8D%E5%A4%8D%E4%B8%8B%E5%8D%95"><span class="nav-number">1.3.6.4.</span> <span class="nav-text">怎么保证一个用户不能重复下单</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%9D%E8%AF%81%E4%B8%8D%E8%B6%85%E5%8D%96"><span class="nav-number">1.3.7.</span> <span class="nav-text">保证不超卖</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E4%B9%90%E8%A7%82%E9%94%81"><span class="nav-number">1.3.7.0.1.</span> <span class="nav-text">乐观锁</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E5%89%8A%E5%B3%B0%E5%BA%94%E8%AF%A5%E6%80%8E%E4%B9%88%E5%81%9A"><span class="nav-number">1.3.8.</span> <span class="nav-text">流量削峰应该怎么做</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

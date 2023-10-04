@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="笔试骗分对于输出 yes no 的二值题使用随机数 1234Random random &#x3D; new Random();int randomInt &#x3D; random.nextInt(50) + 10;&#x2F;&#x2F;random生成50的范围 10-60&#x2F;&#x2F;       随机数概论小于60 yes System.out.println((new Random().nextInt() % 100) &lt; 60">
+<meta property="og:type" content="article">
+<meta property="og:title" content="秋招笔试">
+<meta property="og:url" content="http://example.com/articles/2023/08/30/%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="笔试骗分对于输出 yes no 的二值题使用随机数 1234Random random &#x3D; new Random();int randomInt &#x3D; random.nextInt(50) + 10;&#x2F;&#x2F;random生成50的范围 10-60&#x2F;&#x2F;       随机数概论小于60 yes System.out.println((new Random().nextInt() % 100) &lt; 60">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-08-30T01:28:05.000Z">
+<meta property="article:modified_time" content="2023-09-28T03:10:07.244Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/articles/2023/08/30/%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>秋招笔试 | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/08/30/%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          秋招笔试
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-30 09:28:05" itemprop="dateCreated datePublished" datetime="2023-08-30T09:28:05+08:00">2023-08-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-28 11:10:07" itemprop="dateModified" datetime="2023-09-28T11:10:07+08:00">2023-09-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="笔试骗分"><a href="#笔试骗分" class="headerlink" title="笔试骗分"></a>笔试骗分</h3><p>对于输出 yes no 的二值题<br>使用随机数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Random</span> <span class="variable">random</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line"><span class="type">int</span> <span class="variable">randomInt</span> <span class="operator">=</span> random.nextInt(<span class="number">50</span>) + <span class="number">10</span>;<span class="comment">//random生成50的范围 10-60</span></span><br><span class="line"><span class="comment">//       随机数概论小于60 yes</span></span><br><span class="line"> System.out.println((<span class="keyword">new</span> <span class="title class_">Random</span>().nextInt() % <span class="number">100</span>) &lt; <span class="number">60</span> ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="8-29-哔哩哔哩"><a href="#8-29-哔哩哔哩" class="headerlink" title="8-29 哔哩哔哩"></a>8-29 哔哩哔哩</h3><ul>
+<li>TCP 三次握手中的序列号码<br>序列号：seq 通过 SYN 包发送 在建立连接时随机生成作为初始值 每发送一次连接就将 seq 数+1 用来解决数据包乱序问题<br>应答确认号：ACK 回应连接 表明了下一次连接期望发送过来的序列号 发送端通过确认号 确认接收端正确接收 用来解决丢包问题<blockquote>
+<p>无论时接受方还是发送方 都需要发送 seq 第一次发送的 seq 均是自己随机生成的.<br>其次 接收方接收到信息后均会在发送确认信息 Ack ack 即表示下一次对方发送的序列号作为确认标识.<br>三次握手 后面两次都需要序列号和确认应答号</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<p>请在 UP 主视频数据表中，筛选发布视频平均时长大于 300 秒的 up 主，按 UP 主视频平均时长排序，视频 iD 升序，返回第 3 行到 6 行的视频 iD。</p>
+<p>2: 712. 两个字符串的最小 ASCII 删除和</p>
+<h2 id="CVTE"><a href="#CVTE" class="headerlink" title="CVTE"></a>CVTE</h2><p>第一题最小的 k 个元素 leetcode 原题，第二题最短路径</p>
+<h3 id="微众银行"><a href="#微众银行" class="headerlink" title="微众银行"></a>微众银行</h3><h3 id="卓望数码"><a href="#卓望数码" class="headerlink" title="卓望数码"></a>卓望数码</h3><p>很多微服务相关的题目</p>
+<h3 id="wps"><a href="#wps" class="headerlink" title="wps"></a>wps</h3><p>笔试感觉还行 挂 记事本写题 快排写错</p>
+<h3 id="中缀表达式转后缀表达式"><a href="#中缀表达式转后缀表达式" class="headerlink" title="中缀表达式转后缀表达式"></a>中缀表达式转后缀表达式</h3><p>对应的中序遍历转为后序遍历</p>
+<h3 id="前序和中序转后序"><a href="#前序和中序转后序" class="headerlink" title="前序和中序转后序"></a>前序和中序转后序</h3>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/08/25/%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E8%AE%B0%E5%BD%95/" rel="prev" title="秋招面试记录">
+      <i class="fa fa-chevron-left"></i> 秋招面试记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/08/30/%E5%85%AB%E8%82%A1-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="next" title="八股--操作系统">
+      八股--操作系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%94%E8%AF%95%E9%AA%97%E5%88%86"><span class="nav-number">1.</span> <span class="nav-text">笔试骗分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-29-%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9"><span class="nav-number">2.</span> <span class="nav-text">8-29 哔哩哔哩</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CVTE"><span class="nav-number"></span> <span class="nav-text">CVTE</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BE%AE%E4%BC%97%E9%93%B6%E8%A1%8C"><span class="nav-number">1.</span> <span class="nav-text">微众银行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%93%E6%9C%9B%E6%95%B0%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">卓望数码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wps"><span class="nav-number">3.</span> <span class="nav-text">wps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%BD%AC%E5%90%8E%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">中缀表达式转后缀表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%BA%8F%E5%92%8C%E4%B8%AD%E5%BA%8F%E8%BD%AC%E5%90%8E%E5%BA%8F"><span class="nav-number">5.</span> <span class="nav-text">前序和中序转后序</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

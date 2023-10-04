@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="了解 JVM 内存结构、垃圾回收等内容JVMd 的主要作用是在不同的计算机平台上执行 Java 字节码。 JVM 内存结构 运行时数据区域java 虚拟机在执行 Java 程序时将内存划分成不同的数据区域  线程私有 程序计数器当前线程执行的字节码的行号器，通过改变 虚拟机栈描述 Java 方法执行线程的内存模型，当方法被调用时会创建栈帧，保存了方法调用的上下文信息包括局部变量表，操作数栈、动态链">
+<meta property="og:type" content="article">
+<meta property="og:title" content="八股--JVM">
+<meta property="og:url" content="http://example.com/articles/2023/09/22/%E5%85%AB%E8%82%A1-JVM-1/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="了解 JVM 内存结构、垃圾回收等内容JVMd 的主要作用是在不同的计算机平台上执行 Java 字节码。 JVM 内存结构 运行时数据区域java 虚拟机在执行 Java 程序时将内存划分成不同的数据区域  线程私有 程序计数器当前线程执行的字节码的行号器，通过改变 虚拟机栈描述 Java 方法执行线程的内存模型，当方法被调用时会创建栈帧，保存了方法调用的上下文信息包括局部变量表，操作数栈、动态链">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-22T06:15:27.000Z">
+<meta property="article:modified_time" content="2023-09-22T13:15:27.815Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/articles/2023/09/22/%E5%85%AB%E8%82%A1-JVM-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>八股--JVM | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/09/22/%E5%85%AB%E8%82%A1-JVM-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          八股--JVM
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-09-22 14:15:27 / 修改时间：21:15:27" itemprop="dateCreated datePublished" datetime="2023-09-22T14:15:27+08:00">2023-09-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="了解-JVM-内存结构、垃圾回收等内容"><a href="#了解-JVM-内存结构、垃圾回收等内容" class="headerlink" title="了解 JVM 内存结构、垃圾回收等内容"></a>了解 JVM 内存结构、垃圾回收等内容</h3><p>JVMd 的主要作用是在不同的计算机平台上执行 Java 字节码。</p>
+<h3 id="JVM-内存结构-运行时数据区域"><a href="#JVM-内存结构-运行时数据区域" class="headerlink" title="JVM 内存结构 运行时数据区域"></a>JVM 内存结构 运行时数据区域</h3><p>java 虚拟机在执行 Java 程序时将内存划分成不同的数据区域</p>
+<ul>
+<li>线程私有<ul>
+<li>程序计数器<br>当前线程执行的字节码的行号器，通过改变</li>
+<li>虚拟机栈<br>描述 Java 方法执行线程的内存模型，当方法被调用时会创建栈帧，保存了方法调用的上下文信息包括局部变量表，操作数栈、动态链接等内容，当方法返回时栈帧被销毁</li>
+<li>本地方法栈<br>作用和虚拟机栈类似，但是保存的是 native 方法的调用信息</li>
+</ul>
+</li>
+<li>线程共享<ul>
+<li>堆 ：目的是存放对象的实例，所有对象和数组均在堆中开辟内存，同时堆也是垃圾收集的主要区域。根据垃圾回收的角度，堆分为新生代内存、老生代、永久代</li>
+<li>方法区 存储被虚拟机加载的类信息，字段信息，方法信息，常量，静态变量等数据</li>
+</ul>
+</li>
+</ul>
+<h3 id="GC"><a href="#GC" class="headerlink" title="GC"></a>GC</h3><p>已经有了 GC 为什么还要了解 GC 的机制呢？<br>当垃圾回收是项目并发的瓶颈时，我们需要去对其进行监控和调优。</p>
+<ul>
+<li>可达性分析：用于确定那些对象能够进行回收<br>当对象到 GCRoot 间没有任何引用链路相连，则该对象不再被使用。需要被回收<br>固定可作为 GC Roots 的对象：<br>在虚拟机栈（栈帧中的本地变量表）中引用的对象<br>方法区类的静态属性引用对象、常量引用对象<br>本地方法栈中 JNI 引用对象<br>synchronized 关键字修饰的对象</li>
+</ul>
+<p><strong>如何决定是否死亡</strong><br>当对象不可达时为第一次标记，第二次标记对象没有覆盖 finalize 方法，或 finalize 方法已经被虚拟机调用过时，虚拟机将这两种情况视为没有必要执行。否则进入 F-Queue 中且最终方法没有和引用链的对象建立链接会被确定回收，</p>
+<p><strong>引用类型分类</strong><br>强引用：代码之间显式的引用赋值，JVM 永远不会对其进行回收<br>软引用：允许内存在不足时被回收<br>弱引用：允许对象在没有强引用（即普通引用）指向它时被垃圾回收器回收。</p>
+<h3 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h3><ul>
+<li><p>标记-清除（Mark-and-Sweep）算法分为“标记（Mark）”和“清除（Sweep）”阶段：首先标记出所有不需要回收的对象，在标记完成后统一回收掉所有没有被标记的对象<br>问题：标记和清除两个过程效率都不高。且会产生大量内存碎片</p>
+</li>
+<li><p>复制算法：将内存分为大小相同的两块，每次使用一块内存区域，当其中一块使用完毕后将存活的对象复制到另一块中去。并把之前使用的内存区域清理。<br>问题：实际可使用的内存变小，当存活对象数量较大时会产生性能问题。、<br>&#96;&#96;</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/09/08/%E5%85%AB%E8%82%A1-Java%E5%9F%BA%E7%A1%80/" rel="prev" title="八股--Java基础">
+      <i class="fa fa-chevron-left"></i> 八股--Java基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/09/29/12306/" rel="next" title="12306">
+      12306 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3-JVM-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E3%80%81%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AD%89%E5%86%85%E5%AE%B9"><span class="nav-number">1.</span> <span class="nav-text">了解 JVM 内存结构、垃圾回收等内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM-%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F"><span class="nav-number">2.</span> <span class="nav-text">JVM 内存结构 运行时数据区域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GC"><span class="nav-number">3.</span> <span class="nav-text">GC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">垃圾收集算法</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

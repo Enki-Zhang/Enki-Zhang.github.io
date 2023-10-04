@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="框架集合可以更灵活有效的存储对象，相比于数组大小可变支持泛型，元素操作方便 ArrayList初始容量 10 1.5 倍扩容 将原数组拷贝给过去进行扩容  什么情况下使用 ArrayList 和 LinkedListArraylist 底层是 Object[]，空间连续，支持随机访问，适用于查找和遍历的操作LinkedList 底层是双向链表，内存空间不连续，适用于快速的插入和删除操作  遍历方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="八股--Java集合">
+<meta property="og:url" content="http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="框架集合可以更灵活有效的存储对象，相比于数组大小可变支持泛型，元素操作方便 ArrayList初始容量 10 1.5 倍扩容 将原数组拷贝给过去进行扩容  什么情况下使用 ArrayList 和 LinkedListArraylist 底层是 Object[]，空间连续，支持随机访问，适用于查找和遍历的操作LinkedList 底层是双向链表，内存空间不连续，适用于快速的插入和删除操作  遍历方式">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/image-18.png">
+<meta property="article:published_time" content="2023-09-05T08:29:03.000Z">
+<meta property="article:modified_time" content="2023-10-01T14:27:50.905Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/image-18.png">
+
+<link rel="canonical" href="http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>八股--Java集合 | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          八股--Java集合
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-05 16:29:03" itemprop="dateCreated datePublished" datetime="2023-09-05T16:29:03+08:00">2023-09-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-10-01 22:27:50" itemprop="dateModified" datetime="2023-10-01T22:27:50+08:00">2023-10-01</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><p><img src="/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/image-18.png" alt="Alt text"><br>集合可以更灵活有效的存储对象，相比于数组大小可变支持泛型，元素操作方便</p>
+<h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>初始容量 10 1.5 倍扩容 将原数组拷贝给过去进行扩容</p>
+<blockquote>
+<p>什么情况下使用 ArrayList 和 LinkedList<br>Arraylist 底层是 Object[]，空间连续，支持随机访问，适用于查找和遍历的操作<br>LinkedList 底层是双向链表，内存空间不连续，适用于快速的插入和删除操作</p>
+</blockquote>
+<h3 id="遍历方式"><a href="#遍历方式" class="headerlink" title="遍历方式"></a>遍历方式</h3><p>遍历方式 fori foreach 增强 for 问题出在遍历时候进行修改<br>对 ArrayList 遍历并修改会触发快速失败机制会抛出 Concurrent Modification Exception。原因在于集合在遍历过程中改变了 modcount 值，与迭代器 next 的 Modcount 值不相同则报错触发快速失败机制，</p>
+<h3 id="说一说-ConcurrentHashMap-的实现原理"><a href="#说一说-ConcurrentHashMap-的实现原理" class="headerlink" title="说一说 ConcurrentHashMap 的实现原理"></a>说一说 ConcurrentHashMap 的实现原理</h3><p>ConcurrentHashMap 和 HashMap 的功能基本一致，区别在于 ConcurrentHashMap 是线程安全的</p>
+<h3 id="说一说-HashMap-的扩容机制"><a href="#说一说-HashMap-的扩容机制" class="headerlink" title="说一说 HashMap 的扩容机制"></a>说一说 HashMap 的扩容机制</h3><p>当 hashMap 中的元素大于数组长度*阈值后需要进行扩容。将所有元素散列到扩容后的容器中。存放 key 的桶数组容量固定，在 jdk1.8 后扩容不需要进行重新计算 hash 进行定位，扩容后的元素要么在原先位置要么在原先位置加上旧容量的长度</p>
+<h3 id="redis-字典的-rehash-为啥是渐进式的"><a href="#redis-字典的-rehash-为啥是渐进式的" class="headerlink" title="redis 字典的 rehash 为啥是渐进式的"></a>redis 字典的 rehash 为啥是渐进式的</h3><p>这样做的原因在于，若 hash 桶的个数比较少那么服务器可以在瞬间就将<br>这些键值对全部 rehash 到 新的表中，但是，如果哈希表里保存的键值对数量不是四个，而是四百万、四千方基至四亿个键值对，那么要一次性将这些键值对全部 rehash 新的表中会造成服务器在一段时间内停止服务。<br><strong>渐进式的步骤</strong><br>在 h[0]表中维护一个索引计数指针，每次对字典执行操作之外在对计数指针上的键值对进行 rehash 到 h[1]表中直到所有键值对 rehash 完成。同时渐进式的 rehash 会在两张表中执行相同的删除、查找、更新操作，但添加操作只在新表 h[1]中进行，保证 h[0]只减不增，</p>
+<h3 id="为什么-HashMap-的数组长度要取-2-的整数幂"><a href="#为什么-HashMap-的数组长度要取-2-的整数幂" class="headerlink" title="为什么 HashMap 的数组长度要取 2 的整数幂"></a>为什么 HashMap 的数组长度要取 2 的整数幂</h3><p>在得到 hash 值后，对其进行取模运算从而得到对应的数组下标（将数组长度-1 与&amp; hash 值）而 2 的幂次方长度的数组-1 会使得 hash 值高位为 0 只保留低位</p>
+<p>方便取 hash<br>方便散列</p>
+<h3 id="hashMap-多线程为什么不安全"><a href="#hashMap-多线程为什么不安全" class="headerlink" title="hashMap 多线程为什么不安全"></a>hashMap 多线程为什么不安全</h3><p>1.7 之前的头插法会造成链表成环，<br>1.8 在多线程 put 操作下会出现插入元素丢失的情况，如果两个线程的 key 相同会出现覆盖从而 丢失。</p>
+<p>可以使用 HashTable<br>concurrentHashMap</p>
+<h3 id="HashMap-的死锁情况"><a href="#HashMap-的死锁情况" class="headerlink" title="HashMap 的死锁情况"></a>HashMap 的死锁情况</h3><p>1.7 版本中多线程情况下头插法会使得链表发生翻转，从而形成环造成死循环产生死锁</p>
+<h3 id="假设有个-hashmap-上锁-put，get-不上锁会有线程安全问题吗？为什么？"><a href="#假设有个-hashmap-上锁-put，get-不上锁会有线程安全问题吗？为什么？" class="headerlink" title="假设有个 hashmap 上锁 put，get 不上锁会有线程安全问题吗？为什么？"></a>假设有个 hashmap 上锁 put，get 不上锁会有线程安全问题吗？为什么？</h3><p>对 HashMap 的 put 操作进行了锁定，而对 get 操作没有进行锁定，通常情况下是会有线程安全问题的</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E5%B9%B6%E5%8F%91/" rel="prev" title="八股--Java并发">
+      <i class="fa fa-chevron-left"></i> 八股--Java并发
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/09/08/%E5%85%AB%E8%82%A1-spring/" rel="next" title="八股--spring">
+      八股--spring <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList"><span class="nav-number">1.1.</span> <span class="nav-text">ArrayList</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E6%96%B9%E5%BC%8F"><span class="nav-number">1.2.</span> <span class="nav-text">遍历方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B4%E4%B8%80%E8%AF%B4-ConcurrentHashMap-%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">说一说 ConcurrentHashMap 的实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%B4%E4%B8%80%E8%AF%B4-HashMap-%E7%9A%84%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6"><span class="nav-number">1.4.</span> <span class="nav-text">说一说 HashMap 的扩容机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-%E5%AD%97%E5%85%B8%E7%9A%84-rehash-%E4%B8%BA%E5%95%A5%E6%98%AF%E6%B8%90%E8%BF%9B%E5%BC%8F%E7%9A%84"><span class="nav-number">1.5.</span> <span class="nav-text">redis 字典的 rehash 为啥是渐进式的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-HashMap-%E7%9A%84%E6%95%B0%E7%BB%84%E9%95%BF%E5%BA%A6%E8%A6%81%E5%8F%96-2-%E7%9A%84%E6%95%B4%E6%95%B0%E5%B9%82"><span class="nav-number">1.6.</span> <span class="nav-text">为什么 HashMap 的数组长度要取 2 的整数幂</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hashMap-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%AE%89%E5%85%A8"><span class="nav-number">1.7.</span> <span class="nav-text">hashMap 多线程为什么不安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HashMap-%E7%9A%84%E6%AD%BB%E9%94%81%E6%83%85%E5%86%B5"><span class="nav-number">1.8.</span> <span class="nav-text">HashMap 的死锁情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%87%E8%AE%BE%E6%9C%89%E4%B8%AA-hashmap-%E4%B8%8A%E9%94%81-put%EF%BC%8Cget-%E4%B8%8D%E4%B8%8A%E9%94%81%E4%BC%9A%E6%9C%89%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E5%90%97%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.9.</span> <span class="nav-text">假设有个 hashmap 上锁 put，get 不上锁会有线程安全问题吗？为什么？</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

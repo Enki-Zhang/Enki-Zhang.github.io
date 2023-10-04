@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="tomcat 热部署 [Intellij] Project Structure 配置说明servlet 继承关系和生命周期servlet 的默认方法是 405 风格的若子类不实现父类的 get post 等方法会报错 405 生命周期init()service()servlet 只实例化和初始化一次 要提高响应时间需要设置初始化时机默认在第一次接受时实例化，初始化设置启动顺序最小为 0单例 线程不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javaweb">
+<meta property="og:url" content="http://example.com/articles/2022/11/30/javaweb/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="tomcat 热部署 [Intellij] Project Structure 配置说明servlet 继承关系和生命周期servlet 的默认方法是 405 风格的若子类不实现父类的 get post 等方法会报错 405 生命周期init()service()servlet 只实例化和初始化一次 要提高响应时间需要设置初始化时机默认在第一次接受时实例化，初始化设置启动顺序最小为 0单例 线程不">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/articles/2022/11/30/javaweb/2022-11-30-15-12-46.png">
+<meta property="og:image" content="http://example.com/articles/2022/11/30/javaweb/2022-11-30-20-32-48.png">
+<meta property="og:image" content="http://example.com/articles/2022/11/30/javaweb/2022-12-01-20-25-26.png">
+<meta property="og:image" content="http://example.com/articles/2022/11/30/javaweb/2022-12-01-21-58-15.png">
+<meta property="og:image" content="http://example.com/articles/2022/11/30/javaweb/2022-12-02-21-36-54.png">
+<meta property="og:image" content="http://example.com/articles/2022/11/30/javaweb/2022-12-03-14-13-57.png">
+<meta property="og:image" content="http://example.com/articles/2022/11/30/javaweb/2022-12-04-15-29-54.png">
+<meta property="article:published_time" content="2022-11-30T07:09:14.000Z">
+<meta property="article:modified_time" content="2022-12-04T07:32:54.519Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/articles/2022/11/30/javaweb/2022-11-30-15-12-46.png">
+
+<link rel="canonical" href="http://example.com/articles/2022/11/30/javaweb/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>javaweb | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2022/11/30/javaweb/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          javaweb
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-11-30 15:09:14" itemprop="dateCreated datePublished" datetime="2022-11-30T15:09:14+08:00">2022-11-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-12-04 15:32:54" itemprop="dateModified" datetime="2022-12-04T15:32:54+08:00">2022-12-04</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="tomcat-热部署"><a href="#tomcat-热部署" class="headerlink" title="tomcat 热部署"></a>tomcat 热部署</h3><p><img src="/articles/2022/11/30/javaweb/2022-11-30-15-12-46.png" alt="asset_img"></p>
+<h4 id="Intellij-Project-Structure-配置说明"><a href="#Intellij-Project-Structure-配置说明" class="headerlink" title="[Intellij] Project Structure 配置说明"></a>[Intellij] Project Structure 配置说明</h4><h4 id="servlet-继承关系和生命周期"><a href="#servlet-继承关系和生命周期" class="headerlink" title="servlet 继承关系和生命周期"></a>servlet 继承关系和生命周期</h4><p>servlet 的默认方法是 405 风格的若子类不实现父类的 get post 等方法会报错 405</p>
+<p><strong>生命周期</strong><br>init()<br>service()<br><img src="/articles/2022/11/30/javaweb/2022-11-30-20-32-48.png" alt="asset_img"><br>servlet 只实例化和初始化一次 要提高响应时间需要设置初始化时机<br>默认在第一次接受时实例化，初始化<br>设置启动顺序最小为 0<br>单例 线程不安全 所有线程共用该实例会造成冲突不安全所以不要在 servlet 中定义成员变量或者可修改的变量</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 数字越小启动时间越靠前--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span>```</span><br></pre></td></tr></table></figure>
+
+<p><img src="/articles/2022/11/30/javaweb/2022-12-01-20-25-26.png" alt="asset_img"><br>http 无状态 服务器无法区分不同的请求时那个客户端发送的<br>通过会话解决</p>
+<p>servlet 的生命周期中，可以看出，执行的是 service 方法，为什么我们就只需要写 doGet 和 doPost 方法呢?</p>
+<p>service 方法会被自动调用 HttpServlet 中的 service 方法已经做了逻辑转向</p>
+<p>GenericServlet 的两个 init 方法</p>
+<p>方便开发，只是用 init()方法不需要对 ServletConfig 参数的维护就是不需要自己构建一个新的变量让父类方法自己构建<br><a target="_blank" rel="noopener" href="http://www.yunjuu.com/info/211161.html">http://www.yunjuu.com/info/211161.html</a></p>
+<p>session 会话跟踪技术</p>
+<p>session 会话保存作用域<br>request 一次响应请求范围<br>session 一次会话有效<br>application 一次程序范围内有效</p>
+<p>服务器端的内部转发和客户端重定向的区别<br>服务器重定向是在内部进行转发 客户端不知道<br>客户端重定向是服务器通知客户端向另一个 servlet 进行请求，改变客户端的请求地址</p>
+<h3 id="thymeleaf"><a href="#thymeleaf" class="headerlink" title="thymeleaf"></a>thymeleaf</h3><p>配置路径前缀后缀</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 配置上下文参数 --&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">context-param</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>view-prefix<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>/<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">context-param</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">context-param</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>view-suffix<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>.html<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">context-param</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>dispatchServlet<br>其中配置的需要和 controller 在 xml 中进行对应<br>从 url 找到 servletPath 中的 path 中定位到 controller 组件<br><img src="/articles/2022/11/30/javaweb/2022-12-01-21-58-15.png" alt="asset_img"></p>
+<p>servletConfig 和 servletContext 的范围</p>
+<h3 id="mvc-设计模式"><a href="#mvc-设计模式" class="headerlink" title="mvc 设计模式"></a>mvc 设计模式</h3><p>model： 模型 完成业务</p>
+<ul>
+<li>pojo&#x2F;vo 值对象</li>
+<li>dao 数据对象 其中的方法都是单精度方法或细粒度方法 只考虑一个动作</li>
+<li>bo 业务对象 业务方法比较复杂 为粗粒度发方法 一般的 bo 类中需要操作多条 dao 方法才能完成业务</li>
+</ul>
+<ul>
+<li>DTO 数据传输对象</li>
+</ul>
+<p>事务管理应该以业务层的方法为单位<br>view ：视图<br>controller 接受用户请求并交由 model 处理</p>
+<p>ioc<br>每层之间的依赖<br>设计的原则高内聚(层内部) 和低耦合（层间）</p>
+<ol>
+<li>控制反转<br>若程序员在 service 类中的方法里面创建了具体的 service 对象 该对象的生命周期则依赖于方法若在方法外创建则依赖于类的生命周期<br>将 service 的对象的声明周期转移到通过解析 xml 文件的容器中，容器中生成 service 对象，所以 service 对象的生命周期从程序员转移到了该容器中去</li>
+<li>依赖注入<br><img src="/articles/2022/11/30/javaweb/2022-12-02-21-36-54.png" alt="asset_img"></li>
+</ol>
+<p>过滤器<br>实现 init doFilter destory 方法</p>
+<p>通过注解配置@WebFilter(“*.do”)表示拦截所有.do 结尾的 servlet<br>过滤器链 chain<br><img src="/articles/2022/11/30/javaweb/2022-12-03-14-13-57.png" alt="asset_img"><br>响应顺序<br>a c e service f d b<br>过滤器的执行顺序若是注解方式是按照类名的排序执行<br>配置文件中安装配置文件的顺序执行</p>
+<p>ThreadLocal</p>
+<p>监听器 观察者模式 不主动访问</p>
+<h3 id="java-不同关键词的范围"><a href="#java-不同关键词的范围" class="headerlink" title="java 不同关键词的范围"></a>java 不同关键词的范围</h3><h3 id="QQZone"><a href="#QQZone" class="headerlink" title="QQZone"></a>QQZone</h3><p>数据库实体： 用户登录信息、用户详情信息、日志、回帖、主任回复</p>
+<p>数据库范式 常用 1 2 3<br>列不可再分<br>一张表只表达一层含义 只描述一个事情<br>表中的每一列和主键都直接依赖</p>
+<p>主键和业务无关</p>
+<p>servletContext 和 servletconfig 对象<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_32224047/article/details/106985763">https://blog.csdn.net/qq_32224047/article/details/106985763</a></p>
+<p><img src="/articles/2022/11/30/javaweb/2022-12-04-15-29-54.png" alt="asset_img"><br>context 方法只能得到 context 的 initparams<br>config 可以通过 context 方法得到 context 的 initparams<br>context 的范围要大于 config<br>一个 servlet 对应一个 config 一个 context 对应多个 servlet</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2022/11/23/%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93/" rel="prev" title="面试总结">
+      <i class="fa fa-chevron-left"></i> 面试总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2022/12/13/SpringMVC/" rel="next" title="SpringMVC">
+      SpringMVC <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#tomcat-%E7%83%AD%E9%83%A8%E7%BD%B2"><span class="nav-number">1.</span> <span class="nav-text">tomcat 热部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Intellij-Project-Structure-%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E"><span class="nav-number">1.1.</span> <span class="nav-text">[Intellij] Project Structure 配置说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#servlet-%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB%E5%92%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">1.2.</span> <span class="nav-text">servlet 继承关系和生命周期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#thymeleaf"><span class="nav-number">2.</span> <span class="nav-text">thymeleaf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mvc-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">mvc 设计模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java-%E4%B8%8D%E5%90%8C%E5%85%B3%E9%94%AE%E8%AF%8D%E7%9A%84%E8%8C%83%E5%9B%B4"><span class="nav-number">4.</span> <span class="nav-text">java 不同关键词的范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#QQZone"><span class="nav-number">5.</span> <span class="nav-text">QQZone</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

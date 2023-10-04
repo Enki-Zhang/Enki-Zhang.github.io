@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="JsessionId 是什么  Jsessionid 指的是 sessionid，Tomcat 中生成的就是叫做 jsessionid  浏览器第一次访问服务器会在 tomcat 服务器 HttpServletRequest 的 getSession(true)的时候创建 session（浏览器的相关信息） 并存在服务器中，tomcat 的 ManagerBase 类提供创建 sessionid">
+<meta property="og:type" content="article">
+<meta property="og:title" content="黑马点评网">
+<meta property="og:url" content="http://example.com/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="JsessionId 是什么  Jsessionid 指的是 sessionid，Tomcat 中生成的就是叫做 jsessionid  浏览器第一次访问服务器会在 tomcat 服务器 HttpServletRequest 的 getSession(true)的时候创建 session（浏览器的相关信息） 并存在服务器中，tomcat 的 ManagerBase 类提供创建 sessionid">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/2023-03-15-20-17-56.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/2023-03-15-22-47-21.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/2023-03-15-22-49-14.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/2023-03-16-13-13-08.png">
+<meta property="article:published_time" content="2023-03-15T12:15:44.000Z">
+<meta property="article:modified_time" content="2023-03-16T11:17:20.844Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/2023-03-15-20-17-56.png">
+
+<link rel="canonical" href="http://example.com/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>黑马点评网 | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          黑马点评网
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-15 20:15:44" itemprop="dateCreated datePublished" datetime="2023-03-15T20:15:44+08:00">2023-03-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-03-16 19:17:20" itemprop="dateModified" datetime="2023-03-16T19:17:20+08:00">2023-03-16</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="JsessionId-是什么"><a href="#JsessionId-是什么" class="headerlink" title="JsessionId 是什么"></a>JsessionId 是什么</h2><p><img src="/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/2023-03-15-20-17-56.png" alt="asset_img"></p>
+<blockquote>
+<p>Jsessionid 指的是 sessionid，Tomcat 中生成的就是叫做 jsessionid</p>
+</blockquote>
+<p>浏览器第一次访问服务器会在 tomcat 服务器 HttpServletRequest 的 getSession(true)的时候创建 session（浏览器的相关信息） 并存在服务器中，tomcat 的 ManagerBase 类提供创建 sessionid 的方法：随机数+时间+jvmid；客户端只保存 sessionid 也就是 Jsessionid 到 cookie<br>，同时 session 销毁只能通过 invalidate 或超时，关掉浏览器并不会关闭 session</p>
+<h4 id="ServletContext、HttpSession-和-HttpServletRequest-的区别和联系"><a href="#ServletContext、HttpSession-和-HttpServletRequest-的区别和联系" class="headerlink" title="ServletContext、HttpSession 和 HttpServletRequest 的区别和联系"></a>ServletContext、HttpSession 和 HttpServletRequest 的区别和联系</h4><p>Context 域 &gt; Session 域 &gt; Request 域<br>Session 域 只要会话不结束就会存在 但是 Session 有默认的存活时间(30 分钟)<br>HttpServletRequest 作用范围是整个请求链（请求转发也存在）；生命周期是在 service 方法调用前由服务器创建，传入 service 方法。整个请求结束，request 生命结束。</p>
+<ol>
+<li>ServletContext：范围最大,应用程序级别的,整个应用程序都能访问；</li>
+<li>HttpSession–次之,会话级别的，在当前的浏览器中都能訪问[不论是在同一浏览器开多少窗体，都能够访问],可是换个浏览器就不行了，<br>就必须又一次创建 session；</li>
+<li>HttpServletRequest–范围最小,请求级别,请求结束,变量的作用域也结束【也就是仅仅是一次访问,访问结束，这个也结束】。</li>
+</ol>
+<h2 id="短信登录流程"><a href="#短信登录流程" class="headerlink" title="短信登录流程"></a>短信登录流程</h2><p><img src="/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/2023-03-15-22-47-21.png" alt="asset_img"></p>
+<h3 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h3><p><img src="/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/2023-03-15-22-49-14.png" alt="asset_img"><br>相对于过滤器而言，拦截器要的控制更加的细节，拦截器可以在三个地方进行执行。</p>
+<ol>
+<li>可以在请求到达 Controller 控制器之前 通过拦截器执行一段代码</li>
+<li>也可以在控制器执行之后，通过拦截器执行一段代码 【此时只是 Controller 执行完毕 视图还没有开始渲染也就是跳转之前】</li>
+<li>最后在整个请求结束的时候页面跳转完成还可以通过拦截器执行一段时间代码</li>
+</ol>
+<p>是 AOP 面向切片编程的体现<br>作用：<br>日志记录：记录请求信息的日志，以便进行信息监控、信息统计、计算 PV（Page View）等；<br>权限检查：如登录检测，进入处理器检测是否登录；<br>性能监控：通过拦截器在进入处理器之前记录开始时间，在处理完后记录结束时间，从而得到该请求的处理时间。（反向代理，如 Apache 也可以自动记录）<br>通用行为：读取 Cookie 得到用户信息并将用户对象放入请求，从而方便后续流程使用，还有如提取 Locale、Theme 信息等，只要是多个处理器都需要的即可使用拦截器实现。</p>
+<h2 id="登录刷新"><a href="#登录刷新" class="headerlink" title="登录刷新"></a>登录刷新</h2><p>设置一个 token 刷新拦截器 用户发送请求 通过 session 得到 token 查询 redis 只要用户存活就进行登录刷新<br><img src="/articles/2023/03/15/%E9%BB%91%E9%A9%AC%E7%82%B9%E8%AF%84%E7%BD%91/2023-03-16-13-13-08.png" alt="asset_img"></p>
+<h2 id="缓存不一致问题"><a href="#缓存不一致问题" class="headerlink" title="缓存不一致问题"></a>缓存不一致问题</h2><p>数据库更新后缓存也要更新 将缓存删除 在用户查询时在写入缓存保持更新</p>
+<h2 id="秒杀问题"><a href="#秒杀问题" class="headerlink" title="秒杀问题"></a>秒杀问题</h2><p>一人一单问题：<br>集群中本地锁会失效。利用 redis 的特点进行分布式锁的使用<br>Redis 利用 setnx 实现加锁效果，并设置超时删除；<br>但是加锁和删除非原子操作，当加锁成功后 服务器遇见问题 不能删除会出现<u>死锁情况</u></p>
+<p>同时删除锁时候 需要判断是不是自己上的锁 检查当前的锁和线程的锁是否一致</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/03/14/%E8%BF%90%E7%AE%97%E7%AC%A6/" rel="prev" title="运算符">
+      <i class="fa fa-chevron-left"></i> 运算符
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/03/23/%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F/" rel="next" title="秒杀系统">
+      秒杀系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JsessionId-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">JsessionId 是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ServletContext%E3%80%81HttpSession-%E5%92%8C-HttpServletRequest-%E7%9A%84%E5%8C%BA%E5%88%AB%E5%92%8C%E8%81%94%E7%B3%BB"><span class="nav-number">1.0.1.</span> <span class="nav-text">ServletContext、HttpSession 和 HttpServletRequest 的区别和联系</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9F%AD%E4%BF%A1%E7%99%BB%E5%BD%95%E6%B5%81%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">短信登录流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%A6%E6%88%AA%E5%99%A8"><span class="nav-number">2.1.</span> <span class="nav-text">拦截器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E5%BD%95%E5%88%B7%E6%96%B0"><span class="nav-number">3.</span> <span class="nav-text">登录刷新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">缓存不一致问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A7%92%E6%9D%80%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">秒杀问题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

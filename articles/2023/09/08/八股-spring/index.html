@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="SpringBoot 的优点简化 Spring 配置有强大的生态 JDBC Spring Securtiy内置 Tomcat 服务器拥有多种插件 lombok maven IOCIOC 控制反转；在 spring 中用于管理对象之间的关系实现对象之间的松耦合和可维护性。IOC 在 Spring 中的主要任务：  实例化对象 注入依赖 bean 对象生命周期的管理  主要表现为beanFactory">
+<meta property="og:type" content="article">
+<meta property="og:title" content="八股--spring">
+<meta property="og:url" content="http://example.com/articles/2023/09/08/%E5%85%AB%E8%82%A1-spring/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="SpringBoot 的优点简化 Spring 配置有强大的生态 JDBC Spring Securtiy内置 Tomcat 服务器拥有多种插件 lombok maven IOCIOC 控制反转；在 spring 中用于管理对象之间的关系实现对象之间的松耦合和可维护性。IOC 在 Spring 中的主要任务：  实例化对象 注入依赖 bean 对象生命周期的管理  主要表现为beanFactory">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-09-08T07:10:48.000Z">
+<meta property="article:modified_time" content="2023-09-28T07:06:32.419Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/articles/2023/09/08/%E5%85%AB%E8%82%A1-spring/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>八股--spring | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/09/08/%E5%85%AB%E8%82%A1-spring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          八股--spring
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-09-08 15:10:48" itemprop="dateCreated datePublished" datetime="2023-09-08T15:10:48+08:00">2023-09-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-28 15:06:32" itemprop="dateModified" datetime="2023-09-28T15:06:32+08:00">2023-09-28</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="SpringBoot-的优点"><a href="#SpringBoot-的优点" class="headerlink" title="SpringBoot 的优点"></a>SpringBoot 的优点</h3><p>简化 Spring 配置<br>有强大的生态 JDBC Spring Securtiy<br>内置 Tomcat 服务器<br>拥有多种插件 lombok maven</p>
+<h2 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h2><p>IOC 控制反转；在 spring 中用于管理对象之间的关系实现对象之间的松耦合和可维护性。IOC 在 Spring 中的主要任务：</p>
+<ol>
+<li>实例化对象</li>
+<li>注入依赖</li>
+<li>bean 对象生命周期的管理</li>
+</ol>
+<p>主要表现为<br>beanFactory ：提供 Spring 最基本的接口和 IOC 功能。延迟加载对象，只有在实际需要时才创建对象<br>ApplicationContext：对 BeanFactory 的拓展。在启动时加载所有 bean</p>
+<h3 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h3><p>@Component：通用的注解，可标注任意类为 Spring 组件<br>@Repository : 对应持久层注解<br>@Service : 对应服务层，<br>@Controller : 对应 Spring MVC 控制层</p>
+<blockquote>
+<p>@SpringBootApplication：@Configuration(允许在上下文中注册额外的 bean 或导入其他配置类)<br>+@EnableAutoConfiguration(启用 SpringBoot 的自动配置机制)+@ComponentScan(扫描被 Component 注解的 bean)<br>用于标识一个 Spring Boot 应用程序的启动类。</p>
+</blockquote>
+<h3 id="Bean-的生命周期"><a href="#Bean-的生命周期" class="headerlink" title="Bean 的生命周期"></a>Bean 的生命周期</h3><p>一般分为实例化、属性赋值、初始化、销毁这 4 个大阶段<br>实例化： 创建 bean 的实例<br>属性配置：将任何配置的依赖通过 setter 方法、构造函数等方式注入到 bean 中<br>初始化 ：</p>
+<h3 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h3><p>工厂模式:通过 BeanFactory（延迟加载对象）或则 ApplicationContext（预加载所有 bean ）创建对象<br>单例模式：日志对象。线程池，不需要频繁的创建对象，节约资源提高响应速率。Spring 中的 Bean 默认是单例的<br>代理模式:在 AOP 切面编程中应用多，SpringAOP 一般是利用动态代理来实现，当要代理的对象实现了某个接口，AOP 使用 JDK Proxy 创建代理对象。当没有实现的接口对象就需要使用 Cglib 对被代理对象生成一个子类作为代理</p>
+<h3 id="application-yml-和-bootstrap-yml-执行顺序，以及区别"><a href="#application-yml-和-bootstrap-yml-执行顺序，以及区别" class="headerlink" title="application.yml 和 bootstrap.yml 执行顺序，以及区别"></a>application.yml 和 bootstrap.yml 执行顺序，以及区别</h3><p>bootstrap.yml 在配置加载时优先级高，通常用于配置引导和初始化阶段的配置。<br>application.yml 用于配置应用程序的核心设置，通常在应用程序正常运行时加载。</p>
+<h3 id="yml、yaml、properties-执行顺序，以及区别"><a href="#yml、yaml、properties-执行顺序，以及区别" class="headerlink" title=".yml、yaml、properties 执行顺序，以及区别"></a>.yml、yaml、properties 执行顺序，以及区别</h3><p>yml &gt; yaml &gt; properties 三个配置文件配置的信息都有效果并且若配置了相同的属性，会按照加载顺序进行加载后加载的文件会覆盖掉之前加载的信息。<br>yml 和 Yaml 实际上是相同的是 天然的树形结构，相同的前缀只需要写一次。可读性更好<br>properties 是传统的配置文件格式 每一行是一个配置使用&#x3D;描述属性<br>properties 邮</p>
+<h3 id="springboot-如何切换测试、开发等模式，配置是什么样的"><a href="#springboot-如何切换测试、开发等模式，配置是什么样的" class="headerlink" title="springboot 如何切换测试、开发等模式，配置是什么样的"></a>springboot 如何切换测试、开发等模式，配置是什么样的</h3><p>我们可以为不同的环境配置不同的 properties 环境，并在 apliaction.properties 中通过 spring.profiles.active 指定不同的环境配置文件<br>或者是再 yml 中配置不同环境并指定后<br>或者使用 VM options 指定参数式启动某个环境的配置文件</p>
+<h3 id="Spring-中的线程安全问题"><a href="#Spring-中的线程安全问题" class="headerlink" title="Spring 中的线程安全问题"></a>Spring 中的线程安全问题</h3><ul>
+<li>Bean 是单例的被所有线程共享，Spring 中的单例 Bean 不是线程安全的。全局只有一个 Bean 被所有线程共享。对于无状态的 Bean 即不对其进行修改操作的是安全的。否则则是线程不安全的<br>常见的解决办法：<br>使用 ThreadLocal 对线程进行隔离，将需要的成员变量保存在 ThreadLocal 中，或者使用锁也可以解决</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/" rel="prev" title="八股--Java集合">
+      <i class="fa fa-chevron-left"></i> 八股--Java集合
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/09/08/%E5%85%AB%E8%82%A1-Java%E5%9F%BA%E7%A1%80/" rel="next" title="八股--Java基础">
+      八股--Java基础 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringBoot-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot 的优点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IOC"><span class="nav-number"></span> <span class="nav-text">IOC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.</span> <span class="nav-text">常用注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-number">2.</span> <span class="nav-text">Bean 的生命周期</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">设计模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#application-yml-%E5%92%8C-bootstrap-yml-%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%EF%BC%8C%E4%BB%A5%E5%8F%8A%E5%8C%BA%E5%88%AB"><span class="nav-number">4.</span> <span class="nav-text">application.yml 和 bootstrap.yml 执行顺序，以及区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#yml%E3%80%81yaml%E3%80%81properties-%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F%EF%BC%8C%E4%BB%A5%E5%8F%8A%E5%8C%BA%E5%88%AB"><span class="nav-number">5.</span> <span class="nav-text">.yml、yaml、properties 执行顺序，以及区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#springboot-%E5%A6%82%E4%BD%95%E5%88%87%E6%8D%A2%E6%B5%8B%E8%AF%95%E3%80%81%E5%BC%80%E5%8F%91%E7%AD%89%E6%A8%A1%E5%BC%8F%EF%BC%8C%E9%85%8D%E7%BD%AE%E6%98%AF%E4%BB%80%E4%B9%88%E6%A0%B7%E7%9A%84"><span class="nav-number">6.</span> <span class="nav-text">springboot 如何切换测试、开发等模式，配置是什么样的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="nav-number">7.</span> <span class="nav-text">Spring 中的线程安全问题</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

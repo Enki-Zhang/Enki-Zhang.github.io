@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="如何在 Linux 上部署项目linux 文件权限管理组管理和权限管理Linux 的用户都属于一个组，每个文件有所有者、所在组、其他组 修改文件的所有者(chang own)12chown 用户名 文件名chown enki bb.txt  创建组12groupadd 组名groupadd monster  查看文件所在的组1ls -ahl  查看文件的权限12ls -l 文件名 查看文件权限ls">
+<meta property="og:type" content="article">
+<meta property="og:title" content="八股--linux">
+<meta property="og:url" content="http://example.com/articles/2023/08/30/%E5%85%AB%E8%82%A1-linux/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="如何在 Linux 上部署项目linux 文件权限管理组管理和权限管理Linux 的用户都属于一个组，每个文件有所有者、所在组、其他组 修改文件的所有者(chang own)12chown 用户名 文件名chown enki bb.txt  创建组12groupadd 组名groupadd monster  查看文件所在的组1ls -ahl  查看文件的权限12ls -l 文件名 查看文件权限ls">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/articles/2023/08/30/%E5%85%AB%E8%82%A1-linux/image-13.png">
+<meta property="og:image" content="http://example.com/articles/2023/08/30/%E5%85%AB%E8%82%A1-linux/image-14.png">
+<meta property="article:published_time" content="2023-08-30T06:05:51.000Z">
+<meta property="article:modified_time" content="2023-08-30T07:26:10.580Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/articles/2023/08/30/%E5%85%AB%E8%82%A1-linux/image-13.png">
+
+<link rel="canonical" href="http://example.com/articles/2023/08/30/%E5%85%AB%E8%82%A1-linux/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>八股--linux | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/08/30/%E5%85%AB%E8%82%A1-linux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          八股--linux
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-08-30 14:05:51 / 修改时间：15:26:10" itemprop="dateCreated datePublished" datetime="2023-08-30T14:05:51+08:00">2023-08-30</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="如何在-Linux-上部署项目"><a href="#如何在-Linux-上部署项目" class="headerlink" title="如何在 Linux 上部署项目"></a>如何在 Linux 上部署项目</h2><h2 id="linux-文件权限管理"><a href="#linux-文件权限管理" class="headerlink" title="linux 文件权限管理"></a>linux 文件权限管理</h2><h3 id="组管理和权限管理"><a href="#组管理和权限管理" class="headerlink" title="组管理和权限管理"></a>组管理和权限管理</h3><p>Linux 的用户都属于一个组，每个文件有所有者、所在组、其他组</p>
+<h4 id="修改文件的所有者-chang-own"><a href="#修改文件的所有者-chang-own" class="headerlink" title="修改文件的所有者(chang own)"></a>修改文件的所有者(chang own)</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chown 用户名 文件名</span><br><span class="line">chown enki bb.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="创建组"><a href="#创建组" class="headerlink" title="创建组"></a>创建组</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">groupadd 组名</span><br><span class="line">groupadd monster</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看文件所在的组"><a href="#查看文件所在的组" class="headerlink" title="查看文件所在的组"></a>查看文件所在的组</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -ahl</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看文件的权限"><a href="#查看文件的权限" class="headerlink" title="查看文件的权限"></a>查看文件的权限</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ls -l 文件名 查看文件权限</span><br><span class="line">ls -ld 文件名 查看文件名权限</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改文件-x2F-目录所在的组"><a href="#修改文件-x2F-目录所在的组" class="headerlink" title="修改文件&#x2F;目录所在的组"></a>修改文件&#x2F;目录所在的组</h4><p>基本指令<br><code>chgrp 组名 文件名</code></p>
+<h4 id="改变用户所在组"><a href="#改变用户所在组" class="headerlink" title="改变用户所在组"></a>改变用户所在组</h4><h4 id="权限的基本介绍"><a href="#权限的基本介绍" class="headerlink" title="权限的基本介绍"></a>权限的基本介绍</h4><p><code>drwxr-xr-x 17 enki enki 4.0K 11月 9 04:30</code><br>第一列的 0-9 位数字<br>0 位: 确定文件类型</p>
+<ol>
+<li>d :目录 相当于文件夹</li>
+<li><code>-</code> ：普通文件</li>
+<li>c : 字符设备类文件 鼠标、键盘</li>
+<li>b :块设备如硬盘</li>
+<li>l : 链接</li>
+</ol>
+<p>1-3 位确定所有者（该文件的所有者）拥有该文件的权限</p>
+<ul>
+<li>r&#x3D;4:读</li>
+<li>w&#x3D;2:写</li>
+<li>x&#x3D;1（execute）:可执行<blockquote>
+<p>可以用数字代表权限 rwx(&#x3D;4+2+1&#x3D;7) 没有权限为 -</p>
+</blockquote>
+</li>
+</ul>
+<p>第 4-6 位确定所属组（同用户组的）拥有该文件的权限<br>第 7-9 位确定其他用户拥有该文件的权限</p>
+<blockquote>
+<p>文件权限以 rwx 顺序排序<br><img src="/articles/2023/08/30/%E5%85%AB%E8%82%A1-linux/image-13.png" alt="Alt text"></p>
+</blockquote>
+<h4 id="修改权限"><a href="#修改权限" class="headerlink" title="修改权限"></a>修改权限</h4><p>通过 chmod 指令，可以修改文件或者目录的权限。<br>使用+ - &#x3D;改变<br>u 为所有者 g 所有组 o 其他用户 a 对 u g o 进行同步操作</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod u=rwx,g=rwx,o=rwx aa.txt/或者目录</span><br><span class="line">chmod o+w 文件/目录（将文件或者目录的其他用户加上写权限）</span><br><span class="line">chmod a-x 文件/目录 (将文件的全部用户的权限取消执行权限)</span><br></pre></td></tr></table></figure>
+
+<p>或者通过数字改变</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 777 aa.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改文件所有者"><a href="#修改文件所有者" class="headerlink" title="修改文件所有者"></a>修改文件所有者</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chown newowner 文件/目录 (改变所有者)</span><br><span class="line">chown root aa.txt</span><br><span class="line">chown -R root aaa(将aaa目录下的全部文件的所有者改为root)</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改文件-x2F-目录所在组-chgrp"><a href="#修改文件-x2F-目录所在组-chgrp" class="headerlink" title="修改文件&#x2F;目录所在组-chgrp"></a>修改文件&#x2F;目录所在组-chgrp</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chgrp newgroup 文件/目录</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h3><h4 id="服务管理"><a href="#服务管理" class="headerlink" title="服务管理"></a>服务管理</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service 服务名[start|stop|restart|reload|status]</span><br><span class="line"><span class="meta prompt_">&gt; </span><span class="language-bash">|表示可选</span></span><br></pre></td></tr></table></figure>
+
+<p>ubuntu 开启和关闭 network</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service network-manager stop</span><br></pre></td></tr></table></figure>
+
+<h4 id="显示所有服务状态"><a href="#显示所有服务状态" class="headerlink" title="显示所有服务状态"></a>显示所有服务状态</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service --status-all</span><br></pre></td></tr></table></figure>
+
+<h4 id="显示-cpu-内存-进程的状态"><a href="#显示-cpu-内存-进程的状态" class="headerlink" title="显示 cpu 内存 进程的状态"></a>显示 cpu 内存 进程的状态</h4><p>使用 top 命令<br>进入 top 界面后的交互<br><img src="/articles/2023/08/30/%E5%85%AB%E8%82%A1-linux/image-14.png" alt="Alt text"><br>输入 k 选择终止进程的 pid 后在输入 9 表示强制终止</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/08/30/%E5%85%AB%E8%82%A1-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="prev" title="八股--操作系统">
+      <i class="fa fa-chevron-left"></i> 八股--操作系统
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/08/30/%E5%85%AB%E8%82%A1-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="next" title="八股--设计模式">
+      八股--设计模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%9C%A8-Linux-%E4%B8%8A%E9%83%A8%E7%BD%B2%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">如何在 Linux 上部署项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux-%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">linux 文件权限管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E7%AE%A1%E7%90%86%E5%92%8C%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">组管理和权限管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E7%9A%84%E6%89%80%E6%9C%89%E8%80%85-chang-own"><span class="nav-number">2.1.1.</span> <span class="nav-text">修改文件的所有者(chang own)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%BB%84"><span class="nav-number">2.1.2.</span> <span class="nav-text">创建组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E6%89%80%E5%9C%A8%E7%9A%84%E7%BB%84"><span class="nav-number">2.1.3.</span> <span class="nav-text">查看文件所在的组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E7%9A%84%E6%9D%83%E9%99%90"><span class="nav-number">2.1.4.</span> <span class="nav-text">查看文件的权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6-x2F-%E7%9B%AE%E5%BD%95%E6%89%80%E5%9C%A8%E7%9A%84%E7%BB%84"><span class="nav-number">2.1.5.</span> <span class="nav-text">修改文件&#x2F;目录所在的组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E5%8F%98%E7%94%A8%E6%88%B7%E6%89%80%E5%9C%A8%E7%BB%84"><span class="nav-number">2.1.6.</span> <span class="nav-text">改变用户所在组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.1.7.</span> <span class="nav-text">权限的基本介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%9D%83%E9%99%90"><span class="nav-number">2.1.8.</span> <span class="nav-text">修改权限</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E6%89%80%E6%9C%89%E8%80%85"><span class="nav-number">2.1.9.</span> <span class="nav-text">修改文件所有者</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6-x2F-%E7%9B%AE%E5%BD%95%E6%89%80%E5%9C%A8%E7%BB%84-chgrp"><span class="nav-number">2.1.10.</span> <span class="nav-text">修改文件&#x2F;目录所在组-chgrp</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">进程管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AE%A1%E7%90%86"><span class="nav-number">2.2.1.</span> <span class="nav-text">服务管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E6%89%80%E6%9C%89%E6%9C%8D%E5%8A%A1%E7%8A%B6%E6%80%81"><span class="nav-number">2.2.2.</span> <span class="nav-text">显示所有服务状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA-cpu-%E5%86%85%E5%AD%98-%E8%BF%9B%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81"><span class="nav-number">2.2.3.</span> <span class="nav-text">显示 cpu 内存 进程的状态</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

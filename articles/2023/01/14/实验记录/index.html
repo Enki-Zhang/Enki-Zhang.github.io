@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="LR 算法 Logistic RegressionFM-GRU数据处理：label 数据缺失的用 0 值补全 没有带时间数据数据:dataset2.csv 123456789101112第一次：Epoch-9: MAE&#x3D;0.6256896288444599;MSE&#x3D;0.7716576975459853;RMSE&#x3D;0.8365627862513065;NRMSE&#x3D;0.1759436770201489">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实验记录">
+<meta property="og:url" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="LR 算法 Logistic RegressionFM-GRU数据处理：label 数据缺失的用 0 值补全 没有带时间数据数据:dataset2.csv 123456789101112第一次：Epoch-9: MAE&#x3D;0.6256896288444599;MSE&#x3D;0.7716576975459853;RMSE&#x3D;0.8365627862513065;NRMSE&#x3D;0.1759436770201489">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-14-19-32-45.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-14-20-15-19.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-16-10-44-13.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-17-11-43-43.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-17-13-29-33.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-17-15-04-05.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-01-09-24-06.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-19-10-07-15.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-19-10-05-16.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-19-11-22-31.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-05-14-36-43.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-05-14-37-28.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-05-14-37-56.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-05-14-38-50.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-05-14-39-40.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-11-28-22.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-11-28-26.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-11-28-31.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-11-29-03.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-11-29-35.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-21-18-40.png">
+<meta property="og:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-25-23-24-47.png">
+<meta property="article:published_time" content="2023-01-14T11:14:45.000Z">
+<meta property="article:modified_time" content="2023-02-27T01:17:12.788Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-14-19-32-45.png">
+
+<link rel="canonical" href="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>实验记录 | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          实验记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-01-14 19:14:45" itemprop="dateCreated datePublished" datetime="2023-01-14T19:14:45+08:00">2023-01-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-27 09:17:12" itemprop="dateModified" datetime="2023-02-27T09:17:12+08:00">2023-02-27</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="LR-算法-Logistic-Regression"><a href="#LR-算法-Logistic-Regression" class="headerlink" title="LR 算法 Logistic Regression"></a>LR 算法 Logistic Regression</h2><h2 id="FM-GRU"><a href="#FM-GRU" class="headerlink" title="FM-GRU"></a>FM-GRU</h2><p>数据处理：<br>label 数据缺失的用 0 值补全 没有带时间数据<br>数据:dataset2.csv</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">第一次：</span><br><span class="line">Epoch-<span class="number">9</span>: MAE=<span class="number">0.6256896288444599</span>;</span><br><span class="line">MSE=<span class="number">0.7716576975459853</span>;</span><br><span class="line">RMSE=<span class="number">0.8365627862513065</span>;</span><br><span class="line">NRMSE=<span class="number">0.1759436770201489</span></span><br><span class="line">time consumption: <span class="number">144.52682209014893</span></span><br><span class="line">第二次：</span><br><span class="line">Epoch-<span class="number">9</span>: MAE=<span class="number">0.5640662337342898</span>;</span><br><span class="line">MSE=<span class="number">0.5737103850891193</span>;</span><br><span class="line">RMSE=<span class="number">0.7280830492575964</span>;</span><br><span class="line">NRMSE=<span class="number">0.15476489654331746</span></span><br><span class="line">time consumption: <span class="number">129.98186469078064</span></span><br></pre></td></tr></table></figure>
+
+<p>数据：HMWSmall.csv</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Epoch-<span class="number">9</span>: MAE=<span class="number">0.7204340462749069</span>;</span><br><span class="line">MSE=<span class="number">0.9228052129918659</span>;</span><br><span class="line">RMSE=<span class="number">0.9296268079731915</span>;</span><br><span class="line">NRMSE=<span class="number">0.20078527823625594</span></span><br><span class="line">time consumption: <span class="number">389.93425846099854</span></span><br></pre></td></tr></table></figure>
+
+<p>数据：海门湾 label&#x3D;4.csv</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Epoch-<span class="number">9</span>:</span><br><span class="line">MAE=<span class="number">0.6509949515718932</span>;</span><br><span class="line">MSE=<span class="number">0.7955262385285958</span>;</span><br><span class="line">RMSE=<span class="number">0.8547483034181304</span>;</span><br><span class="line">NRMSE=<span class="number">0.1715240579187544</span></span><br><span class="line">time consumption: <span class="number">1724.2369396686554</span></span><br><span class="line">第二次实验：</span><br><span class="line">Epoch-<span class="number">9</span>: MAE=<span class="number">0.7214407597751064</span>;MSE=<span class="number">0.9617295162666828</span>;RMSE=<span class="number">0.939981120031908</span>;NRMSE=<span class="number">0.19553191428042757</span></span><br><span class="line">time consumption: <span class="number">1791.8562726974487</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="LSTM-对比实验"><a href="#LSTM-对比实验" class="headerlink" title="LSTM 对比实验"></a>LSTM 对比实验</h2><p>数据：dataset2.csv</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mae:<span class="number">0.18</span> mse:<span class="number">0.04</span> rmse:<span class="number">0.21</span> nrmse: <span class="number">0.03</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="XGB-实验："><a href="#XGB-实验：" class="headerlink" title="XGB 实验："></a>XGB 实验：</h2><p>数据：海门湾 2000x5.csv</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MAE: <span class="number">0.622</span></span><br><span class="line">MSE: <span class="number">0.878</span></span><br><span class="line">RMSE: <span class="number">0.937</span></span><br><span class="line">NRMSE: <span class="number">0.147</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-14-19-32-45.png" alt="asset_img"></p>
+<p>数据：HMWSmall.csv</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MAE: <span class="number">0.519</span></span><br><span class="line">MSE: <span class="number">0.476</span></span><br><span class="line">RMSE: <span class="number">0.690</span></span><br><span class="line">NRMSE: <span class="number">0.160</span></span><br><span class="line">time consumption: <span class="number">570.6767070293427</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-14-20-15-19.png" alt="asset_img"></p>
+<h1 id="informer"><a href="#informer" class="headerlink" title="informer"></a>informer</h1><p>论文的实验使用了 1&#x2F;4L+L 组合的 informer stack 模型。</p>
+<p>‘M:多变量预测多元（multivariate predict multivariate）’，<br>‘S:单变量预测单变量（univariate predict univariate）’，<br>‘MS:多变量预测单变量（multivariate predict univariate）’。</p>
+<p>不对数据进行处理：<br>数据：全年数据</p>
+<blockquote>
+<p>模型过拟合 泛华能力弱</p>
+</blockquote>
+<p>数据：HMW_ALL</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Namespace(activation=<span class="string">&#x27;gelu&#x27;</span>, attn=<span class="string">&#x27;prob&#x27;</span>, batch_size=<span class="number">32</span>, c_out=<span class="number">1</span>, checkpoints=<span class="string">&#x27;./checkpoints/&#x27;</span>, cols=<span class="literal">None</span>, d_ff=<span class="number">2048</span>, d_layers=<span class="number">1</span>, d_model=<span class="number">512</span>, data=<span class="string">&#x27;HMW_small&#x27;</span>, data_path=<span class="string">&#x27;HMW_small.csv&#x27;</span>, dec_in=<span class="number">5</span>, des=<span class="string">&#x27;test&#x27;</span>, detail_freq=<span class="string">&#x27;h&#x27;</span>, devices=<span class="string">&#x27;0,1,2,3&#x27;</span>, distil=<span class="literal">True</span>, do_predict=<span class="literal">False</span>, dropout=<span class="number">0.05</span>, e_layers=<span class="number">2</span>, embed=<span class="string">&#x27;timeF&#x27;</span>, enc_in=<span class="number">5</span>, factor=<span class="number">5</span>, features=<span class="string">&#x27;MS&#x27;</span>, freq=<span class="string">&#x27;h&#x27;</span>, gpu=<span class="number">0</span>, inverse=<span class="literal">False</span>, itr=<span class="number">5</span>, label_len=<span class="number">48</span>, learning_rate=<span class="number">0.0001</span>, loss=<span class="string">&#x27;mse&#x27;</span>, lradj=<span class="string">&#x27;type1&#x27;</span>, mix=<span class="literal">True</span>, model=<span class="string">&#x27;informer&#x27;</span>, n_heads=<span class="number">8</span>, num_workers=<span class="number">0</span>, output_attention=<span class="literal">False</span>, padding=<span class="number">0</span>, patience=<span class="number">5</span>, pred_len=<span class="number">24</span>, root_path=<span class="string">&#x27;./data/&#x27;</span>, s_layers=[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>], seq_len=<span class="number">96</span>, target=<span class="string">&#x27;oxy&#x27;</span>, train_epochs=<span class="number">6</span>, use_amp=<span class="literal">False</span>, use_gpu=<span class="literal">True</span>, use_multi_gpu=<span class="literal">False</span>)</span><br><span class="line">Use GPU: cuda:<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>效果：mse:0.7565932273864746, mae:0.6806058287620544<br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-16-10-44-13.png" alt="asset_img"></p>
+<p>数据 powerdata</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">teps: <span class="number">2814</span> | Train Loss: <span class="number">0.0348153</span> Vali Loss: <span class="number">0.0367153</span> Test Loss: <span class="number">0.0566367</span></span><br><span class="line">EarlyStopping counter: <span class="number">5</span> out of <span class="number">5</span></span><br><span class="line">Early stopping</span><br><span class="line">test <span class="number">25757</span></span><br><span class="line">test shape: (<span class="number">804</span>, <span class="number">32</span>, <span class="number">48</span>, <span class="number">1</span>) (<span class="number">804</span>, <span class="number">32</span>, <span class="number">48</span>, <span class="number">1</span>)</span><br><span class="line">test shape: (<span class="number">25728</span>, <span class="number">48</span>, <span class="number">1</span>) (<span class="number">25728</span>, <span class="number">48</span>, <span class="number">1</span>)</span><br><span class="line">mse:<span class="number">0.056838978081941605</span>, mae:<span class="number">0.15307551622390747</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>效果：<br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-17-11-43-43.png" alt="asset_img"></p>
+<p>数据：WTH</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">第一次实验：</span><br><span class="line">Namespace(activation=<span class="string">&#x27;gelu&#x27;</span>, attn=<span class="string">&#x27;prob&#x27;</span>, batch_size=<span class="number">32</span>, c_out=<span class="number">1</span>, checkpoints=<span class="string">&#x27;./checkpoints/&#x27;</span>, cols=<span class="literal">None</span>, d_ff=<span class="number">2048</span>, d_layers=<span class="number">1</span>, d_model=<span class="number">512</span>, data=<span class="string">&#x27;WTH&#x27;</span>, data_path=<span class="string">&#x27;WTH.csv&#x27;</span>, dec_in=<span class="number">1</span>, des=<span class="string">&#x27;Exp&#x27;</span>, detail_freq=<span class="string">&#x27;h&#x27;</span>, devices=<span class="string">&#x27;0,1,2,3&#x27;</span>, distil=<span class="literal">True</span>, do_predict=<span class="literal">False</span>, dropout=<span class="number">0.05</span>, e_layers=<span class="number">2</span>, embed=<span class="string">&#x27;timeF&#x27;</span>, enc_in=<span class="number">1</span>, factor=<span class="number">5</span>, features=<span class="string">&#x27;S&#x27;</span>, freq=<span class="string">&#x27;h&#x27;</span>, gpu=<span class="number">0</span>, inverse=<span class="literal">False</span>, itr=<span class="number">3</span>, label_len=<span class="number">48</span>, learning_rate=<span class="number">0.0001</span>, loss=<span class="string">&#x27;mse&#x27;</span>, lradj=<span class="string">&#x27;type1&#x27;</span>, mix=<span class="literal">True</span>, model=<span class="string">&#x27;informer&#x27;</span>, n_heads=<span class="number">8</span>, num_workers=<span class="number">0</span>, output_attention=<span class="literal">False</span>, padding=<span class="number">0</span>, patience=<span class="number">3</span>, pred_len=<span class="number">24</span>, root_path=<span class="string">&#x27;./data/&#x27;</span>, s_layers=[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>], seq_len=<span class="number">96</span>, target=<span class="string">&#x27;WetBulbCelsius&#x27;</span>, train_epochs=<span class="number">6</span>, use_amp=<span class="literal">False</span>, use_gpu=<span class="literal">True</span>, use_multi_gpu=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">mse:<span class="number">0.09717869758605957</span>, mae:<span class="number">0.21864117681980133</span></span><br><span class="line">第二次实验：</span><br><span class="line">Namespace(activation=<span class="string">&#x27;gelu&#x27;</span>, attn=<span class="string">&#x27;prob&#x27;</span>, batch_size=<span class="number">32</span>, c_out=<span class="number">12</span>, checkpoints=<span class="string">&#x27;./checkpoints/&#x27;</span>, cols=<span class="literal">None</span>, d_ff=<span class="number">2048</span>, d_layers=<span class="number">1</span>, d_model=<span class="number">512</span>, data=<span class="string">&#x27;WTH&#x27;</span>, data_path=<span class="string">&#x27;WTH.csv&#x27;</span>, dec_in=<span class="number">12</span>, des=<span class="string">&#x27;Exp&#x27;</span>, detail_freq=<span class="string">&#x27;h&#x27;</span>, devices=<span class="string">&#x27;0,1,2,3&#x27;</span>, distil=<span class="literal">True</span>, do_predict=<span class="literal">False</span>, dropout=<span class="number">0.05</span>, e_layers=<span class="number">2</span>, embed=<span class="string">&#x27;timeF&#x27;</span>, enc_in=<span class="number">12</span>, factor=<span class="number">5</span>, features=<span class="string">&#x27;M&#x27;</span>, freq=<span class="string">&#x27;h&#x27;</span>, gpu=<span class="number">0</span>, inverse=<span class="literal">False</span>, itr=<span class="number">3</span>, label_len=<span class="number">48</span>, learning_rate=<span class="number">0.0001</span>, loss=<span class="string">&#x27;mse&#x27;</span>, lradj=<span class="string">&#x27;type1&#x27;</span>, mix=<span class="literal">True</span>, model=<span class="string">&#x27;informer&#x27;</span>, n_heads=<span class="number">8</span>, num_workers=<span class="number">0</span>, output_attention=<span class="literal">False</span>, padding=<span class="number">0</span>, patience=<span class="number">3</span>, pred_len=<span class="number">24</span>, root_path=<span class="string">&#x27;./data/&#x27;</span>, s_layers=[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>], seq_len=<span class="number">96</span>, target=<span class="string">&#x27;WetBulbCelsius&#x27;</span>, train_epochs=<span class="number">6</span>, use_amp=<span class="literal">False</span>, use_gpu=<span class="literal">True</span>, use_multi_gpu=<span class="literal">False</span>)</span><br><span class="line">Use GPU: cuda:<span class="number">0</span></span><br><span class="line">Epoch: <span class="number">4</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2213985</span> Vali Loss: <span class="number">0.4212814</span> Test Loss: <span class="number">0.3256248</span></span><br><span class="line">EarlyStopping counter: <span class="number">3</span> out of <span class="number">3</span></span><br><span class="line">Early stopping</span><br><span class="line">test <span class="number">6989</span></span><br><span class="line">test shape: (<span class="number">218</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">218</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">test shape: (<span class="number">6976</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">6976</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">mse:<span class="number">0.3156082034111023</span>, mae:<span class="number">0.3719654083251953</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>第二次实验效果：<br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-17-13-29-33.png" alt="asset_img"><br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-17-15-04-05.png" alt="asset_img"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Namespace(activation=&#x27;gelu&#x27;, attn=&#x27;prob&#x27;, batch_size=32, c_out=1, checkpoints=&#x27;./checkpoints/&#x27;, cols=None, d_ff=2048, d_layers=1, d_model=512, data=&#x27;HMWFULL&#x27;, data_path=&#x27;HMWFULL.csv&#x27;, dec_in=1, des=&#x27;Exp&#x27;, detail_freq=&#x27;h&#x27;, devices=&#x27;0,1,2,3&#x27;, distil=False, do_predict=False, dropout=0.05, e_layers=2, embed=&#x27;timeF&#x27;, enc_in=1, factor=5, features=&#x27;S&#x27;, freq=&#x27;h&#x27;, gpu=0, inverse=False, itr=50, label_len=48, learning_rate=0.0001, loss=&#x27;mse&#x27;, lradj=&#x27;type1&#x27;, mix=True, model=&#x27;informerstack&#x27;, n_heads=8, num_workers=0, output_attention=False, padding=0, patience=5, pred_len=24, root_path=&#x27;./data/&#x27;, s_layers=[3, 2, 1], seq_len=96, target=&#x27;oxy&#x27;, train_epochs=30, use_amp=False, use_gpu=True, use_multi_gpu=False)</span><br><span class="line">Use GPU: cuda:0</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">mse:0.5204310417175293, mae:0.551766574382782</span><br></pre></td></tr></table></figure>
+
+<p><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-01-09-24-06.png" alt="asset_img"></p>
+<h2 id="实验问题"><a href="#实验问题" class="headerlink" title="实验问题"></a>实验问题</h2><!-- 数据稀疏 有大量的空值 导致模型收敛效果不好 -->
+
+<p>先用 FM 对原始数据进行处理 后再输入模型中训练 改进 informer 模型 1.优化器</p>
+<p>2 随机搜索 优化参数调整</p>
+<p>数据过拟合</p>
+<h3 id="是否是数据量不够导致过拟合"><a href="#是否是数据量不够导致过拟合" class="headerlink" title="是否是数据量不够导致过拟合"></a>是否是数据量不够导致过拟合</h3><p>数据：WTH</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">Args <span class="keyword">in</span> experiment:</span><br><span class="line">Namespace(activation=<span class="string">&#x27;gelu&#x27;</span>, attn=<span class="string">&#x27;prob&#x27;</span>, batch_size=<span class="number">32</span>, c_out=<span class="number">12</span>, checkpoints=<span class="string">&#x27;./checkpoints/&#x27;</span>, cols=<span class="literal">None</span>, d_ff=<span class="number">2048</span>, d_layers=<span class="number">1</span>, d_model=<span class="number">512</span>, data=<span class="string">&#x27;WTH&#x27;</span>, data_path=<span class="string">&#x27;WTH.csv&#x27;</span>, dec_in=<span class="number">12</span>, des=<span class="string">&#x27;Exp&#x27;</span>, detail_freq=<span class="string">&#x27;h&#x27;</span>, devices=<span class="string">&#x27;0,1,2,3&#x27;</span>, distil=<span class="literal">True</span>, do_predict=<span class="literal">False</span>, dropout=<span class="number">0.05</span>, e_layers=<span class="number">2</span>, embed=<span class="string">&#x27;timeF&#x27;</span>, enc_in=<span class="number">12</span>, factor=<span class="number">5</span>, features=<span class="string">&#x27;M&#x27;</span>, freq=<span class="string">&#x27;h&#x27;</span>, gpu=<span class="number">0</span>, inverse=<span class="literal">False</span>, itr=<span class="number">3</span>, label_len=<span class="number">48</span>, learning_rate=<span class="number">0.0001</span>, loss=<span class="string">&#x27;mse&#x27;</span>, lradj=<span class="string">&#x27;type1&#x27;</span>, mix=<span class="literal">True</span>, model=<span class="string">&#x27;informer&#x27;</span>, n_heads=<span class="number">8</span>, num_workers=<span class="number">0</span>, output_attention=<span class="literal">False</span>, padding=<span class="number">0</span>, patience=<span class="number">3</span>, pred_len=<span class="number">24</span>, root_path=<span class="string">&#x27;./data/&#x27;</span>, s_layers=[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>], seq_len=<span class="number">96</span>, target=<span class="string">&#x27;WetBulbCelsius&#x27;</span>, train_epochs=<span class="number">6</span>, use_amp=<span class="literal">False</span>, use_gpu=<span class="literal">True</span>, use_multi_gpu=<span class="literal">False</span>)</span><br><span class="line">Use GPU: cuda:<span class="number">0</span></span><br><span class="line">train <span class="number">24425</span></span><br><span class="line">val <span class="number">3485</span></span><br><span class="line">test <span class="number">6989</span></span><br><span class="line">Epoch: <span class="number">1</span> cost time: <span class="number">63.796271085739136</span></span><br><span class="line">Epoch: <span class="number">1</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.3811573</span> Vali Loss: <span class="number">0.4086232</span> Test Loss: <span class="number">0.3270284</span></span><br><span class="line">Validation loss decreased (inf --&gt; <span class="number">0.408623</span>).  Saving model ...</span><br><span class="line">Updating learning rate to <span class="number">0.0001</span></span><br><span class="line">Epoch: <span class="number">2</span> cost time: <span class="number">56.0014066696167</span></span><br><span class="line">Epoch: <span class="number">2</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2971005</span> Vali Loss: <span class="number">0.4012066</span> Test Loss: <span class="number">0.3181123</span></span><br><span class="line">Validation loss decreased (<span class="number">0.408623</span> --&gt; <span class="number">0.401207</span>).  Saving model ...</span><br><span class="line">Updating learning rate to <span class="number">5e-05</span></span><br><span class="line">Epoch: <span class="number">3</span> cost time: <span class="number">56.45022463798523</span></span><br><span class="line">Epoch: <span class="number">3</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2531563</span> Vali Loss: <span class="number">0.4294812</span> Test Loss: <span class="number">0.3225703</span></span><br><span class="line">EarlyStopping counter: <span class="number">1</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">2.5e-05</span></span><br><span class="line">Epoch: <span class="number">4</span> cost time: <span class="number">56.34293866157532</span></span><br><span class="line">Epoch: <span class="number">4</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2272390</span> Vali Loss: <span class="number">0.4422789</span> Test Loss: <span class="number">0.3289614</span></span><br><span class="line">EarlyStopping counter: <span class="number">2</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">1.25e-05</span></span><br><span class="line">Epoch: <span class="number">5</span> cost time: <span class="number">56.31914448738098</span></span><br><span class="line">Epoch: <span class="number">5</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2132428</span> Vali Loss: <span class="number">0.4562938</span> Test Loss: <span class="number">0.3320536</span></span><br><span class="line">EarlyStopping counter: <span class="number">3</span> out of <span class="number">3</span></span><br><span class="line">Early stopping</span><br><span class="line">test <span class="number">6989</span></span><br><span class="line">test shape: (<span class="number">218</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">218</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">test shape: (<span class="number">6976</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">6976</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">mse:<span class="number">0.31823205947875977</span>, mae:<span class="number">0.3682463765144348</span></span><br><span class="line">Use GPU: cuda:<span class="number">0</span></span><br><span class="line">train <span class="number">24425</span></span><br><span class="line">val <span class="number">3485</span></span><br><span class="line">test <span class="number">6989</span></span><br><span class="line">Epoch: <span class="number">1</span> cost time: <span class="number">56.746463775634766</span></span><br><span class="line">Epoch: <span class="number">1</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.3788457</span> Vali Loss: <span class="number">0.3907439</span> Test Loss: <span class="number">0.3091684</span></span><br><span class="line">Validation loss decreased (inf --&gt; <span class="number">0.390744</span>).  Saving model ...</span><br><span class="line">Updating learning rate to <span class="number">0.0001</span></span><br><span class="line">Epoch: <span class="number">2</span> cost time: <span class="number">56.375022411346436</span></span><br><span class="line">Epoch: <span class="number">2</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2963837</span> Vali Loss: <span class="number">0.4053312</span> Test Loss: <span class="number">0.3231265</span></span><br><span class="line">EarlyStopping counter: <span class="number">1</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">5e-05</span></span><br><span class="line">Epoch: <span class="number">3</span> cost time: <span class="number">56.67919874191284</span></span><br><span class="line">Epoch: <span class="number">3</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2505333</span> Vali Loss: <span class="number">0.4084474</span> Test Loss: <span class="number">0.3248915</span></span><br><span class="line">EarlyStopping counter: <span class="number">2</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">2.5e-05</span></span><br><span class="line">Epoch: <span class="number">4</span> cost time: <span class="number">56.6005961894989</span></span><br><span class="line">Epoch: <span class="number">4</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2243188</span> Vali Loss: <span class="number">0.4288246</span> Test Loss: <span class="number">0.3335948</span></span><br><span class="line">EarlyStopping counter: <span class="number">3</span> out of <span class="number">3</span></span><br><span class="line">Early stopping</span><br><span class="line">test <span class="number">6989</span></span><br><span class="line">test shape: (<span class="number">218</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">218</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">test shape: (<span class="number">6976</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">6976</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">mse:<span class="number">0.3092172145843506</span>, mae:<span class="number">0.3625324070453644</span></span><br><span class="line">Use GPU: cuda:<span class="number">0</span></span><br><span class="line">train <span class="number">24425</span></span><br><span class="line">val <span class="number">3485</span></span><br><span class="line">test <span class="number">6989</span></span><br><span class="line">Epoch: <span class="number">1</span> cost time: <span class="number">56.78239607810974</span></span><br><span class="line">Epoch: <span class="number">1</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.3787740</span> Vali Loss: <span class="number">0.3965647</span> Test Loss: <span class="number">0.3124289</span></span><br><span class="line">Validation loss decreased (inf --&gt; <span class="number">0.396565</span>).  Saving model ...</span><br><span class="line">Updating learning rate to <span class="number">0.0001</span></span><br><span class="line">Epoch: <span class="number">2</span> cost time: <span class="number">56.635188579559326</span></span><br><span class="line">Epoch: <span class="number">2</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2948636</span> Vali Loss: <span class="number">0.4022826</span> Test Loss: <span class="number">0.3077486</span></span><br><span class="line">EarlyStopping counter: <span class="number">1</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">5e-05</span></span><br><span class="line">Epoch: <span class="number">3</span> cost time: <span class="number">58.146103382110596</span></span><br><span class="line">Epoch: <span class="number">3</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2491131</span> Vali Loss: <span class="number">0.4316607</span> Test Loss: <span class="number">0.3205608</span></span><br><span class="line">EarlyStopping counter: <span class="number">2</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">2.5e-05</span></span><br><span class="line">Epoch: <span class="number">4</span> cost time: <span class="number">58.03831100463867</span></span><br><span class="line">Epoch: <span class="number">4</span>, Steps: <span class="number">763</span> | Train Loss: <span class="number">0.2221787</span> Vali Loss: <span class="number">0.4414862</span> Test Loss: <span class="number">0.3280292</span></span><br><span class="line">EarlyStopping counter: <span class="number">3</span> out of <span class="number">3</span></span><br><span class="line">Early stopping</span><br><span class="line">test <span class="number">6989</span></span><br><span class="line">test shape: (<span class="number">218</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">218</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">test shape: (<span class="number">6976</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">6976</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">mse:<span class="number">0.3123178482055664</span>, mae:<span class="number">0.36595234274864197</span></span><br></pre></td></tr></table></figure>
+
+<p>效果：<br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-19-10-07-15.png" alt="asset_img"></p>
+<p>将 WTH 数据减少到 13099</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line">Args <span class="keyword">in</span> experiment:</span><br><span class="line">Namespace(activation=<span class="string">&#x27;gelu&#x27;</span>, attn=<span class="string">&#x27;prob&#x27;</span>, batch_size=<span class="number">32</span>, c_out=<span class="number">12</span>, checkpoints=<span class="string">&#x27;./checkpoints/&#x27;</span>, cols=<span class="literal">None</span>, d_ff=<span class="number">2048</span>, d_layers=<span class="number">1</span>, d_model=<span class="number">512</span>, data=<span class="string">&#x27;WTH_small&#x27;</span>, data_path=<span class="string">&#x27;WTH_small.csv&#x27;</span>, dec_in=<span class="number">12</span>, des=<span class="string">&#x27;Exp&#x27;</span>, detail_freq=<span class="string">&#x27;h&#x27;</span>, devices=<span class="string">&#x27;0,1,2,3&#x27;</span>, distil=<span class="literal">True</span>, do_predict=<span class="literal">False</span>, dropout=<span class="number">0.05</span>, e_layers=<span class="number">2</span>, embed=<span class="string">&#x27;timeF&#x27;</span>, enc_in=<span class="number">12</span>, factor=<span class="number">5</span>, features=<span class="string">&#x27;M&#x27;</span>, freq=<span class="string">&#x27;h&#x27;</span>, gpu=<span class="number">0</span>, inverse=<span class="literal">False</span>, itr=<span class="number">3</span>, label_len=<span class="number">48</span>, learning_rate=<span class="number">0.0001</span>, loss=<span class="string">&#x27;mse&#x27;</span>, lradj=<span class="string">&#x27;type1&#x27;</span>, mix=<span class="literal">True</span>, model=<span class="string">&#x27;informer&#x27;</span>, n_heads=<span class="number">8</span>, num_workers=<span class="number">0</span>, output_attention=<span class="literal">False</span>, padding=<span class="number">0</span>, patience=<span class="number">3</span>, pred_len=<span class="number">24</span>, root_path=<span class="string">&#x27;./data/&#x27;</span>, s_layers=[<span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>], seq_len=<span class="number">96</span>, target=<span class="string">&#x27;WetBulbCelsius&#x27;</span>, train_epochs=<span class="number">6</span>, use_amp=<span class="literal">False</span>, use_gpu=<span class="literal">True</span>, use_multi_gpu=<span class="literal">False</span>)</span><br><span class="line">Use GPU: cuda:<span class="number">0</span></span><br><span class="line">train <span class="number">9049</span></span><br><span class="line">val <span class="number">1288</span></span><br><span class="line">test <span class="number">2596</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">1</span> | loss: <span class="number">0.3929413</span></span><br><span class="line">	speed: <span class="number">0.1156</span>s/<span class="built_in">iter</span>; left time: <span class="number">184.1941</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">1</span> | loss: <span class="number">0.3709807</span></span><br><span class="line">	speed: <span class="number">0.0759</span>s/<span class="built_in">iter</span>; left time: <span class="number">113.3635</span>s</span><br><span class="line">Epoch: <span class="number">1</span> cost time: <span class="number">25.358320951461792</span></span><br><span class="line">Epoch: <span class="number">1</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.4345655</span> Vali Loss: <span class="number">0.5087171</span> Test Loss: <span class="number">0.4339369</span></span><br><span class="line">Validation loss decreased (inf --&gt; <span class="number">0.508717</span>).  Saving model ...</span><br><span class="line">Updating learning rate to <span class="number">0.0001</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">2</span> | loss: <span class="number">0.2958772</span></span><br><span class="line">	speed: <span class="number">0.1762</span>s/<span class="built_in">iter</span>; left time: <span class="number">231.0189</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">2</span> | loss: <span class="number">0.3318094</span></span><br><span class="line">	speed: <span class="number">0.0744</span>s/<span class="built_in">iter</span>; left time: <span class="number">90.0887</span>s</span><br><span class="line">Epoch: <span class="number">2</span> cost time: <span class="number">20.981266498565674</span></span><br><span class="line">Epoch: <span class="number">2</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.3085716</span> Vali Loss: <span class="number">0.5106961</span> Test Loss: <span class="number">0.4459712</span></span><br><span class="line">EarlyStopping counter: <span class="number">1</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">5e-05</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">3</span> | loss: <span class="number">0.2508945</span></span><br><span class="line">	speed: <span class="number">0.1716</span>s/<span class="built_in">iter</span>; left time: <span class="number">176.5808</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">3</span> | loss: <span class="number">0.2346871</span></span><br><span class="line">	speed: <span class="number">0.0748</span>s/<span class="built_in">iter</span>; left time: <span class="number">69.4849</span>s</span><br><span class="line">Epoch: <span class="number">3</span> cost time: <span class="number">21.04939556121826</span></span><br><span class="line">Epoch: <span class="number">3</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.2538351</span> Vali Loss: <span class="number">0.5617536</span> Test Loss: <span class="number">0.4440238</span></span><br><span class="line">EarlyStopping counter: <span class="number">2</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">2.5e-05</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">4</span> | loss: <span class="number">0.2400217</span></span><br><span class="line">	speed: <span class="number">0.1718</span>s/<span class="built_in">iter</span>; left time: <span class="number">128.3560</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">4</span> | loss: <span class="number">0.1911491</span></span><br><span class="line">	speed: <span class="number">0.0746</span>s/<span class="built_in">iter</span>; left time: <span class="number">48.2374</span>s</span><br><span class="line">Epoch: <span class="number">4</span> cost time: <span class="number">21.02139139175415</span></span><br><span class="line">Epoch: <span class="number">4</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.2284331</span> Vali Loss: <span class="number">0.5406013</span> Test Loss: <span class="number">0.4592241</span></span><br><span class="line">EarlyStopping counter: <span class="number">3</span> out of <span class="number">3</span></span><br><span class="line">Early stopping</span><br><span class="line">test <span class="number">2596</span></span><br><span class="line">test shape: (<span class="number">81</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">81</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">test shape: (<span class="number">2592</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">2592</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">mse:<span class="number">0.4339095950126648</span>, mae:<span class="number">0.44402486085891724</span></span><br><span class="line">Use GPU: cuda:<span class="number">0</span></span><br><span class="line">train <span class="number">9049</span></span><br><span class="line">val <span class="number">1288</span></span><br><span class="line">test <span class="number">2596</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">1</span> | loss: <span class="number">0.4348719</span></span><br><span class="line">	speed: <span class="number">0.0749</span>s/<span class="built_in">iter</span>; left time: <span class="number">119.2977</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">1</span> | loss: <span class="number">0.4007643</span></span><br><span class="line">	speed: <span class="number">0.0746</span>s/<span class="built_in">iter</span>; left time: <span class="number">111.4375</span>s</span><br><span class="line">Epoch: <span class="number">1</span> cost time: <span class="number">21.12400794029236</span></span><br><span class="line">Epoch: <span class="number">1</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.4405728</span> Vali Loss: <span class="number">0.5352291</span> Test Loss: <span class="number">0.4438668</span></span><br><span class="line">Validation loss decreased (inf --&gt; <span class="number">0.535229</span>).  Saving model ...</span><br><span class="line">Updating learning rate to <span class="number">0.0001</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">2</span> | loss: <span class="number">0.3224227</span></span><br><span class="line">	speed: <span class="number">0.1759</span>s/<span class="built_in">iter</span>; left time: <span class="number">230.5588</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">2</span> | loss: <span class="number">0.2572384</span></span><br><span class="line">	speed: <span class="number">0.0756</span>s/<span class="built_in">iter</span>; left time: <span class="number">91.5637</span>s</span><br><span class="line">Epoch: <span class="number">2</span> cost time: <span class="number">21.34011459350586</span></span><br><span class="line">Epoch: <span class="number">2</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.3162456</span> Vali Loss: <span class="number">0.5325221</span> Test Loss: <span class="number">0.4487060</span></span><br><span class="line">Validation loss decreased (<span class="number">0.535229</span> --&gt; <span class="number">0.532522</span>).  Saving model ...</span><br><span class="line">Updating learning rate to <span class="number">5e-05</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">3</span> | loss: <span class="number">0.2374957</span></span><br><span class="line">	speed: <span class="number">0.1759</span>s/<span class="built_in">iter</span>; left time: <span class="number">181.0154</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">3</span> | loss: <span class="number">0.2355222</span></span><br><span class="line">	speed: <span class="number">0.0758</span>s/<span class="built_in">iter</span>; left time: <span class="number">70.4288</span>s</span><br><span class="line">Epoch: <span class="number">3</span> cost time: <span class="number">21.344139575958252</span></span><br><span class="line">Epoch: <span class="number">3</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.2626097</span> Vali Loss: <span class="number">0.5565879</span> Test Loss: <span class="number">0.4496032</span></span><br><span class="line">EarlyStopping counter: <span class="number">1</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">2.5e-05</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">4</span> | loss: <span class="number">0.2350486</span></span><br><span class="line">	speed: <span class="number">0.1742</span>s/<span class="built_in">iter</span>; left time: <span class="number">130.1581</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">4</span> | loss: <span class="number">0.2261773</span></span><br><span class="line">	speed: <span class="number">0.0756</span>s/<span class="built_in">iter</span>; left time: <span class="number">48.9275</span>s</span><br><span class="line">Epoch: <span class="number">4</span> cost time: <span class="number">21.31989288330078</span></span><br><span class="line">Epoch: <span class="number">4</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.2369285</span> Vali Loss: <span class="number">0.5546714</span> Test Loss: <span class="number">0.4589340</span></span><br><span class="line">EarlyStopping counter: <span class="number">2</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">1.25e-05</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">5</span> | loss: <span class="number">0.2155548</span></span><br><span class="line">	speed: <span class="number">0.1745</span>s/<span class="built_in">iter</span>; left time: <span class="number">81.1575</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">5</span> | loss: <span class="number">0.2049205</span></span><br><span class="line">	speed: <span class="number">0.0759</span>s/<span class="built_in">iter</span>; left time: <span class="number">27.6925</span>s</span><br><span class="line">Epoch: <span class="number">5</span> cost time: <span class="number">21.35876154899597</span></span><br><span class="line">Epoch: <span class="number">5</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.2249534</span> Vali Loss: <span class="number">0.5526537</span> Test Loss: <span class="number">0.4628886</span></span><br><span class="line">EarlyStopping counter: <span class="number">3</span> out of <span class="number">3</span></span><br><span class="line">Early stopping</span><br><span class="line">test <span class="number">2596</span></span><br><span class="line">test shape: (<span class="number">81</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">81</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">test shape: (<span class="number">2592</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">2592</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">mse:<span class="number">0.4481780529022217</span>, mae:<span class="number">0.46156835556030273</span></span><br><span class="line">Use GPU: cuda:<span class="number">0</span></span><br><span class="line">train <span class="number">9049</span></span><br><span class="line">val <span class="number">1288</span></span><br><span class="line">test <span class="number">2596</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">1</span> | loss: <span class="number">0.3555815</span></span><br><span class="line">	speed: <span class="number">0.0762</span>s/<span class="built_in">iter</span>; left time: <span class="number">121.4317</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">1</span> | loss: <span class="number">0.3954389</span></span><br><span class="line">	speed: <span class="number">0.0758</span>s/<span class="built_in">iter</span>; left time: <span class="number">113.1718</span>s</span><br><span class="line">Epoch: <span class="number">1</span> cost time: <span class="number">21.422552585601807</span></span><br><span class="line">Epoch: <span class="number">1</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.4345994</span> Vali Loss: <span class="number">0.4956020</span> Test Loss: <span class="number">0.4256884</span></span><br><span class="line">Validation loss decreased (inf --&gt; <span class="number">0.495602</span>).  Saving model ...</span><br><span class="line">Updating learning rate to <span class="number">0.0001</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">2</span> | loss: <span class="number">0.3080822</span></span><br><span class="line">	speed: <span class="number">0.1769</span>s/<span class="built_in">iter</span>; left time: <span class="number">231.9102</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">2</span> | loss: <span class="number">0.3988460</span></span><br><span class="line">	speed: <span class="number">0.0758</span>s/<span class="built_in">iter</span>; left time: <span class="number">91.7762</span>s</span><br><span class="line">Epoch: <span class="number">2</span> cost time: <span class="number">21.35769748687744</span></span><br><span class="line">Epoch: <span class="number">2</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.3083995</span> Vali Loss: <span class="number">0.5282077</span> Test Loss: <span class="number">0.4418433</span></span><br><span class="line">EarlyStopping counter: <span class="number">1</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">5e-05</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">3</span> | loss: <span class="number">0.2559841</span></span><br><span class="line">	speed: <span class="number">0.1748</span>s/<span class="built_in">iter</span>; left time: <span class="number">179.8352</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">3</span> | loss: <span class="number">0.2613652</span></span><br><span class="line">	speed: <span class="number">0.0757</span>s/<span class="built_in">iter</span>; left time: <span class="number">70.2881</span>s</span><br><span class="line">Epoch: <span class="number">3</span> cost time: <span class="number">21.38126850128174</span></span><br><span class="line">Epoch: <span class="number">3</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.2551193</span> Vali Loss: <span class="number">0.5191556</span> Test Loss: <span class="number">0.4380889</span></span><br><span class="line">EarlyStopping counter: <span class="number">2</span> out of <span class="number">3</span></span><br><span class="line">Updating learning rate to <span class="number">2.5e-05</span></span><br><span class="line">	iters: <span class="number">100</span>, epoch: <span class="number">4</span> | loss: <span class="number">0.1936909</span></span><br><span class="line">	speed: <span class="number">0.1749</span>s/<span class="built_in">iter</span>; left time: <span class="number">130.6762</span>s</span><br><span class="line">	iters: <span class="number">200</span>, epoch: <span class="number">4</span> | loss: <span class="number">0.2377086</span></span><br><span class="line">	speed: <span class="number">0.0758</span>s/<span class="built_in">iter</span>; left time: <span class="number">49.0485</span>s</span><br><span class="line">Epoch: <span class="number">4</span> cost time: <span class="number">21.35731053352356</span></span><br><span class="line">Epoch: <span class="number">4</span>, Steps: <span class="number">282</span> | Train Loss: <span class="number">0.2307397</span> Vali Loss: <span class="number">0.5280428</span> Test Loss: <span class="number">0.4381759</span></span><br><span class="line">EarlyStopping counter: <span class="number">3</span> out of <span class="number">3</span></span><br><span class="line">Early stopping</span><br><span class="line">test <span class="number">2596</span></span><br><span class="line">test shape: (<span class="number">81</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">81</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">test shape: (<span class="number">2592</span>, <span class="number">24</span>, <span class="number">12</span>) (<span class="number">2592</span>, <span class="number">24</span>, <span class="number">12</span>)</span><br><span class="line">mse:<span class="number">0.42530733346939087</span>, mae:<span class="number">0.43608078360557556</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>效果：<br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-19-10-05-16.png" alt="asset_img"></p>
+<p>HMW 增加数据量到 17000</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Epoch: <span class="number">6</span>, Steps: <span class="number">377</span> | Train Loss: <span class="number">0.2115505</span> Vali Loss: <span class="number">0.9331595</span> Test Loss: <span class="number">0.8476166</span></span><br><span class="line">EarlyStopping counter: <span class="number">4</span> out of <span class="number">5</span></span><br><span class="line">Updating learning rate to <span class="number">3.125e-06</span></span><br><span class="line">test <span class="number">3466</span></span><br><span class="line">test shape: (<span class="number">108</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">1</span>) (<span class="number">108</span>, <span class="number">32</span>, <span class="number">24</span>, <span class="number">1</span>)</span><br><span class="line">test shape: (<span class="number">3456</span>, <span class="number">24</span>, <span class="number">1</span>) (<span class="number">3456</span>, <span class="number">24</span>, <span class="number">1</span>)</span><br><span class="line">mse:<span class="number">0.7616454362869263</span>, mae:<span class="number">0.6817399263381958</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-01-19-11-22-31.png" alt="asset_img"></p>
+<h2 id="实验数据处理"><a href="#实验数据处理" class="headerlink" title="实验数据处理"></a>实验数据处理</h2><p>超参数优化 正则化不能简单的加惩罚项<br>使用 VAE 变分自编码器 增强数据<br>修改多头注意力头数为 4 减半<br>效果 模型过拟合程度减小<br>数据非连续 两小时一次 有 305 个缺失值<br>使用 AE 进行预训练得到</p>
+<p>采用线性插值和小波技术分别对缺失数据进行填充和去噪<br>去除噪声并平滑时间序列数据 ：<br>SG 或者卡尔曼滤波器<br>降噪</p>
+<h2 id="对比实验记录"><a href="#对比实验记录" class="headerlink" title="对比实验记录"></a>对比实验记录</h2><p>label 数据：tem<br>xgboost<br>数据：原始数据填 0 测试 Tem.csv</p>
+<p>数据以及参数：Namespace(activation&#x3D;’gelu’, attn&#x3D;’prob’, batch_size&#x3D;32, c_out&#x3D;1, checkpoints&#x3D;’.&#x2F;checkpoints&#x2F;‘, cols&#x3D;None, d_ff&#x3D;2048, d_layers&#x3D;1, d_model&#x3D;512, data&#x3D;’HMW 未平滑测测试 tur’, data_path&#x3D;’HMW 未平滑测测试 tur.csv’, dec_in&#x3D;1, des&#x3D;’原始数据测试 tem’, detail_freq&#x3D;’h’, devices&#x3D;’0,1,2,3’, distil&#x3D;False, do_predict&#x3D;False, dropout&#x3D;0.05, e_layers&#x3D;2, embed&#x3D;’timeF’, enc_in&#x3D;1, factor&#x3D;5, features&#x3D;’S’, freq&#x3D;’h’, gpu&#x3D;0, inverse&#x3D;False, itr&#x3D;1, label_len&#x3D;96, learning_rate&#x3D;0.0001, loss&#x3D;’mse’, lradj&#x3D;’type1’, mix&#x3D;True, model&#x3D;’informerstack’, n_heads&#x3D;8, num_workers&#x3D;0, output_attention&#x3D;False, padding&#x3D;0, patience&#x3D;6, pred_len&#x3D;48, root_path&#x3D;’.&#x2F;data&#x2F;‘, s_layers&#x3D;[3, 2, 1], seq_len&#x3D;144, target&#x3D;’tur’, train_epochs&#x3D;50, use_amp&#x3D;False, use_gpu&#x3D;True, use_multi_gpu&#x3D;False)<br>Use GPU: cuda:0<br>mse:2.061469793319702, mae:0.6467424035072327</p>
+<p>Namespace(activation&#x3D;’gelu’, attn&#x3D;’prob’, batch_size&#x3D;32, c_out&#x3D;1, checkpoints&#x3D;’.&#x2F;checkpoints&#x2F;‘, cols&#x3D;None, d_ff&#x3D;2048, d_layers&#x3D;1, d_model&#x3D;512, data&#x3D;’HMW 为平滑测试 tem’, data_path&#x3D;’HMW 为平滑测试 tem.csv’, dec_in&#x3D;1, des&#x3D;’HMW 为平滑测试 tem 实验第一次’, detail_freq&#x3D;’h’, devices&#x3D;’0,1,2,3’, distil&#x3D;False, do_predict&#x3D;False, dropout&#x3D;0.05, e_layers&#x3D;2, embed&#x3D;’timeF’, enc_in&#x3D;1, factor&#x3D;5, features&#x3D;’S’, freq&#x3D;’h’, gpu&#x3D;0, inverse&#x3D;False, itr&#x3D;1, label_len&#x3D;48, learning_rate&#x3D;0.0001, loss&#x3D;’mse’, lradj&#x3D;’type1’, mix&#x3D;True, model&#x3D;’informerstack’, n_heads&#x3D;8, num_workers&#x3D;0, output_attention&#x3D;False, padding&#x3D;0, patience&#x3D;6, pred_len&#x3D;24, root_path&#x3D;’.&#x2F;data&#x2F;‘, s_layers&#x3D;[3, 2, 1], seq_len&#x3D;96, target&#x3D;’tem’, train_epochs&#x3D;100, use_amp&#x3D;False, use_gpu&#x3D;True, use_multi_gpu&#x3D;False)<br>Use GPU: cuda:0<br>mse:0.053930822759866714, mae:0.16455648839473724</p>
+<p>Namespace(activation&#x3D;’gelu’, attn&#x3D;’prob’, batch_size&#x3D;32, c_out&#x3D;1, checkpoints&#x3D;’.&#x2F;checkpoints&#x2F;‘, cols&#x3D;None, d_ff&#x3D;2048, d_layers&#x3D;1, d_model&#x3D;512, data&#x3D;’HMWFULL 全平滑’, data_path&#x3D;’HMWFULL 全平滑.csv’, dec_in&#x3D;1, des&#x3D;’全平滑数据测试 tem 第 2 次’, detail_freq&#x3D;’h’, devices&#x3D;’0,1,2,3’, distil&#x3D;False, do_predict&#x3D;False, dropout&#x3D;0.05, e_layers&#x3D;2, embed&#x3D;’timeF’, enc_in&#x3D;1, factor&#x3D;5, features&#x3D;’S’, freq&#x3D;’h’, gpu&#x3D;0, inverse&#x3D;False, itr&#x3D;1, label_len&#x3D;48, learning_rate&#x3D;0.0001, loss&#x3D;’mse’, lradj&#x3D;’type1’, mix&#x3D;True, model&#x3D;’informerstack’, n_heads&#x3D;8, num_workers&#x3D;0, output_attention&#x3D;False, padding&#x3D;0, patience&#x3D;6, pred_len&#x3D;24, root_path&#x3D;’.&#x2F;data&#x2F;‘, s_layers&#x3D;[3, 2, 1], seq_len&#x3D;96, target&#x3D;’tem’, train_epochs&#x3D;50, use_amp&#x3D;False, use_gpu&#x3D;True, use_multi_gpu&#x3D;False)<br>Use GPU: cuda:0<br>mse:0.050531916320323944, mae:0.17868748307228088</p>
+<p>Namespace(activation&#x3D;’gelu’, attn&#x3D;’prob’, batch_size&#x3D;32, c_out&#x3D;1, checkpoints&#x3D;’.&#x2F;checkpoints&#x2F;‘, cols&#x3D;None, d_ff&#x3D;2048, d_layers&#x3D;1, d_model&#x3D;512, data&#x3D;’HMWFULL 全平滑’, data_path&#x3D;’HMWFULL 全平滑.csv’, dec_in&#x3D;5, des&#x3D;’全平滑数据测试 tem 第 1 次 MS’, detail_freq&#x3D;’h’, devices&#x3D;’0,1,2,3’, distil&#x3D;False, do_predict&#x3D;False, dropout&#x3D;0.05, e_layers&#x3D;2, embed&#x3D;’timeF’, enc_in&#x3D;5, factor&#x3D;5, features&#x3D;’MS’, freq&#x3D;’h’, gpu&#x3D;0, inverse&#x3D;False, itr&#x3D;1, label_len&#x3D;48, learning_rate&#x3D;0.0001, loss&#x3D;’mse’, lradj&#x3D;’type1’, mix&#x3D;True, model&#x3D;’informerstack’, n_heads&#x3D;8, num_workers&#x3D;0, output_attention&#x3D;False, padding&#x3D;0, patience&#x3D;6, pred_len&#x3D;24, root_path&#x3D;’.&#x2F;data&#x2F;‘, s_layers&#x3D;[3, 2, 1], seq_len&#x3D;96, target&#x3D;’tem’, train_epochs&#x3D;50, use_amp&#x3D;False, use_gpu&#x3D;True, use_multi_gpu&#x3D;False)<br>Use GPU: cuda:<br>mse:0.18952175974845886, mae:0.326072335243225</p>
+<p>Namespace(activation&#x3D;’gelu’, attn&#x3D;’prob’, batch_size&#x3D;32, c_out&#x3D;1, checkpoints&#x3D;’.&#x2F;checkpoints&#x2F;‘, cols&#x3D;None, d_ff&#x3D;2048, d_layers&#x3D;1, d_model&#x3D;512, data&#x3D;’HMWFULL 全平滑测试 PH’, data_path&#x3D;’HMWFULL 全平滑测试 PH.csv’, dec_in&#x3D;1, des&#x3D;’HMWFULL 全平滑测试 PH02’, detail_freq&#x3D;’h’, devices&#x3D;’0,1,2,3’, distil&#x3D;False, do_predict&#x3D;False, dropout&#x3D;0.05, e_layers&#x3D;2, embed&#x3D;’timeF’, enc_in&#x3D;1, factor&#x3D;5, features&#x3D;’S’, freq&#x3D;’h’, gpu&#x3D;0, inverse&#x3D;False, itr&#x3D;1, label_len&#x3D;48, learning_rate&#x3D;0.0001, loss&#x3D;’mse’, lradj&#x3D;’type1’, mix&#x3D;True, model&#x3D;’informerstack’, n_heads&#x3D;8, num_workers&#x3D;0, output_attention&#x3D;False, padding&#x3D;0, patience&#x3D;6, pred_len&#x3D;24, root_path&#x3D;’.&#x2F;data&#x2F;‘, s_layers&#x3D;[3, 2, 1], seq_len&#x3D;96, target&#x3D;’PH’, train_epochs&#x3D;100, use_amp&#x3D;False, use_gpu&#x3D;True, use_multi_gpu&#x3D;False)<br>Use GPU: cuda:0<br>mse:1.0920016765594482, mae:0.692217230796814</p>
+<h2 id="数据平滑前后对比"><a href="#数据平滑前后对比" class="headerlink" title="数据平滑前后对比"></a>数据平滑前后对比</h2><p><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-05-14-36-43.png" alt="asset_img"><br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-05-14-37-28.png" alt="asset_img"><br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-05-14-37-56.png" alt="asset_img"><br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-05-14-38-50.png" alt="asset_img"><br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-05-14-39-40.png" alt="asset_img"></p>
+<p><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-11-28-22.png" alt="asset_img"><br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-11-28-26.png" alt="asset_img"><br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-11-28-31.png" alt="asset_img"><br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-11-29-03.png" alt="asset_img"><br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-11-29-35.png" alt="asset_img"></p>
+<p>GRU 测试 训练数据平滑测试原始 tem<br>Epoch-9: MAE&#x3D;0.3710864945481391;MSE&#x3D;0.5061650873447188;RMSE&#x3D;0.5061737629201142;NRMSE&#x3D;0.021544123023164764<br>time consumption: 1728.8260278701782</p>
+<p>原始数据填 0 测试 Tem<br>xgboost 训练数据平滑测试原始 tem<br>Epoch-9: MAE&#x3D;0.5162394441907551;MSE&#x3D;0.8672649646366181;RMSE&#x3D;0.6923129876052981;NRMSE&#x3D;0.029339418060000448<br>time consumption: 1712.5348207950592</p>
+<p>MAE: 0.140<br>MSE: 0.034<br>RMSE: 0.185<br>NRMSE: 0.006<br>time consumption: 8153.2218708992<br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-06-21-18-40.png" alt="asset_img"></p>
+<p>informer<br>Namespace(activation&#x3D;’gelu’, attn&#x3D;’prob’, batch_size&#x3D;32, c_out&#x3D;1, checkpoints&#x3D;’.&#x2F;checkpoints&#x2F;‘, cols&#x3D;None, d_ff&#x3D;2048, d_layers&#x3D;1, d_model&#x3D;512, data&#x3D;’原始数据平滑训练和验证非平滑测试’, data_path&#x3D;’原始数据平滑训练和验证非平滑测试.csv’, dec_in&#x3D;5, des&#x3D;’原始数据平滑训练和验证非平滑测试 Tem02_infomer’, detail_freq&#x3D;’h’, devices&#x3D;’0,1,2,3’, distil&#x3D;False, do_predict&#x3D;False, dropout&#x3D;0.05, e_layers&#x3D;2, embed&#x3D;’timeF’, enc_in&#x3D;5, factor&#x3D;5, features&#x3D;’MS’, freq&#x3D;’h’, gpu&#x3D;0, inverse&#x3D;False, itr&#x3D;5, label_len&#x3D;48, learning_rate&#x3D;0.0001, loss&#x3D;’mse’, lradj&#x3D;’type1’, mix&#x3D;True, model&#x3D;’informer’, n_heads&#x3D;8, num_workers&#x3D;0, output_attention&#x3D;False, padding&#x3D;0, patience&#x3D;6, pred_len&#x3D;24, root_path&#x3D;’.&#x2F;data&#x2F;‘, s_layers&#x3D;[3, 2, 1], seq_len&#x3D;96, target&#x3D;’tem’, train_epochs&#x3D;20, use_amp&#x3D;False, use_gpu&#x3D;True, use_multi_gpu&#x3D;False)<br>Use GPU: cuda:0<br>mse:0.3933122158050537, mae:0.33675721287727356</p>
+<h2 id="灰色关联分析"><a href="#灰色关联分析" class="headerlink" title="灰色关联分析"></a>灰色关联分析</h2><p>做水质评价</p>
+<p>inoformerstack 比 informer 效果好</p>
+<p>informer mse:0.7242347598075867, mae:0.6504984498023987<br>stack mse:0.5931978821754456, mae:0.5942239165306091</p>
+<p>lstm 对比实验</p>
+<h2 id="卡尔曼"><a href="#卡尔曼" class="headerlink" title="卡尔曼"></a>卡尔曼</h2><h2 id="相关论文"><a href="#相关论文" class="headerlink" title="相关论文"></a>相关论文</h2><p>Adaptive self-attention LSTM for RUL prediction of lithium-ion batteries</p>
+<blockquote>
+<p>To achieve an accurate remaining useful life (RUL) prediction for lithium-ion batteries (LIBs), this study proposes an adaptive self-attention long short-term memory (SA-LSTM) prediction model. The innovations of the designed prediction model include the following. (1) It features an optimized local tangent space alignment algorithm, which allows the extraction of an indirect health indicator (HI) that can precisely describe battery degeneration from charge data. The extracted HI exhibits a high correlation with the standard capacity, thus facilitating RUL estimation. (2) By introducing a masked multi-head self-attention module into the time-series prediction model based on LSTM, critical information in the sequences is captured and the prediction performance is improved. (3) An online self-tuning mechanism for the weights and biases of neural networks is designed to correct cumulative estimation errors in long-term predictions and reduce the effects of local fluctuations and regeneration. The proposed prediction model enables the HI values in future cycles to be iteratively estimated using the one-step-ahead method, and the RUL can be forecast once the predicted signal falls. Experimental results indicate the effectiveness and superiority of the proposed prediction method.</p>
+</blockquote>
+<h2 id="实验对比"><a href="#实验对比" class="headerlink" title="实验对比"></a>实验对比</h2><p>原始数据：<br>gur attention 海门湾 label&#x3D;4.csv 测试 oxy<br>Epoch-19: MAE&#x3D;0.5056305906590507;MSE&#x3D;0.49453759521491714;RMSE&#x3D;0.6673399734037854;NRMSE&#x3D;0.13308724587662887<br>gur self attention 海门湾 label&#x3D;4.csv 测试 oxy<br>Epoch-18: MAE&#x3D;0.47861688153758747;MSE&#x3D;0.4258741292114809;RMSE&#x3D;0.6298131934168167;NRMSE&#x3D;0.12948916728283139<br>lstm attention 海门湾 label&#x3D;4.csv 测试 oxy<br>MAE&#x3D;0.3664150093522322;MSE&#x3D;0.25913278078462904;RMSE&#x3D;0.48949103461491533;NRMSE&#x3D;0.09892116048231667<br>lstm self attention 海门湾 label&#x3D;4.csv 测试 oxy<br>Epoch-19: MAE&#x3D;0.39482879702046675;MSE&#x3D;0.3108506501228544;RMSE&#x3D;0.5325323370045679;NRMSE&#x3D;0.10643937736614949<br>time consumption: 3715.6570472717285<br>lstm self attention fm 海门湾 label&#x3D;4.csv 测试 oxy<br>Epoch-19: MAE&#x3D;0.35727761726919793;MSE&#x3D;0.24399237469901608;RMSE&#x3D;0.4776049191548831;NRMSE&#x3D;0.09572045595054353<br>GRU self attention fm dataset2<br>MAE&#x3D;0.5333394085864184;MSE&#x3D;0.5864764062582569;RMSE&#x3D;0.7340354433448523;NRMSE&#x3D;0.1512885612852088<br>GRU attention fm dataset2<br>Epoch-19: MAE&#x3D;0.47163130941422265;MSE&#x3D;0.47747090259777747;RMSE&#x3D;0.6491814356144684;NRMSE&#x3D;0.13813591654090107<br>LSTM attention fm dataset2<br>MAE&#x3D;0.41815303584969804;MSE&#x3D;0.3683506297518309;RMSE&#x3D;0.5774055411097265;NRMSE&#x3D;0.12160736982288178</p>
+<h2 id="实验改进"><a href="#实验改进" class="headerlink" title="实验改进"></a>实验改进</h2><p>使用更先进的平滑滤波 RTS EKF<br>估计过去的状态叫平滑，估计当前的状态叫滤波，估计未来的状态叫预测</p>
+<h2 id="论文大纲"><a href="#论文大纲" class="headerlink" title="论文大纲"></a>论文大纲</h2><p>数据处理<br>self.features：协变量<br>self.label label<br>encode_step 24<br>forcast_step 12<br>len 计算 len(self.features) - self.forcast_step - self.encode_step - 1<br>hisx 协变量<br>hisz 训练的 label<br>futx 预测的协变量<br>z 预测 babel</p>
+<p>forward ：<br>futureZ 预测步</p>
+<h2 id="实验图片"><a href="#实验图片" class="headerlink" title="实验图片"></a>实验图片</h2><p>Comparison between Machine-Learning-Based Turbidity Models Developed for Different Lake Zones in a Large Shallow Lake<br><img src="/articles/2023/01/14/%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95/2023-02-25-23-24-47.png" alt="asset_img"></p>
+<h2 id="评价指标"><a href="#评价指标" class="headerlink" title="评价指标"></a>评价指标</h2><p>Efficient Water Quality Prediction Using Supervised Machine Learning</p>
+<p>Enhancement of water quality index prediction using support vector machine with sensitivity analysis<br>水质处理 缺失值</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2022/12/13/SpringMVC/" rel="prev" title="SpringMVC">
+      <i class="fa fa-chevron-left"></i> SpringMVC
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/02/10/java%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/" rel="next" title="java面试准备">
+      java面试准备 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LR-%E7%AE%97%E6%B3%95-Logistic-Regression"><span class="nav-number">1.</span> <span class="nav-text">LR 算法 Logistic Regression</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FM-GRU"><span class="nav-number">2.</span> <span class="nav-text">FM-GRU</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM-%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">LSTM 对比实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XGB-%E5%AE%9E%E9%AA%8C%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">XGB 实验：</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#informer"><span class="nav-number"></span> <span class="nav-text">informer</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">实验问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%AF%E5%90%A6%E6%98%AF%E6%95%B0%E6%8D%AE%E9%87%8F%E4%B8%8D%E5%A4%9F%E5%AF%BC%E8%87%B4%E8%BF%87%E6%8B%9F%E5%90%88"><span class="nav-number">1.1.</span> <span class="nav-text">是否是数据量不够导致过拟合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">实验数据处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95"><span class="nav-number">3.</span> <span class="nav-text">对比实验记录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%B9%B3%E6%BB%91%E5%89%8D%E5%90%8E%E5%AF%B9%E6%AF%94"><span class="nav-number">4.</span> <span class="nav-text">数据平滑前后对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%81%B0%E8%89%B2%E5%85%B3%E8%81%94%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">灰色关联分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%A1%E5%B0%94%E6%9B%BC"><span class="nav-number">6.</span> <span class="nav-text">卡尔曼</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87"><span class="nav-number">7.</span> <span class="nav-text">相关论文</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%AF%B9%E6%AF%94"><span class="nav-number">8.</span> <span class="nav-text">实验对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%94%B9%E8%BF%9B"><span class="nav-number">9.</span> <span class="nav-text">实验改进</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BA%E6%96%87%E5%A4%A7%E7%BA%B2"><span class="nav-number">10.</span> <span class="nav-text">论文大纲</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E5%9B%BE%E7%89%87"><span class="nav-number">11.</span> <span class="nav-text">实验图片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87"><span class="nav-number">12.</span> <span class="nav-text">评价指标</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

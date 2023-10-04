@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="分层一般有三种：OSI 七层模型、TCP&#x2F;IP 四层模型、五层结构。重点是五层协议 应用层应用层专注于为用户提供服务，使用 HTTP、FTP、Telnet、DNS、SMTP 等协议，它定义了信息交换的格式，消息会交给下⼀层传输层来传输。我们把应⽤层交互的数据单元称为报⽂。 传输层向两台终端设备进程之间的通信提供通⽤的数据传输服务，为应用层提供支持。传输层选择传输协议，并通知网络层进行传输">
+<meta property="og:type" content="article">
+<meta property="og:title" content="八股--计算机网络">
+<meta property="og:url" content="http://example.com/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="分层一般有三种：OSI 七层模型、TCP&#x2F;IP 四层模型、五层结构。重点是五层协议 应用层应用层专注于为用户提供服务，使用 HTTP、FTP、Telnet、DNS、SMTP 等协议，它定义了信息交换的格式，消息会交给下⼀层传输层来传输。我们把应⽤层交互的数据单元称为报⽂。 传输层向两台终端设备进程之间的通信提供通⽤的数据传输服务，为应用层提供支持。传输层选择传输协议，并通知网络层进行传输">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2023-08-12-22-28-34.png">
+<meta property="og:image" content="http://example.com/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2023-09-03-15-26-09.png">
+<meta property="og:image" content="http://example.com/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2023-08-22-21-11-33.png">
+<meta property="og:image" content="http://example.com/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/image-15.png">
+<meta property="article:published_time" content="2023-08-12T14:25:34.000Z">
+<meta property="article:modified_time" content="2023-09-12T06:40:17.004Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2023-08-12-22-28-34.png">
+
+<link rel="canonical" href="http://example.com/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>八股--计算机网络 | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          八股--计算机网络
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-12 22:25:34" itemprop="dateCreated datePublished" datetime="2023-08-12T22:25:34+08:00">2023-08-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-09-12 14:40:17" itemprop="dateModified" datetime="2023-09-12T14:40:17+08:00">2023-09-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="分层"><a href="#分层" class="headerlink" title="分层"></a>分层</h2><p>一般有三种：OSI 七层模型、TCP&#x2F;IP 四层模型、五层结构。<br>重点是五层协议<br><img src="/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2023-08-12-22-28-34.png" alt="asset_img"><br><img src="/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2023-09-03-15-26-09.png" alt="asset_img"></p>
+<h3 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h3><p>应用层专注于为用户提供服务，使用 HTTP、FTP、Telnet、DNS、SMTP 等协议，它定义了信息交换的格式，消息会交给下⼀层传输层来传输。我们把应⽤层交互的数据单元称为报⽂。<br><img src="/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2023-08-22-21-11-33.png" alt="asset_img"></p>
+<h3 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h3><p>向两台终端设备进程之间的通信提供通⽤的数据传输服务，为应用层提供支持。传输层选择传输协议，并通知网络层进行传输</p>
+<hr>
+<h3 id="HTTP-的缓存"><a href="#HTTP-的缓存" class="headerlink" title="HTTP 的缓存"></a>HTTP 的缓存</h3><h3 id="HTTP-的请求方式"><a href="#HTTP-的请求方式" class="headerlink" title="HTTP 的请求方式"></a>HTTP 的请求方式</h3><hr>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><h3 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h3><p><strong>三次握手</strong><br>简述三次握手<br>第一次握手：客户端发送带有 SYN 同步标志位置 1 的报文段并将序列号保存为客户端的随机初始序列号发送给服务器。<br>第二次握手：服务器接收到客户端的数据后回复客户端 回复 SYN 和 ACK 标志置为 1 的报文段其中序列号为服务器随机初始化序列号，同时将确认应答号保存为客户端序列号+1；<br>第三次握手：客户端收到服务器数据后回复服务器，回复 ACK 标志置为 1 的报文段，其中的确认应答号字段保存为接收到的服务器序列号+1<br>确认序列号&#x3D;原始序列号+TCP 段的长度</p>
+<p><strong>四次挥手</strong><br>第一次挥手：客户端关闭向服务器的连接，向服务器发送 Fin 标志位置 1 的报文段<br>第二次挥手:服务器收到关闭连接请求后向客户端返回一个 ACK 报文段<br>客户端接收到后，表示客户端的连接关闭<br>第三次挥手，服务器向客户端发送 fin 标志位置为 1 的报文段<br>第四次挥手 客户端收到数据后，向服务器发送 ACK 报文段表示连接关闭</p>
+<h3 id="IP-地址范围"><a href="#IP-地址范围" class="headerlink" title="IP 地址范围"></a>IP 地址范围</h3><p><img src="/articles/2023/08/12/%E5%85%AB%E8%82%A1-%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/image-15.png" alt="Alt text"><br>A 类 00000001.00000001.00000000.00000000-01111110.111111111.11111111.11111110（网络字段号 第一位为 0 可使用范围为第二为到第八位 b 从 1 到 126 （全 0 和全 1 不使用））</p>
+<p>网络范围：<br>A:1~126<br>B:128.1 ~ 191.255<br>C：192.0.1 ~ 223.255.255<br>全零全 1 地址保留不用<br>全 0 地址是指用于网络标识的 IP 地址，它用来代表一个网络中的所有主机<br>全 1 地址用来广播</p>
+<h3 id="如何让-UDP-可靠"><a href="#如何让-UDP-可靠" class="headerlink" title="如何让 UDP 可靠"></a>如何让 UDP 可靠</h3><p>1、添加 seq&#x2F;ack 机制，确保数据发送到对端<br>2、添加发送和接收缓冲区，主要用于用户超时重传。<br>3、添加超时重传机制。</p>
+<h3 id="tcp-慢启动是怎么实现的"><a href="#tcp-慢启动是怎么实现的" class="headerlink" title="tcp 慢启动是怎么实现的"></a>tcp 慢启动是怎么实现的</h3><h3 id="如何解决-syn-泛洪攻击"><a href="#如何解决-syn-泛洪攻击" class="headerlink" title="如何解决 syn 泛洪攻击"></a>如何解决 syn 泛洪攻击</h3><hr>
+<h2 id="题"><a href="#题" class="headerlink" title="题"></a>题</h2><h3 id="socket-过程"><a href="#socket-过程" class="headerlink" title="socket 过程"></a>socket 过程</h3><h3 id="HTTPS-协议中间人攻击是什么"><a href="#HTTPS-协议中间人攻击是什么" class="headerlink" title="HTTPS 协议中间人攻击是什么"></a>HTTPS 协议中间人攻击是什么</h3><h3 id="常见的-HTTP-协议响应头有哪些"><a href="#常见的-HTTP-协议响应头有哪些" class="headerlink" title="常见的 HTTP 协议响应头有哪些"></a>常见的 HTTP 协议响应头有哪些</h3><h3 id="路由器对应-OSI-七层中的那一层"><a href="#路由器对应-OSI-七层中的那一层" class="headerlink" title="路由器对应 OSI 七层中的那一层"></a>路由器对应 OSI 七层中的那一层</h3><p>网络层 数据链路层和<br>物理层</p>
+<h3 id="判断是否是同一网段"><a href="#判断是否是同一网段" class="headerlink" title="判断是否是同一网段"></a>判断是否是同一网段</h3><p>要想判断两个 ip 地址是不是在同一个网段，只需将 ip 地址与子网掩码做与运算，如果得出的结果一样，则这两个 ip 地址是同一个子网当中</p>
+<hr>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/08/12/%E5%85%AB%E8%82%A1-Redis/" rel="prev" title="八股---Redis">
+      <i class="fa fa-chevron-left"></i> 八股---Redis
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/08/14/%E5%85%AB%E8%82%A1-%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="next" title="八股---多线程">
+      八股---多线程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E5%B1%82"><span class="nav-number">1.</span> <span class="nav-text">分层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82"><span class="nav-number">1.1.</span> <span class="nav-text">应用层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82"><span class="nav-number">1.2.</span> <span class="nav-text">传输层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-%E7%9A%84%E7%BC%93%E5%AD%98"><span class="nav-number">1.3.</span> <span class="nav-text">HTTP 的缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-%E7%9A%84%E8%AF%B7%E6%B1%82%E6%96%B9%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text">HTTP 的请求方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE"><span class="nav-number">2.</span> <span class="nav-text">题目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP"><span class="nav-number">2.1.</span> <span class="nav-text">TCP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IP-%E5%9C%B0%E5%9D%80%E8%8C%83%E5%9B%B4"><span class="nav-number">2.2.</span> <span class="nav-text">IP 地址范围</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%A9-UDP-%E5%8F%AF%E9%9D%A0"><span class="nav-number">2.3.</span> <span class="nav-text">如何让 UDP 可靠</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tcp-%E6%85%A2%E5%90%AF%E5%8A%A8%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">2.4.</span> <span class="nav-text">tcp 慢启动是怎么实现的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3-syn-%E6%B3%9B%E6%B4%AA%E6%94%BB%E5%87%BB"><span class="nav-number">2.5.</span> <span class="nav-text">如何解决 syn 泛洪攻击</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98"><span class="nav-number">3.</span> <span class="nav-text">题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#socket-%E8%BF%87%E7%A8%8B"><span class="nav-number">3.1.</span> <span class="nav-text">socket 过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTPS-%E5%8D%8F%E8%AE%AE%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.2.</span> <span class="nav-text">HTTPS 协议中间人攻击是什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84-HTTP-%E5%8D%8F%E8%AE%AE%E5%93%8D%E5%BA%94%E5%A4%B4%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">3.3.</span> <span class="nav-text">常见的 HTTP 协议响应头有哪些</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8%E5%AF%B9%E5%BA%94-OSI-%E4%B8%83%E5%B1%82%E4%B8%AD%E7%9A%84%E9%82%A3%E4%B8%80%E5%B1%82"><span class="nav-number">3.4.</span> <span class="nav-text">路由器对应 OSI 七层中的那一层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E6%98%AF%E5%90%8C%E4%B8%80%E7%BD%91%E6%AE%B5"><span class="nav-number">3.5.</span> <span class="nav-text">判断是否是同一网段</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="如非特殊说明，本文主要针对的就是 HotSpot VM 。 运行时数据区 运行时数据区中包含哪些区域？哪些线程共享？哪些线程独享？哪些区域可能会出现 OutOfMemoryError？哪些区域不会出现 OutOfMemoryError?【⭐⭐⭐⭐⭐】 💡 提示：把下面两张图记在心里！并且，你还要搞懂这些区域大概的作用是什么。 JDK 1.8 之前：JDK 1.8 ：线程私有的：程序计数器、虚拟机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM">
+<meta property="og:url" content="http://example.com/articles/2023/03/12/JVM/index.html">
+<meta property="og:site_name" content="Enki">
+<meta property="og:description" content="如非特殊说明，本文主要针对的就是 HotSpot VM 。 运行时数据区 运行时数据区中包含哪些区域？哪些线程共享？哪些线程独享？哪些区域可能会出现 OutOfMemoryError？哪些区域不会出现 OutOfMemoryError?【⭐⭐⭐⭐⭐】 💡 提示：把下面两张图记在心里！并且，你还要搞懂这些区域大概的作用是什么。 JDK 1.8 之前：JDK 1.8 ：线程私有的：程序计数器、虚拟机">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/articles/2023/03/12/JVM/2023-03-12-13-51-31.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/12/JVM/2023-03-12-13-51-40.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/12/JVM/2023-03-12-13-51-59.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/12/JVM/2023-03-12-13-52-10.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/12/JVM/2023-03-12-13-52-22.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/12/JVM/2023-03-12-13-52-29.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/12/JVM/2023-03-12-13-52-38.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/12/JVM/2023-03-12-13-53-01.png">
+<meta property="og:image" content="http://example.com/articles/2023/03/12/JVM/2023-03-12-13-53-38.png">
+<meta property="article:published_time" content="2023-03-12T05:51:05.000Z">
+<meta property="article:modified_time" content="2023-03-12T05:53:39.286Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/articles/2023/03/12/JVM/2023-03-12-13-51-31.png">
+
+<link rel="canonical" href="http://example.com/articles/2023/03/12/JVM/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>JVM | Enki</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Enki</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">这个世界根本不存在“不会”这回事，当你失去所有依靠的时候，你自然就什么都会了。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/03/12/JVM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="个人博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Enki">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JVM
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-03-12 13:51:05 / 修改时间：13:53:39" itemprop="dateCreated datePublished" datetime="2023-03-12T13:51:05+08:00">2023-03-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>如非特殊说明，本文主要针对的就是 HotSpot VM 。</p>
+<p>运行时数据区</p>
+<p>运行时数据区中包含哪些区域？哪些线程共享？哪些线程独享？哪些区域可能会出现 OutOfMemoryError？哪些区域不会出现 OutOfMemoryError?【⭐⭐⭐⭐⭐】</p>
+<p>💡 提示：把下面两张图记在心里！并且，你还要搞懂这些区域大概的作用是什么。</p>
+<p>JDK 1.8 之前：<br><img src="/articles/2023/03/12/JVM/2023-03-12-13-51-31.png" alt="asset_img"><br>JDK 1.8 ：<br><img src="/articles/2023/03/12/JVM/2023-03-12-13-51-40.png" alt="asset_img"><br>线程私有的：程序计数器、虚拟机栈、本地方法栈</p>
+<p>线程共享的：堆、方法区、直接内存 (非运行时数据区的一部分)</p>
+<p>相关阅读：Java 内存区域详解</p>
+<p>方法区和永久代的关系。【⭐⭐⭐】</p>
+<p>💡 提示：其实就有点像 Java 中接口和类的关系。<br><img src="/articles/2023/03/12/JVM/2023-03-12-13-51-59.png" alt="asset_img"><br>相关阅读：Java 内存区域详解</p>
+<p>Java 对象的创建过程。【⭐⭐⭐⭐】</p>
+<p>💡 提示：下图便是 Java 对象的创建过程，我建议最好是能默写出来，并且要掌握每一步在做什么。<br><img src="/articles/2023/03/12/JVM/2023-03-12-13-52-10.png" alt="asset_img"><br>相关阅读：HotSpot 虚拟机对象探秘</p>
+<p>对象的访问定位的两种方式知道吗？各有什么优缺点。【⭐⭐⭐⭐】</p>
+<p>💡 提示：句柄和直接指针。</p>
+<p>句柄：<br><img src="/articles/2023/03/12/JVM/2023-03-12-13-52-22.png" alt="asset_img"><br>直接指针：<br><img src="/articles/2023/03/12/JVM/2023-03-12-13-52-29.png" alt="asset_img"><br>堆空间的基本结构了解吗？什么情况下对象会进入老年代？【⭐⭐⭐⭐⭐】</p>
+<p>提示：</p>
+<p>1<br>大部分情况，对象都会首先在 Eden 区域分配。<br>2<br>长期存活的对象将进入老年代。<br>3<br>大对象直接进入老年代。</p>
+<p>🌈 拓展：动态对象年龄判定。<br><img src="/articles/2023/03/12/JVM/2023-03-12-13-52-38.png" alt="asset_img"></p>
+<h2 id="垃圾收集"><a href="#垃圾收集" class="headerlink" title="垃圾收集"></a>垃圾收集</h2><p>如何判断对象是否死亡（两种方法）。 【⭐⭐⭐⭐】</p>
+<p>💡 提示：引用计数法和可达性分析算法。</p>
+<p>讲一下可达性分析算法的流程。 哪些对象可以作为 GC Roots 呢？</p>
+<p>💡 提示：可达性分析算法法的基本思想就是通过一系列的称为 “GC Roots” 的对象作为起点，从这些节点开始向下搜索，节点所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连的话，则证明此对象是不可用的，需要被回收。</p>
+<p>下面这些对象可以作为 GC Roots：</p>
+<p>●<br>虚拟机栈(栈帧中的本地变量表)中引用的对象<br>●<br>本地方法栈(Native 方法)中引用的对象<br>●<br>方法区中类静态属性引用的对象<br>●<br>方法区中常量引用的对象<br>●<br>所有被同步锁持有的对象</p>
+<p>对象可以被回收，就代表一定会被回收吗？ 【⭐⭐⭐】</p>
+<p>💡 提示：不一定。</p>
+<p>JDK 中有几种引用类型？分别的特点是什么？【⭐⭐】</p>
+<p>💡 提示：JDK1.2 以后，Java 对引用的概念进行了扩充，将引用分为强引用、软引用、弱引用、虚引用四种（引用强度逐渐减弱）。对这些概念简单了解，有印象就可以了。</p>
+<p>垃圾收集有哪些算法，各自的特点？【⭐⭐⭐⭐⭐】</p>
+<p>💡 提示：<br><img src="/articles/2023/03/12/JVM/2023-03-12-13-53-01.png" alt="asset_img"></p>
+<p>有哪些常见的 GC?谈谈你对 Minor GC、还有 Full GC 的理解。Minor GC 与 Full GC 分别在什么时候发生？ Minor GC 会发生 stop the world 现象吗？【⭐⭐⭐⭐⭐】</p>
+<p>💡 提示：</p>
+<p>针对 HotSpot VM 的实现，它里面的 GC 其实准确分类只有两大种：</p>
+<p>部分收集 (Partial GC)：</p>
+<p>●<br>新生代收集（Minor GC &#x2F; Young GC）：只对新生代进行垃圾收集；<br>●<br>老年代收集（Major GC &#x2F; Old GC）：只对老年代进行垃圾收集。需要注意的是 Major GC 在有的语境中也用于指代整堆收集；<br>●<br>混合收集（Mixed GC）：对整个新生代和部分老年代进行垃圾收集。</p>
+<p>整堆收集 (Full GC)：收集整个 Java 堆和方法区。</p>
+<p>讲一下 CMS 垃圾收集器的四个步骤。CMS 有什么缺点？【⭐⭐⭐⭐】</p>
+<p>💡 提示：初始标记、并发标记、重新标记、并发清除。</p>
+<p>并发标记要解决什么问题？并发标记带来了什么问题？如何解决并发扫描时对象消失问题？【⭐⭐⭐⭐】</p>
+<p>相关阅读：面试官:你说你熟悉 jvm?那你讲一下并发的可达性分析 。</p>
+<p>G1 垃圾收集器的步骤。有什么缺点？【⭐⭐⭐⭐】</p>
+<p>💡 提示：和 CMS 类似。</p>
+<p>ZGC 了解吗？【⭐⭐⭐⭐】</p>
+<p>💡 提示： 新一代垃圾回收器 ZGC 的探索与实践</p>
+<p>JVM 中的安全点和安全区各代表什么？【⭐⭐⭐】</p>
+<p>💡 提示：：浅谈 JVM GC 的安全点与安全区域</p>
+<p>类</p>
+<p>什么是字节码？类文件结构的组成了解吗？【⭐⭐⭐⭐】</p>
+<p>💡 提示：在 Java 中，JVM 可以理解的代码就叫做字节码（即扩展名为 .class 的文件）。</p>
+<p>ClassFile 的结构如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ClassFile &#123;</span><br><span class="line">    u4             magic; <span class="comment">//Class 文件的标志</span></span><br><span class="line">    u2             minor_version;<span class="comment">//Class 的小版本号</span></span><br><span class="line">    u2             major_version;<span class="comment">//Class 的大版本号</span></span><br><span class="line">    u2             constant_pool_count;<span class="comment">//常量池的数量</span></span><br><span class="line">    cp_info        constant_pool[constant_pool_count-<span class="number">1</span>];<span class="comment">//常量池</span></span><br><span class="line">    u2             access_flags;<span class="comment">//Class 的访问标记</span></span><br><span class="line">    u2             this_class;<span class="comment">//当前类</span></span><br><span class="line">    u2             super_class;<span class="comment">//父类</span></span><br><span class="line">    u2             interfaces_count;<span class="comment">//接口</span></span><br><span class="line">    u2             interfaces[interfaces_count];<span class="comment">//一个类可以实现多个接口</span></span><br><span class="line">    u2             fields_count;<span class="comment">//Class 文件的字段属性</span></span><br><span class="line">    field_info     fields[fields_count];<span class="comment">//一个类会可以有多个字段</span></span><br><span class="line">    u2             methods_count;<span class="comment">//Class 文件的方法数量</span></span><br><span class="line">    method_info    methods[methods_count];<span class="comment">//一个类可以有个多个方法</span></span><br><span class="line">    u2             attributes_count;<span class="comment">//此类的属性表中的属性数</span></span><br><span class="line">    attribute_info attributes[attributes_count];<span class="comment">//属性表集合</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>类的生命周期？类加载的过程了解么？加载这一步主要做了什么事情？初始化阶段中哪几种情况必须对类初始化？【⭐⭐⭐⭐⭐】</p>
+<p>💡 提示：</p>
+<p>双亲委派模型了解么？如果我们不想用双亲委派模型怎么办？【⭐⭐⭐⭐⭐】</p>
+<p>💡 提示：可以参考 Tomcat 的自定义类加载器 WebAppClassLoader<br><img src="/articles/2023/03/12/JVM/2023-03-12-13-53-38.png" alt="asset_img"><br>双亲委派模型有什么好处？双亲委派模型是为了保证一个 Java 类在 JVM 中是唯一的？ 【⭐⭐⭐⭐⭐】</p>
+<p>JDK 中有哪些默认的类加载器？ 【⭐⭐⭐⭐】</p>
+<p>💡 提示：</p>
+<p>JVM 中内置了三个重要的 ClassLoader，除了 BootstrapClassLoader 其他类加载器均由 Java 实现且全部继承自 java.lang.ClassLoader：</p>
+<p>1<br>BootstrapClassLoader(启动类加载器) ：最顶层的加载类，由 C++实现，负责加载 %JAVA_HOME%&#x2F;lib 目录下的 jar 包和类或者被 -Xbootclasspath 参数指定的路径中的所有类。<br>2<br>ExtensionClassLoader(扩展类加载器) ：主要负责加载 %JRE_HOME%&#x2F;lib&#x2F;ext 目录下的 jar 包和类，或被 java.ext.dirs 系统变量所指定的路径下的 jar 包。<br>3<br>AppClassLoader(应用程序类加载器) ：面向我们用户的加载器，负责加载当前应用 classpath 下的所有 jar 包和类。</p>
+<p>性能调优&amp;问题排查</p>
+<p>这部分内容在面试大厂的时候比较重要，我这里先推荐一些不错的文章以供学习参考：</p>
+<p>●<br>JVM 参数配置说明 - 阿里云官方文档 - 2022<br>●<br>JVM 内存配置最佳实践 - 阿里云官方文档 - 2022<br>●<br>一次大量 JVM Native 内存泄露的排查分析（64M 问题） - 掘金 - 2022<br>●<br>一次线上 JVM 调优实践，FullGC40 次&#x2F;天到 10 天一次的优化过程 - HeadpDump - 2021<br>●<br>听说 JVM 性能优化很难？今天我小试了一把！ - 陈树义 - 2021<br>●<br>你们要的线上 GC 问题案例来啦 - 编了个程 - 2021<br>●<br>Java 中 9 种常见的 CMS GC 问题分析与解决 - 美团技术团队 - 2020<br>●<br>从实际案例聊聊 Java 应用的 GC 优化-美团技术团队 - 美团技术团队 - 2017</p>
+<p>虚拟机基础故障处理工具有哪些？【⭐⭐⭐】</p>
+<p>💡 提示： 简单了解几个最重要的即可！</p>
+<p>堆内存相关的 JVM 参数有哪些？你在项目中实际配置过了吗？ 【⭐⭐⭐⭐⭐】</p>
+<p>💡 提示：一定要自己动手操作一下。</p>
+<p>相关问题：</p>
+<p>●<br>如何设置年轻代和老年代的大小？<br>●<br>如何调整调整新生代和老年代的比值？<br>●<br>……</p>
+<p>相关阅读：JVM 参数配置说明 - 阿里云官方文档 - 2022。</p>
+<p>你在项目中遇到过 GC 问题吗？怎么分析和解决的？【⭐⭐⭐⭐⭐】</p>
+<p>💡 提示：比较有含金量的问题！比较能反映出求职者的水平，应该重点准备。</p>
+<p>相关问题：</p>
+<p>●<br>Young GC 频繁如何排查和解决？可能是什么原因导致的？<br>●<br>Old GC 频繁如何排查和解决？可能是什么原因导致的？<br>●<br>堆外内存 OOM 如何排查和解决？可能是什么原因导致的？<br>●<br>……</p>
+<p>相关阅读：Java 中 9 种常见的 CMS GC 问题分析与解决 - 美团技术团队 - 2020</p>
+<p>GC 性能指标了解吗？调优原则呢？【⭐⭐⭐⭐⭐】</p>
+<p>●<br>GC 性能指标通常关注吞吐量、停顿时间和垃圾回收频率。<br>●<br>GC 优化的目标就是降低 Full GC 的频率以及减少 Full GC 的执行时间。</p>
+<p>如何降低 Full GC 的频率？【⭐⭐⭐⭐⭐】</p>
+<p>💡 提示： 可以通过减少进入老年代的对象数量可以显著降低 Full GC 的频率。如何减少进入老年代的对象数量呢？JVM 垃圾回收这部分有提到过。</p>
+<p>项目中实践过 JVM 调优吗？怎么做的？【⭐⭐⭐⭐⭐】</p>
+<p>💡 提示：比较笼统的一个问题，面试官主要考察的是个人对于 JVM 调优的整体实践情况。</p>
+<p>相关阅读：JVM 调优实践 - 掘金 - 2022<br>1</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/articles/2023/03/11/%E6%90%BA%E7%A8%8B%E9%9D%A2%E8%AF%95%E7%BB%8F%E9%AA%8C/" rel="prev" title="携程面试经验">
+      <i class="fa fa-chevron-left"></i> 携程面试经验
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/articles/2023/03/13/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" rel="next" title="操作系统">
+      操作系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86"><span class="nav-number">1.</span> <span class="nav-text">垃圾收集</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description">个人博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
