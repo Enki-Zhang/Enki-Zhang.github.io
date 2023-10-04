@@ -2,6 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E5%B9%B6%E5%8F%91/</loc>
+    
+    <lastmod>2023-10-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/articles/2023/09/08/%E5%85%AB%E8%82%A1-Java%E5%9F%BA%E7%A1%80/</loc>
+    
+    <lastmod>2023-10-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://example.com/articles/2023/08/12/%E5%85%AB%E8%82%A1-Redis/</loc>
     
     <lastmod>2023-10-04</lastmod>
@@ -104,24 +122,6 @@
     <loc>http://example.com/articles/2023/08/25/%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E8%AE%B0%E5%BD%95/</loc>
     
     <lastmod>2023-09-26</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E5%B9%B6%E5%8F%91/</loc>
-    
-    <lastmod>2023-09-25</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/articles/2023/09/08/%E5%85%AB%E8%82%A1-Java%E5%9F%BA%E7%A1%80/</loc>
-    
-    <lastmod>2023-09-24</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -994,14 +994,14 @@
   </url>
   
   <url>
-    <loc>http://example.com/categories/MySQL/</loc>
+    <loc>http://example.com/categories/Redis/</loc>
     <lastmod>2023-10-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://example.com/categories/Redis/</loc>
+    <loc>http://example.com/categories/MySQL/</loc>
     <lastmod>2023-10-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
