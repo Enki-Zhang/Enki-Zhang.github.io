@@ -5,46 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 6.2.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/Enki-Zhang.github.io/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/Enki-Zhang.github.io/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/Enki-Zhang.github.io/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/Enki-Zhang.github.io/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/Enki-Zhang.github.io/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/Enki-Zhang.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"enki-zhang.github.io","root":"/Enki-Zhang.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="JVM路线 字节码 我们平时说的 java 字节码，指的是用 java 语言编译成的字节码。准确的说任何能在 jvm 平台上执行的字节码格式都是一样的。所以应该统称为：jvm 字节码。 不同的编译器，可以编译出相同的字节码文件，字节码文件也可以在不同的 JVM 上运行。 Java 虚拟机与 Java 语言并没有必然的联系，它只与特定的二进制文件格式—Class 文件格式所关联，Class 文件中包">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM">
-<meta property="og:url" content="https://enki-zhang.github.io/Enki-Zhang.github.io/articles/2022/10/25/JVM/index.html">
+<meta property="og:url" content="http://example.com/articles/2022/10/25/JVM/index.html">
 <meta property="og:site_name" content="学习博客">
 <meta property="og:description" content="JVM路线 字节码 我们平时说的 java 字节码，指的是用 java 语言编译成的字节码。准确的说任何能在 jvm 平台上执行的字节码格式都是一样的。所以应该统称为：jvm 字节码。 不同的编译器，可以编译出相同的字节码文件，字节码文件也可以在不同的 JVM 上运行。 Java 虚拟机与 Java 语言并没有必然的联系，它只与特定的二进制文件格式—Class 文件格式所关联，Class 文件中包">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-10-26-16-32-27.png">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/image.png.png">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-10-25-15-52-40.png">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-10-25-15-34-23.png">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-10-25-21-54-32.png">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-10-26-13-47-50.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/2022-10-26-16-32-27.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/image.png.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/2022-10-25-15-52-40.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/2022-10-25-15-34-23.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/2022-10-25-21-54-32.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/2022-10-26-13-47-50.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-概述图.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-JRE关系.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-Java7%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%9B%BE.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-Java8%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%9B%BE.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-虚拟机栈.png">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-10-27-15-48-02.png">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-10-27-16-28-28.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/2022-10-27-15-48-02.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/2022-10-27-16-28-28.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E7%AC%A6%E5%8F%B7%E5%BC%95%E7%94%A8.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-本地方法栈.png">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-10-28-15-35-55.png">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-10-27-17-09-13.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/2022-10-28-15-35-55.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/2022-10-27-17-09-13.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-内存图对比.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-TLAB%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%AD%96%E7%95%A5.jpg">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-TLAB%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E8%BF%87%E7%A8%8B.jpg">
@@ -54,7 +54,7 @@
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-三色标记法过程.gif">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-三色标记法多标情况.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-三色标记法漏标情况.png">
-<meta property="og:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-11-04-13-03-45.png">
+<meta property="og:image" content="http://example.com/articles/2022/10/25/JVM/2022-11-04-13-03-45.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-标记清除算法.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JVM-标记整理算法.png">
@@ -95,9 +95,9 @@
 <meta property="article:modified_time" content="2023-04-17T07:31:48.979Z">
 <meta property="article:author" content="Enki">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://enki-zhang.github.io/articles/2022/10/25/JVM/2022-10-26-16-32-27.png">
+<meta name="twitter:image" content="http://example.com/articles/2022/10/25/JVM/2022-10-26-16-32-27.png">
 
-<link rel="canonical" href="https://enki-zhang.github.io/Enki-Zhang.github.io/articles/2022/10/25/JVM/">
+<link rel="canonical" href="http://example.com/articles/2022/10/25/JVM/">
 
 
 <script id="page-configurations">
@@ -159,7 +159,7 @@
 
   <div class="site-meta">
 
-    <a href="/Enki-Zhang.github.io/" class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">学习博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -180,22 +180,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/Enki-Zhang.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/Enki-Zhang.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/Enki-Zhang.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/Enki-Zhang.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
   </ul>
@@ -226,10 +226,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://enki-zhang.github.io/Enki-Zhang.github.io/articles/2022/10/25/JVM/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2022/10/25/JVM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/Enki-Zhang.github.io/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="Enki">
       <meta itemprop="description" content="学习是件很幸福的事情">
     </span>
@@ -4105,11 +4105,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/Enki-Zhang.github.io/articles/2022/10/21/%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E/" rel="prev" title="谷粒商城">
+    <a href="/articles/2022/10/21/%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E/" rel="prev" title="谷粒商城">
       <i class="fa fa-chevron-left"></i> 谷粒商城
     </a></div>
       <div class="post-nav-item">
-    <a href="/Enki-Zhang.github.io/articles/2022/10/28/vim-start/" rel="next" title="vim start">
+    <a href="/articles/2022/10/28/vim-start/" rel="next" title="vim start">
       vim start <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -4182,7 +4182,7 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/Enki-Zhang.github.io/archives/">
+          <a href="/archives/">
         
           <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">日志</span>
@@ -4241,19 +4241,19 @@
   </div>
 
   
-  <script src="/Enki-Zhang.github.io/lib/anime.min.js"></script>
-  <script src="/Enki-Zhang.github.io/lib/velocity/velocity.min.js"></script>
-  <script src="/Enki-Zhang.github.io/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/Enki-Zhang.github.io/js/utils.js"></script>
+<script src="/js/utils.js"></script>
 
-<script src="/Enki-Zhang.github.io/js/motion.js"></script>
-
-
-<script src="/Enki-Zhang.github.io/js/schemes/pisces.js"></script>
+<script src="/js/motion.js"></script>
 
 
-<script src="/Enki-Zhang.github.io/js/next-boot.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
 
 
 
