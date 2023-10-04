@@ -5,32 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 6.2.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/Enki-Zhang/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/Enki-Zhang/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/Enki-Zhang/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/Enki-Zhang/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/Enki-Zhang.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/Enki-Zhang.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/Enki-Zhang.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/Enki-Zhang.github.io/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/Enki-Zhang/css/main.css">
+<link rel="stylesheet" href="/Enki-Zhang.github.io/css/main.css">
 
 
-<link rel="stylesheet" href="/Enki-Zhang/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/Enki-Zhang.github.io/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"github.com","root":"/Enki-Zhang/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"enki-zhang.github.io","root":"/Enki-Zhang.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="JUC进程概述进程：程序是静止的，进程实体的运行过程就是进程，是系统进行资源分配的基本单位 进程的特征：并发性、异步性、动态性、独立性、结构性 线程：线程是属于进程的，是一个基本的 CPU 执行单元，是程序执行流的最小单元。线程是进程中的一个实体，是系统独立调度的基本单位，线程本身不拥有系统资源，只拥有一点在运行中必不可少的资源，与同属一个进程的其他线程共享进程所拥有的全部资源 关系：一个进程可以">
 <meta property="og:type" content="article">
 <meta property="og:title" content="学习博客">
-<meta property="og:url" content="https://github.com/Enki-Zhang/articles/2023/05/16/Prog/index.html">
+<meta property="og:url" content="https://enki-zhang.github.io/Enki-Zhang.github.io/articles/2023/05/16/Prog/index.html">
 <meta property="og:site_name" content="学习博客">
 <meta property="og:description" content="JUC进程概述进程：程序是静止的，进程实体的运行过程就是进程，是系统进行资源分配的基本单位 进程的特征：并发性、异步性、动态性、独立性、结构性 线程：线程是属于进程的，是一个基本的 CPU 执行单元，是程序执行流的最小单元。线程是进程中的一个实体，是系统独立调度的基本单位，线程本身不拥有系统资源，只拥有一点在运行中必不可少的资源，与同属一个进程的其他线程共享进程所拥有的全部资源 关系：一个进程可以">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JUC-两阶段终止模式.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JUC-%E7%BA%BF%E7%A8%8B6%E7%A7%8D%E7%8A%B6%E6%80%81.png">
-<meta property="og:image" content="https://github.com/articles/2023/05/16/Prog/2023-05-25-15-50-23.png">
-<meta property="og:image" content="https://github.com/articles/2023/05/16/Prog/2023-06-06-15-14-50.png">
+<meta property="og:image" content="https://enki-zhang.github.io/articles/2023/05/16/Prog/2023-05-25-15-50-23.png">
+<meta property="og:image" content="https://enki-zhang.github.io/articles/2023/05/16/Prog/2023-06-06-15-14-50.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JUC-Monitor-MarkWord%E7%BB%93%E6%9E%8432%E4%BD%8D.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JUC-Monitor-MarkWord%E7%BB%93%E6%9E%8464%E4%BD%8D.png">
 <meta property="og:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JUC-Monitor工作原理1.png">
@@ -135,7 +135,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://seazean.oss-cn-beijing.aliyuncs.com/img/Java/JUC-两阶段终止模式.png">
 
-<link rel="canonical" href="https://github.com/Enki-Zhang/articles/2023/05/16/Prog/">
+<link rel="canonical" href="https://enki-zhang.github.io/Enki-Zhang.github.io/articles/2023/05/16/Prog/">
 
 
 <script id="page-configurations">
@@ -197,7 +197,7 @@
 
   <div class="site-meta">
 
-    <a href="/Enki-Zhang/" class="brand" rel="start">
+    <a href="/Enki-Zhang.github.io/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">学习博客</h1>
       <span class="logo-line-after"><i></i></span>
@@ -218,22 +218,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/Enki-Zhang/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/Enki-Zhang.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/Enki-Zhang/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/Enki-Zhang.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/Enki-Zhang/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/Enki-Zhang.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/Enki-Zhang/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/Enki-Zhang.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
   </ul>
@@ -264,10 +264,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Enki-Zhang/articles/2023/05/16/Prog/">
+    <link itemprop="mainEntityOfPage" href="https://enki-zhang.github.io/Enki-Zhang.github.io/articles/2023/05/16/Prog/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/Enki-Zhang/images/avatar.gif">
+      <meta itemprop="image" content="/Enki-Zhang.github.io/images/avatar.gif">
       <meta itemprop="name" content="Enki">
       <meta itemprop="description" content="学习是件很幸福的事情">
     </span>
@@ -1175,7 +1175,7 @@
 <li>store：作用于工作内存，把工作内存的一个变量的值传送到主内存中</li>
 <li>write：作用于主内存，在 store 之后执行，把 store 得到的值放入主内存的变量中</li>
 </ul>
-<p>参考文章：<a href="https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%B9%B6%E5%8F%91.md">https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%B9%B6%E5%8F%91.md</a></p>
+<p>参考文章：<a target="_blank" rel="noopener" href="https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%B9%B6%E5%8F%91.md">https://github.com/CyC2018/CS-Notes/blob/master/notes/Java%20%E5%B9%B6%E5%8F%91.md</a></p>
 <hr>
 <h4 id="三大特性"><a href="#三大特性" class="headerlink" title="三大特性"></a>三大特性</h4><h5 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h5><p>可见性：是指当多个线程访问同一个变量时，一个线程修改了这个变量的值，其他线程能够立即看得到修改的值</p>
 <p>存在不可见问题的根本原因是由于缓存的存在，线程持有的是共享变量的副本，无法感知其他线程对于共享变量的更改，导致读取的值不是最新的。但是 final 修饰的变量是<strong>不可变</strong>的，就算有缓存，也不会存在不可见的问题</p>
@@ -4166,7 +4166,7 @@
 <li>poll 还有一个特点是水平触发，如果报告了 fd 后，没有被处理，那么下次 poll 时会再次报告该 fd</li>
 <li>如果一个线程对某个描述符调用了 select 或者 poll，另一个线程关闭了该描述符，会导致调用结果不确定</li>
 </ul>
-<p>参考文章：<a href="https://github.com/CyC2018/CS-Notes/blob/master/notes/Socket.md">https://github.com/CyC2018/CS-Notes/blob/master/notes/Socket.md</a></p>
+<p>参考文章：<a target="_blank" rel="noopener" href="https://github.com/CyC2018/CS-Notes/blob/master/notes/Socket.md">https://github.com/CyC2018/CS-Notes/blob/master/notes/Socket.md</a></p>
 <hr>
 <h4 id="epoll"><a href="#epoll" class="headerlink" title="epoll"></a>epoll</h4><h5 id="函数-1"><a href="#函数-1" class="headerlink" title="函数"></a>函数</h5><p>epoll 使用事件的就绪通知方式，通过 epoll_ctl() 向内核注册新的描述符或者是改变某个文件描述符的状态。已注册的描述符在内核中会被维护在一棵<strong>红黑树</strong>上，一旦该 fd 就绪，<strong>内核通过 callback 回调函数将 I&#x2F;O 准备好的描述符加入到一个链表中</strong>管理，进程调用 epoll_wait() 便可以得到事件就绪的描述符</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">epoll_create</span><span class="params">(<span class="type">int</span> size)</span>;</span><br><span class="line"><span class="type">int</span> <span class="title function_">epoll_ctl</span><span class="params">(<span class="type">int</span> epfd, <span class="type">int</span> op, <span class="type">int</span> fd, <span class="keyword">struct</span> epoll_event *event)</span>；</span><br><span class="line"><span class="type">int</span> <span class="title function_">epoll_wait</span><span class="params">(<span class="type">int</span> epfd, <span class="keyword">struct</span> epoll_event * events, <span class="type">int</span> maxevents, <span class="type">int</span> timeout)</span>;</span><br></pre></td></tr></table></figure>
@@ -4258,7 +4258,7 @@
 </ul>
 </li>
 </ul>
-<p>参考文章：<a href="https://github.com/CyC2018/CS-Notes/blob/master/notes/Socket.md">https://github.com/CyC2018/CS-Notes/blob/master/notes/Socket.md</a></p>
+<p>参考文章：<a target="_blank" rel="noopener" href="https://github.com/CyC2018/CS-Notes/blob/master/notes/Socket.md">https://github.com/CyC2018/CS-Notes/blob/master/notes/Socket.md</a></p>
 <hr>
 <h3 id="系统调用"><a href="#系统调用" class="headerlink" title="系统调用"></a>系统调用</h3><h4 id="内核态"><a href="#内核态" class="headerlink" title="内核态"></a>内核态</h4><p>用户空间：用户代码、用户堆栈</p>
 <p>内核空间：内核代码、内核调度程序、进程描述符（内核堆栈、thread_info 进程描述符）</p>
@@ -5191,11 +5191,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/Enki-Zhang/articles/2023/05/16/Frame/" rel="prev" title="">
+    <a href="/Enki-Zhang.github.io/articles/2023/05/16/Frame/" rel="prev" title="">
       <i class="fa fa-chevron-left"></i> 
     </a></div>
       <div class="post-nav-item">
-    <a href="/Enki-Zhang/articles/2023/05/16/SSM/" rel="next" title="">
+    <a href="/Enki-Zhang.github.io/articles/2023/05/16/SSM/" rel="next" title="">
        <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -5268,7 +5268,7 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/Enki-Zhang/archives/">
+          <a href="/Enki-Zhang.github.io/archives/">
         
           <span class="site-state-item-count">101</span>
           <span class="site-state-item-name">日志</span>
@@ -5327,19 +5327,19 @@
   </div>
 
   
-  <script src="/Enki-Zhang/lib/anime.min.js"></script>
-  <script src="/Enki-Zhang/lib/velocity/velocity.min.js"></script>
-  <script src="/Enki-Zhang/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/Enki-Zhang.github.io/lib/anime.min.js"></script>
+  <script src="/Enki-Zhang.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/Enki-Zhang.github.io/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/Enki-Zhang/js/utils.js"></script>
+<script src="/Enki-Zhang.github.io/js/utils.js"></script>
 
-<script src="/Enki-Zhang/js/motion.js"></script>
-
-
-<script src="/Enki-Zhang/js/schemes/pisces.js"></script>
+<script src="/Enki-Zhang.github.io/js/motion.js"></script>
 
 
-<script src="/Enki-Zhang/js/next-boot.js"></script>
+<script src="/Enki-Zhang.github.io/js/schemes/pisces.js"></script>
+
+
+<script src="/Enki-Zhang.github.io/js/next-boot.js"></script>
 
 
 
