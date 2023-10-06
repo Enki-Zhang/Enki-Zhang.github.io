@@ -354,7 +354,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-04 17:31:15" itemprop="dateModified" datetime="2023-10-04T17:31:15+08:00">2023-10-04</time>
+                <time title="修改时间：2023-10-06 16:28:02" itemprop="dateModified" datetime="2023-10-06T16:28:02+08:00">2023-10-06</time>
               </span>
 
           
@@ -383,13 +383,19 @@
 <p>finally 关键字 和 try catch 结合，处理异常代码，try 中的代码块执行完成后无论是否有异常抛出都会执行 finally 方法。同时 finally 也能够确保资源的最终释放如文件的关闭</p>
 <h3 id="传参如果是-string-是值传递还是引用传递"><a href="#传参如果是-string-是值传递还是引用传递" class="headerlink" title="传参如果是 string 是值传递还是引用传递"></a>传参如果是 string 是值传递还是引用传递</h3><p>Java 只有值传递</p>
 <h3 id="Java-中的序列化与反序列化"><a href="#Java-中的序列化与反序列化" class="headerlink" title="Java 中的序列化与反序列化"></a>Java 中的序列化与反序列化</h3><p>序列化的目的是将 Java 的对象转化为字节流，从而方便存储和传输。<br>反序列化时将字节流重新转为 Java 对象的过程。为了实现序列化可以实现 Java 的 Serializable 接口并使用同时指定 serialVersionUID 的值控制序列化的版本。<br>并使用 ObjectInputStream 或者 ObjectOutPutStream 来操作字节流。<br>使用 transient 关键字来选择某个字段不进行序列化，</p>
-<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><ul>
+<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><h3 id="异常机制"><a href="#异常机制" class="headerlink" title="异常机制"></a>异常机制</h3><h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><ul>
 <li><p>扩容机制<br>如果未指定初始容量 hashMap 会默认初始化容量为 16.<br>若指定了初始容量且部位 2 的幂次，则会选择接近指定容量的最小 2 的幂次数作为初始容量。<br>当 hashMap 的 put 操作时，需要判断加入 map 后的数据元素是否大于初始容量*0.75 若是则进行原先容量的两倍扩容。</p>
 </li>
 <li><p>散列函数<br><img src="/articles/2023/09/08/%E5%85%AB%E8%82%A1-Java%E5%9F%BA%E7%A1%80/2023-09-11-16-45-18.png" alt="asset_img"><br>将计算得来的 hashcode 值右移 16 位，和原先的哈希值相亦或是的高 16 位和低 16 位均参与运算。减少冲突 散列均匀</p>
 </li>
 </ul>
-<h3 id="hashMap-的并发问题"><a href="#hashMap-的并发问题" class="headerlink" title="hashMap 的并发问题"></a>hashMap 的并发问题</h3>
+<h3 id="hashMap-的并发问题"><a href="#hashMap-的并发问题" class="headerlink" title="hashMap 的并发问题"></a>hashMap 的并发问题</h3><h2 id="Java-的函数式编程"><a href="#Java-的函数式编程" class="headerlink" title="Java 的函数式编程"></a>Java 的函数式编程</h2><p>通过合并现有代码来生成新功能而不是从头开始编写所有内容，我们可以更快地获得更可靠的代码。</p>
+<h3 id="Lambda-表达式"><a href="#Lambda-表达式" class="headerlink" title="Lambda 表达式"></a>Lambda 表达式</h3><p>使用最小可能语法编写的函数定义</p>
+<h3 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h3><p>方法引用是用来直接访问类或者实例的已经存在的方法或者构造方法。方法引用提供了一种引用而不执行方法的方式，它需要由兼容的函数式接口构成的目标类型上下文。</p>
+<blockquote>
+<p>Lambda 表达式是一种匿名函数，它允许你以更简洁的方式定义行为，通常用于替代匿名内部类,包含参数，箭头符号和函数体<br>函数式接口是只包含一个抽象方法的接口</p>
+</blockquote>
+
       
     </div>
 
@@ -422,7 +428,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/articles/2023/09/08/%E5%85%AB%E8%82%A1-spring/" class="post-title-link" itemprop="url">八股--spring</a>
+            <a href="/articles/2023/09/08/%E5%85%AB%E8%82%A1-spring/" class="post-title-link" itemprop="url">Spring</a>
         </h2>
 
         <div class="post-meta">
@@ -439,7 +445,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-28 15:06:32" itemprop="dateModified" datetime="2023-09-28T15:06:32+08:00">2023-09-28</time>
+                <time title="修改时间：2023-10-04 20:17:41" itemprop="dateModified" datetime="2023-10-04T20:17:41+08:00">2023-10-04</time>
               </span>
 
           
@@ -611,7 +617,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-04 17:31:21" itemprop="dateModified" datetime="2023-10-04T17:31:21+08:00">2023-10-04</time>
+                <time title="修改时间：2023-10-05 15:25:17" itemprop="dateModified" datetime="2023-10-05T15:25:17+08:00">2023-10-05</time>
               </span>
 
           
@@ -689,6 +695,11 @@
 </ul>
 </li>
 <li>拒绝策略<br>AbortPolicy ：直接抛出异常，默认使用此策略<br>CallerRunsPolicy：用调用者所在的线程来执行任务，哪来回哪去<br>DiscardOldestPolicy：丢弃阻塞队列里最老的任务，也就是队列里靠前的任务，把最前面的挤掉<br>DiscardPolicy ：当前任务直接丢弃。</li>
+</ul>
+<h3 id="为什么阿里规范不能用-Executors-创建"><a href="#为什么阿里规范不能用-Executors-创建" class="headerlink" title="为什么阿里规范不能用 Executors 创建"></a>为什么阿里规范不能用 Executors 创建</h3><p><code>线程池不允许使用 Executors 去创建，而是通过 ThreadPoolExecutor 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险</code></p>
+<ul>
+<li>FixedThreadPool 和 SingleThreadPool 允许的请求队列长度为 Integer.MAX_VALUE 可能会造成 OOM</li>
+<li>CachedThreadPo 和 ScheduledThreadPool 允许的创建线程数量为 Integer.MAX_VALUE 可能会创建大量的线程，从而导致 OOM</li>
 </ul>
 <h4 id="线程池-submit-和-execute-方法的区别"><a href="#线程池-submit-和-execute-方法的区别" class="headerlink" title="线程池 submit 和 execute 方法的区别"></a>线程池 submit 和 execute 方法的区别</h4><p>submit 会返回线程执行的异步结果 future 对象 根据 future 对象可以判断是否执行成功<br>execute 用于提交不需要返回值的任务</p>
 <h4 id="线程池的关闭"><a href="#线程池的关闭" class="headerlink" title="线程池的关闭"></a>线程池的关闭</h4><p>shutdown() 将线程池状态置为 shutdown,并不会立即停止，任务不能继续提交，直到线程池内部处理完成才结束<br>shutdownNow()能立即停止线程池，正在跑的和正在等待的任务都停下了</p>
