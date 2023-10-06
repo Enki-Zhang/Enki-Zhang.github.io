@@ -158,137 +158,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Enki">
-      <meta itemprop="description" content="学习是件很幸福的事情">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="学习博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/" class="post-title-link" itemprop="url">Java常见面试题</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-03-11 13:27:20 / 修改时间：15:01:14" itemprop="dateCreated datePublished" datetime="2023-03-11T13:27:20+08:00">2023-03-11</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Java-数据类型常见面试题总结"><a href="#Java-数据类型常见面试题总结" class="headerlink" title="Java 数据类型常见面试题总结"></a>Java 数据类型常见面试题总结</h1><p>这篇文章绝对干货！文章涉及到的概念经常会被面试官拿来考察求职者的 Java 基础。</p>
-<p>本篇采用大家比较喜欢的面试官问答的形式来展开。</p>
-<p>基本数据类型</p>
-<p>👨‍💻 面试官 ： Java 中有哪 8 种基本数据类型？</p>
-<p>🙋 我 ：Java 中有 8 种基本数据类型，分别为：</p>
-<p>6 种数字类型 ：byte、short、int、long、float、double</p>
-<p>1 种字符类型：char</p>
-<p>1 种布尔型：boolean</p>
-<p>👨‍💻 面试官 ： 它们的默认值和占用的空间大小知道不？</p>
-<p>🙋 我 ：这 8 种基本数据类型的默认值以及所占空间的大小如下：<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-27-52.png" alt="asset_img"></p>
-<p>另外，对于 boolean，官方文档未明确定义，它依赖于 JVM 厂商的具体实现。逻辑上理解是占用 1 位，但是实际中会考虑计算机高效存储因素。</p>
-<p>注意：</p>
-<p>Java 里使用 long 类型的数据一定要在数值后面加上 L，否则将作为整型解析：</p>
-<p>char a &#x3D; ‘h’char :单引号，String a &#x3D; “hello” :双引号</p>
-<h2 id="包装类型"><a href="#包装类型" class="headerlink" title="包装类型"></a>包装类型</h2><p>👨‍💻 面试官 ： 说说这 8 种基本数据类型对应的包装类型。</p>
-<p>🙋 我 ：这八种基本类型都有对应的包装类分别为：Byte、Short、Integer、Long、Float、Double、Character、Boolean</p>
-<p>👨‍💻 面试官 ：那基本类型和包装类型有啥区别不？</p>
-<p>🙋 我 ：包装类型不赋值就是 Null ，而基本类型有默认值且不是 Null。</p>
-<p>另外，这个问题建议还可以先从 JVM 层面来分析。</p>
-<p>基本数据类型直接存放在 Java 虚拟机栈中的局部变量表中，而包装类型属于对象类型，我们知道对象实例都存在于堆中。相比于对象类型， 基本数据类型占用的空间非常小。</p>
-<blockquote>
-<p>《深入理解 Java 虚拟机》 ：局部变量表主要存放了编译期可知的基本数据类型（boolean、byte、char、short、int、float、long、double）、对象引用（reference 类型，它不同于对象本身，可能是一个指向对象起始地址的引用指针，也可能是指向一个代表对象的句柄或其他与此对象相关的位置）。</p>
-</blockquote>
-<h2 id="包装类型的常量池技术"><a href="#包装类型的常量池技术" class="headerlink" title="包装类型的常量池技术"></a>包装类型的常量池技术</h2><p>👨‍💻 面试官 ： 包装类型的常量池技术了解么？</p>
-<p>🙋 我 ： Java 基本类型的包装类的大部分都实现了常量池技术。</p>
-<p>Byte,Short,Integer,Long 这 4 种包装类默认创建了数值 [-128，127] 的相应类型的缓存数据，Character 创建了数值在[0,127]范围的缓存数据，Boolean 直接返回 True Or False。</p>
-<p>Integer 缓存源码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">*此方法将始终缓存-128 到 127（包括端点）范围内的值，并可以缓存此范围之外的其他值。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title function_">valueOf</span><span class="params">(<span class="type">int</span> i)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">      <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Integer</span>(i);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">IntegerCache</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">low</span> <span class="operator">=</span> -<span class="number">128</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> high;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Integer cache[];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Character 缓存源码:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Character <span class="title function_">valueOf</span><span class="params">(<span class="type">char</span> c)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (c &lt;= <span class="number">127</span>) &#123; <span class="comment">// must cache</span></span><br><span class="line">      <span class="keyword">return</span> CharacterCache.cache[(<span class="type">int</span>)c];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Character</span>(c);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">CharacterCache</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">CharacterCache</span><span class="params">()</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> Character cache[] = <span class="keyword">new</span> <span class="title class_">Character</span>[<span class="number">127</span> + <span class="number">1</span>];</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; cache.length; i++)</span><br><span class="line">            cache[i] = <span class="keyword">new</span> <span class="title class_">Character</span>((<span class="type">char</span>)i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Boolean 缓存源码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Boolean <span class="title function_">valueOf</span><span class="params">(<span class="type">boolean</span> b)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (b ? TRUE : FALSE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果超出对应范围仍然会去创建新的对象，缓存的范围区间的大小只是在性能和资源之间的权衡。</p>
-<p>两种浮点数类型的包装类 Float,Double 并没有实现常量池技术。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Integer</span> <span class="variable">i1</span> <span class="operator">=</span> <span class="number">33</span>;</span><br><span class="line"><span class="type">Integer</span> <span class="variable">i2</span> <span class="operator">=</span> <span class="number">33</span>;</span><br><span class="line">System.out.println(i1 == i2);<span class="comment">// 输出 true</span></span><br><span class="line"><span class="type">Float</span> <span class="variable">i11</span> <span class="operator">=</span> <span class="number">333f</span>;</span><br><span class="line"><span class="type">Float</span> <span class="variable">i22</span> <span class="operator">=</span> <span class="number">333f</span>;</span><br><span class="line">System.out.println(i11 == i22);<span class="comment">// 输出 false</span></span><br><span class="line"><span class="type">Double</span> <span class="variable">i3</span> <span class="operator">=</span> <span class="number">1.2</span>;</span><br><span class="line"><span class="type">Double</span> <span class="variable">i4</span> <span class="operator">=</span> <span class="number">1.2</span>;</span><br><span class="line">System.out.println(i3 == i4);<span class="comment">// 输出 false</span></span><br></pre></td></tr></table></figure>
-
-<p>下面我们来看一下问题。下面的代码的输出结果是 true 还是 flase 呢？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Integer</span> <span class="variable">i1</span> <span class="operator">=</span> <span class="number">40</span>;</span><br><span class="line"><span class="type">Integer</span> <span class="variable">i2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Integer</span>(<span class="number">40</span>);</span><br><span class="line">System.out.println(i1==i2);</span><br></pre></td></tr></table></figure>
-
-<p>Integer i1&#x3D;40 这一行代码会发生装箱，也就是说这行代码等价于 Integer i1&#x3D;Integer.valueOf(40) 。因此，i1 直接使用的是常量池中的对象。而 Integer i1 &#x3D; new Integer(40) 会直接创建新的对象。</p>
-<p>因此，答案是 false 。你答对了吗？</p>
-<p>记住：<strong>所有整型包装类对象之间值的比较，全部使用 equals 方法比较。</strong><br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-30-28.png" alt="asset_img"></p>
-<h2 id="为什么要有包装类型？"><a href="#为什么要有包装类型？" class="headerlink" title="为什么要有包装类型？"></a>为什么要有包装类型？</h2><p>👨‍💻 面试官 ： 为什么要有包装类型？</p>
-<p>🙋 我 ：</p>
-<p>Java 本身就是一门 OOP（面向对象编程）语言，对象可以说是 Java 的灵魂。</p>
-<p>除了定义一些常量和局部变量之外，我们在其他地方比如方法参数、对象属性中很少会使用基本类型来定义变量。</p>
-<p>为什么呢？</p>
-<p>我举个例子，假如你有一个对象中的属性使用了 基本类型，那这个属性就必然存在默认值了。这个逻辑不正确的！因为很多业务场景下，对象的某些属性没有赋值，我就希望它的值为 null。你给我默认赋个值，不是帮倒忙么？</p>
-<p>另外，像泛型参数不能是基本类型。因为基本类型不是 Object 子类，应该用基本类型对应的包装类型代替。我们直接拿 JDK 中线程的代码举例。</p>
-<p>Java 中的集合在定义类型的时候不能使用基本类型的。比如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashMap</span>&lt;K,V&gt; <span class="keyword">extends</span> <span class="title class_">AbstractMap</span>&lt;K,V&gt;</span><br><span class="line">    <span class="keyword">implements</span> <span class="title class_">Map</span>&lt;K,V&gt;, Cloneable, Serializable &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Map&lt;Integer, Set&lt;String&gt;&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br></pre></td></tr></table></figure>
-
-<h2 id="自动拆装箱"><a href="#自动拆装箱" class="headerlink" title="自动拆装箱"></a>自动拆装箱</h2><p>什么是自动拆装箱？原理？</p>
-<p>👨‍💻 面试官 ： 什么是自动拆装箱？原理了解么？</p>
-<p>🙋 我 ：</p>
-<p>基本类型和包装类型之间的互转。举例：<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-31-10.png" alt="asset_img"><br>上面这两行代码对应的字节码为：<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-31-17.png" alt="asset_img"><br>从字节码中，我们发现装箱其实就是调用了 包装类的 valueOf()方法，拆箱其实就是调用了 xxxValue()方法。</p>
-<p>因此，</p>
-<p>●<br>Integer i &#x3D; 10 等价于 Integer i &#x3D; Integer.valueOf(10)<br>●<br>int n &#x3D; i 等价于 int n &#x3D; i.intValue();</p>
-<h2 id="自动拆箱引发的-NPE（NullPointerException）-问题"><a href="#自动拆箱引发的-NPE（NullPointerException）-问题" class="headerlink" title="自动拆箱引发的 NPE（NullPointerException） 问题"></a>自动拆箱引发的 NPE（NullPointerException） 问题</h2><p>👨‍💻 面试官 ： 自动拆箱可能会引发 NPE 问题，遇到过类似的场景么？</p>
-<p>🙋 我 ：</p>
-<p>案例 1</p>
-<p>在《阿里巴巴开发手册》上就有这样一条规定。<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-31-31.png" alt="asset_img"><br>我们从上图可以看到，有一条是这样说的：“数据库的查询结果可能是 null，因为自动拆箱，用基本数据类型接收有 NPE 风险”。</p>
-<p>我们来模拟一个实际的案例：<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-31-37.png" alt="asset_img"><br>运行代码之后，果然出现了 NPE 的问题。</p>
-<p>为什么会这样呢? 我们对 AutoBoxTest.class 进行反编译查看其字节码（我更推荐使用 IDEA 插件 jclasslib 来查看类的字节码）。<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-31-47.png" alt="asset_img"><br>反编译后得到的 should_Throw_NullPointerException() 方法的字节码如下：<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-31-51.png" alt="asset_img"><br>我们可以发现自动拆箱 Long -&gt; long 的过程，不过是调用了 longValue() 方法罢了！<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-31-56.png" alt="asset_img"><br>也就是说下面两行的代码实际是等价的:<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-32-01.png" alt="asset_img"><br>因为，getNum()返回的值为 null ，一个 null 值调用方法，当然会有 NPE 的问题了。</p>
-<p>案例 2</p>
-<p>通过上面的分析之后，我来考了一个不论是平时开发还是面试中都经常会碰到的一个问题：“三目运算符使用不当会导致诡异的 NPE 异常”。</p>
-<p>请你回答下面的代码会有 NPE 问题出现吗？如果有 NPE 问题出现的话，原因是什么呢？你会怎么分析呢？<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-32-16.png" alt="asset_img"><br>答案是会有 NPE 问题出现的。</p>
-<p>我们还是通过查看其字节码来搞懂背后的原理（这里借助了 IDEA 插件 jclasslib 来查看类字节码）。<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-32-25.png" alt="asset_img"><br>从字节码中可以看出，22 行的位置发生了 拆箱操作 。</p>
-<p>详细解释下就是：flag ? 0 : i 这行代码中，0 是基本数据类型 int，返回数据的时候 i 会被强制拆箱成 int 类型，由于 i 的值是 null，因此就抛出了 NPE 异常。<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-32-34.png" alt="asset_img"><br>如果，我们把代码中 flag 变量的值修改为 true 的话，就不会存在 NPE 问题了，因为会直接返回 0，不会进行拆箱操作。</p>
-<p>我们在实际项目中应该避免这样的写法，正确 ✅ 修改之后的代码如下：<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-32-40.png" alt="asset_img"><br>这个问题也在 《阿里巴巴开发手册》中 被提到过。<br><img src="/articles/2023/03/11/Java%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/2023-03-11-13-32-47.png" alt="asset_img"></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/03/11/Mysql%E6%97%A5%E5%BF%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -987,15 +856,15 @@ public void reportCurrentTimeWithFixedRate() &#123;
 </ul>
 <p><strong>使用的是 index1 的执行流程</strong></p>
 <ul>
-<li>从<code>index1</code>索引树找到满足索引值是’<a href="mailto:&#x7a;&#104;&#x61;&#x6e;&#x67;&#115;&#x73;&#x78;&#121;&#x7a;&#x40;&#120;&#120;&#120;&#x2e;&#x63;&#x6f;&#x6d;">&#x7a;&#104;&#x61;&#x6e;&#x67;&#115;&#x73;&#x78;&#121;&#x7a;&#x40;&#120;&#120;&#120;&#x2e;&#x63;&#x6f;&#x6d;</a>’的这条记录，取得 ID2 的值；</li>
+<li>从<code>index1</code>索引树找到满足索引值是’<a href="mailto:&#x7a;&#x68;&#97;&#x6e;&#x67;&#x73;&#115;&#x78;&#x79;&#122;&#64;&#x78;&#x78;&#120;&#46;&#x63;&#111;&#109;">&#x7a;&#x68;&#97;&#x6e;&#x67;&#x73;&#115;&#x78;&#x79;&#122;&#64;&#x78;&#x78;&#120;&#46;&#x63;&#111;&#109;</a>’的这条记录，取得 ID2 的值；</li>
 <li>到主键上查到主键值是 ID2 的行，判断 email 的值是正确的，将这行记录加入结果集；</li>
-<li>取 index1 索引树上刚刚查到的位置的下一条记录，发现已经不满足 email&#x3D;‘<a href="mailto:&#x7a;&#x68;&#97;&#110;&#103;&#115;&#115;&#120;&#121;&#x7a;&#x40;&#x78;&#x78;&#x78;&#46;&#x63;&#x6f;&#109;">&#x7a;&#x68;&#97;&#110;&#103;&#115;&#115;&#120;&#121;&#x7a;&#x40;&#x78;&#x78;&#x78;&#46;&#x63;&#x6f;&#109;</a>’的条件了，循环结束</li>
+<li>取 index1 索引树上刚刚查到的位置的下一条记录，发现已经不满足 email&#x3D;‘<a href="mailto:&#x7a;&#104;&#x61;&#x6e;&#x67;&#115;&#115;&#120;&#x79;&#x7a;&#x40;&#120;&#120;&#x78;&#46;&#99;&#x6f;&#x6d;">&#x7a;&#104;&#x61;&#x6e;&#x67;&#115;&#115;&#120;&#x79;&#x7a;&#x40;&#120;&#120;&#x78;&#46;&#99;&#x6f;&#x6d;</a>’的条件了，循环结束</li>
 <li>这个过程中，只需要回主键索引取一次数据，所以系统认为只扫描了一行。</li>
 </ul>
 <p><strong>使用的是 index2 的执行流程</strong></p>
 <ul>
 <li>从<code>index2</code>索引树找到满足索引值是’zhangs’的记录，找到的第一个是 ID1；</li>
-<li>到主键上查到主键值是 ID1 的行，判断出 email 的值不是’<a href="mailto:&#x7a;&#104;&#x61;&#110;&#x67;&#115;&#x73;&#120;&#x79;&#x7a;&#64;&#x78;&#x78;&#x78;&#46;&#x63;&#111;&#x6d;">&#x7a;&#104;&#x61;&#110;&#x67;&#115;&#x73;&#120;&#x79;&#x7a;&#64;&#x78;&#x78;&#x78;&#46;&#x63;&#111;&#x6d;</a>’，这行记录丢弃；</li>
+<li>到主键上查到主键值是 ID1 的行，判断出 email 的值不是’<a href="mailto:&#122;&#104;&#97;&#110;&#103;&#x73;&#x73;&#120;&#x79;&#122;&#x40;&#x78;&#x78;&#x78;&#x2e;&#x63;&#111;&#x6d;">&#122;&#104;&#97;&#110;&#103;&#x73;&#x73;&#120;&#x79;&#122;&#x40;&#x78;&#x78;&#x78;&#x2e;&#x63;&#111;&#x6d;</a>’，这行记录丢弃；</li>
 <li>取 index2 上刚刚查到的位置的下一条记录，发现仍然是’zhangs’，取出 ID2，再到 ID 索引上取整行然后判断，这次值对了，将这行记录加入结果集；</li>
 <li>重复上一步，直到在 idxe2 上取到的值不是’zhangs’时，循环结束。</li>
 <li>在这个过程中，要回主键索引取 4 次数据，也就是扫描了 4 行。</li>
@@ -4000,10 +3869,96 @@ public void reportCurrentTimeWithFixedRate() &#123;
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/02/16/MVC%E5%B1%82%E6%AC%A1%E8%AF%B4%E6%98%8E/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Enki">
+      <meta itemprop="description" content="学习是件很幸福的事情">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学习博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/articles/2023/02/16/MVC%E5%B1%82%E6%AC%A1%E8%AF%B4%E6%98%8E/" class="post-title-link" itemprop="url">MVC层次说明</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-02-16 21:02:08" itemprop="dateCreated datePublished" datetime="2023-02-16T21:02:08+08:00">2023-02-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-02-23 16:31:55" itemprop="dateModified" datetime="2023-02-23T16:31:55+08:00">2023-02-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="常见的三层架构和-MVC"><a href="#常见的三层架构和-MVC" class="headerlink" title="常见的三层架构和 MVC"></a>常见的三层架构和 MVC</h1><h2 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h2><ol>
+<li>view 视图层</li>
+<li>service 业务层</li>
+<li>Dao 持久层<blockquote>
+<p>View 层：用于接收用户提交请求的代码在这里编写。<br>Service 层：系统的业务逻辑主要在这里编写。<br>Dao 层：直接操作数据库的代码在这里编写。</p>
+</blockquote>
+</li>
+</ol>
+<p>dao 层只是访问数据库，业务逻辑跟它没关系，它只会访问数据库读取数据，不知道这些数据是什么意思、做什么用的。<br>service 层，就是操作业务逻辑，它调取 dao 层的数据，对数据按照业务逻辑进行解释。</p>
+<p>dao 层不能有业务逻辑，service 层可以调取一个 dao 层或者多个 dao 来实现业务逻辑。如果 dao 层加了业务逻辑进去，不通过 service 层实现业务逻辑，不仅拖累查询效率，还让 dao 层代码难以复用，导致代码臃肿。</p>
+<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><ol>
+<li>Model</li>
+<li>View</li>
+<li>Controller<blockquote>
+<p>View：视图，为用户提供使用界面，与用户直接进行交互。<br>Model：模型，承载数据，并对用户提交请求进行计算的模块。其分为两类，一类称为数据承载 Bean，一类称为业务处理 Bean。所谓数据承载 Bean 是指实体类，专门承载业务数据的，如 Student、User 等。而业务处理 Bean 则是指 Service 或 Dao 对象，专门用于处理用户提交请求的。<br>Controller：控制器，用于将用户请求转发给相应的 Model 进行处理，并处理 Model 的计算结果向用户提供相应响应。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="MVVC-和三层架构关系"><a href="#MVVC-和三层架构关系" class="headerlink" title="MVVC 和三层架构关系"></a>MVVC 和三层架构关系</h2><p>MVC 中的 V 和 C 均属于三层架构的 View 层。<br>MVC 中的 M（Model）包括了数据承载 Bean 和业务处理 Bean，其中业务处理 Bean 分为 Service 或 Dao 对象，分别对应业务逻辑处理和数据库操作，它们对应的是三层架构中的 Service 层和 Dao 层。</p>
+<h2 id="SSM-和三层架构的关系"><a href="#SSM-和三层架构的关系" class="headerlink" title="SSM 和三层架构的关系"></a>SSM 和三层架构的关系</h2><blockquote>
+<p>SpringMVC：作为 View 层的实现者，完成用户的请求接收功能。SpringMVC 的 Controller 作为整个应用的控制器，完成用户请求的转发及对用户的响应。<br>MyBatis：作为 Dao 层的实现者，完成对数据库的增、删、改、查功能。<br>Spring：以整个应用大管家的身份出现。整个应用中所有的 Bean 的生命周期行为，均由 Spring 来管理。即整个应用中所有对象的创建、初始化、销毁，及对象间关联关系的维护，均由 Spring 进行管理。</p>
+</blockquote>
+<h2 id="spring-springMVC-配置文件"><a href="#spring-springMVC-配置文件" class="headerlink" title="spring springMVC 配置文件"></a>spring springMVC 配置文件</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -4069,7 +4024,7 @@ public void reportCurrentTimeWithFixedRate() &#123;
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">100</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

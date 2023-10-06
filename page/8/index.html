@@ -158,92 +158,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/02/16/MVC%E5%B1%82%E6%AC%A1%E8%AF%B4%E6%98%8E/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Enki">
-      <meta itemprop="description" content="学习是件很幸福的事情">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="学习博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/articles/2023/02/16/MVC%E5%B1%82%E6%AC%A1%E8%AF%B4%E6%98%8E/" class="post-title-link" itemprop="url">MVC层次说明</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-02-16 21:02:08" itemprop="dateCreated datePublished" datetime="2023-02-16T21:02:08+08:00">2023-02-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-02-23 16:31:55" itemprop="dateModified" datetime="2023-02-23T16:31:55+08:00">2023-02-23</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="常见的三层架构和-MVC"><a href="#常见的三层架构和-MVC" class="headerlink" title="常见的三层架构和 MVC"></a>常见的三层架构和 MVC</h1><h2 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h2><ol>
-<li>view 视图层</li>
-<li>service 业务层</li>
-<li>Dao 持久层<blockquote>
-<p>View 层：用于接收用户提交请求的代码在这里编写。<br>Service 层：系统的业务逻辑主要在这里编写。<br>Dao 层：直接操作数据库的代码在这里编写。</p>
-</blockquote>
-</li>
-</ol>
-<p>dao 层只是访问数据库，业务逻辑跟它没关系，它只会访问数据库读取数据，不知道这些数据是什么意思、做什么用的。<br>service 层，就是操作业务逻辑，它调取 dao 层的数据，对数据按照业务逻辑进行解释。</p>
-<p>dao 层不能有业务逻辑，service 层可以调取一个 dao 层或者多个 dao 来实现业务逻辑。如果 dao 层加了业务逻辑进去，不通过 service 层实现业务逻辑，不仅拖累查询效率，还让 dao 层代码难以复用，导致代码臃肿。</p>
-<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><ol>
-<li>Model</li>
-<li>View</li>
-<li>Controller<blockquote>
-<p>View：视图，为用户提供使用界面，与用户直接进行交互。<br>Model：模型，承载数据，并对用户提交请求进行计算的模块。其分为两类，一类称为数据承载 Bean，一类称为业务处理 Bean。所谓数据承载 Bean 是指实体类，专门承载业务数据的，如 Student、User 等。而业务处理 Bean 则是指 Service 或 Dao 对象，专门用于处理用户提交请求的。<br>Controller：控制器，用于将用户请求转发给相应的 Model 进行处理，并处理 Model 的计算结果向用户提供相应响应。</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="MVVC-和三层架构关系"><a href="#MVVC-和三层架构关系" class="headerlink" title="MVVC 和三层架构关系"></a>MVVC 和三层架构关系</h2><p>MVC 中的 V 和 C 均属于三层架构的 View 层。<br>MVC 中的 M（Model）包括了数据承载 Bean 和业务处理 Bean，其中业务处理 Bean 分为 Service 或 Dao 对象，分别对应业务逻辑处理和数据库操作，它们对应的是三层架构中的 Service 层和 Dao 层。</p>
-<h2 id="SSM-和三层架构的关系"><a href="#SSM-和三层架构的关系" class="headerlink" title="SSM 和三层架构的关系"></a>SSM 和三层架构的关系</h2><blockquote>
-<p>SpringMVC：作为 View 层的实现者，完成用户的请求接收功能。SpringMVC 的 Controller 作为整个应用的控制器，完成用户请求的转发及对用户的响应。<br>MyBatis：作为 Dao 层的实现者，完成对数据库的增、删、改、查功能。<br>Spring：以整个应用大管家的身份出现。整个应用中所有的 Bean 的生命周期行为，均由 Spring 来管理。即整个应用中所有对象的创建、初始化、销毁，及对象间关联关系的维护，均由 Spring 进行管理。</p>
-</blockquote>
-<h2 id="spring-springMVC-配置文件"><a href="#spring-springMVC-配置文件" class="headerlink" title="spring springMVC 配置文件"></a>spring springMVC 配置文件</h2>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/02/10/java%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2389,10 +2303,86 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2022/10/25/JVM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Enki">
+      <meta itemprop="description" content="学习是件很幸福的事情">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="学习博客">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/articles/2022/10/25/JVM/" class="post-title-link" itemprop="url">JVM</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-10-25 12:55:12" itemprop="dateCreated datePublished" datetime="2022-10-25T12:55:12+08:00">2022-10-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-17 15:31:48" itemprop="dateModified" datetime="2023-04-17T15:31:48+08:00">2023-04-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h1><h2 id="路线"><a href="#路线" class="headerlink" title="路线"></a>路线</h2><p><img src="/articles/2022/10/25/JVM/2022-10-26-16-32-27.png" alt="asset_img"></p>
+<h2 id="字节码"><a href="#字节码" class="headerlink" title="字节码"></a>字节码</h2><ol>
+<li>我们平时说的 java 字节码，指的是用 java 语言编译成的字节码。准确的<br>说任何能在 jvm 平台上执行的字节码格式都是一样的。所以应该统称为：<br>jvm 字节码。</li>
+<li>不同的编译器，可以编译出相同的字节码文件，字节码文件也可以在不同<br>的 JVM 上运行。</li>
+<li>Java 虚拟机与 Java 语言并没有必然的联系，它只与特定的二进制文<br>件格式—Class 文件格式所关联，Class 文件中包含了 Java 虚拟机指<br>令集（或者称为字节码、Bytecodes）和符号表，还有一些其他辅助信息。</li></ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/articles/2022/10/25/JVM/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/9/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2458,7 +2448,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">101</span>
+          <span class="site-state-item-count">100</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
