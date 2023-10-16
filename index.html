@@ -380,7 +380,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-04 20:17:41" itemprop="dateModified" datetime="2023-10-04T20:17:41+08:00">2023-10-04</time>
+                <time title="修改时间：2023-10-06 17:08:04" itemprop="dateModified" datetime="2023-10-06T17:08:04+08:00">2023-10-06</time>
               </span>
 
           
@@ -413,6 +413,12 @@
 <h3 id="springboot-如何切换测试、开发等模式，配置是什么样的"><a href="#springboot-如何切换测试、开发等模式，配置是什么样的" class="headerlink" title="springboot 如何切换测试、开发等模式，配置是什么样的"></a>springboot 如何切换测试、开发等模式，配置是什么样的</h3><p>我们可以为不同的环境配置不同的 properties 环境，并在 apliaction.properties 中通过 spring.profiles.active 指定不同的环境配置文件<br>或者是再 yml 中配置不同环境并指定后<br>或者使用 VM options 指定参数式启动某个环境的配置文件</p>
 <h3 id="Spring-中的线程安全问题"><a href="#Spring-中的线程安全问题" class="headerlink" title="Spring 中的线程安全问题"></a>Spring 中的线程安全问题</h3><ul>
 <li>Bean 是单例的被所有线程共享，Spring 中的单例 Bean 不是线程安全的。全局只有一个 Bean 被所有线程共享。对于无状态的 Bean 即不对其进行修改操作的是安全的。否则则是线程不安全的<br>常见的解决办法：<br>使用 ThreadLocal 对线程进行隔离，将需要的成员变量保存在 ThreadLocal 中，或者使用锁也可以解决</li>
+</ul>
+<h3 id="Spring-中事务失效的场景（-）"><a href="#Spring-中事务失效的场景（-）" class="headerlink" title="Spring 中事务失效的场景（**）"></a>Spring 中事务失效的场景（**）</h3><ul>
+<li>事务方法的权限：spring 要求被代理方法必须是 public 的。或者将事务方法定义为 final 也会导致事务失效。因为事务底层使用了 AOP 动态代理，final 修饰方法无法进行重写不能添加事务</li>
+<li>方法的内部直接调用</li>
+<li>未被 Spring 管理</li>
+<li>事务不能抛出异常，导致事务无法回滚</li>
 </ul>
 
       
@@ -464,7 +470,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-04 17:26:07" itemprop="dateModified" datetime="2023-10-04T17:26:07+08:00">2023-10-04</time>
+                <time title="修改时间：2023-10-10 16:25:48" itemprop="dateModified" datetime="2023-10-10T16:25:48+08:00">2023-10-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -487,13 +493,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><p><img src="/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/image-18.png" alt="Alt text"><br>集合可以更灵活有效的存储对象，相比于数组大小可变支持泛型，元素操作方便</p>
+          <h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><p><img src="/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/2023-10-10-13-58-05.png" alt="asset_img"><br>集合可以更灵活有效的存储对象，相比于数组大小可变支持泛型，元素操作方便</p>
 <h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>初始容量 10 1.5 倍扩容 将原数组拷贝给过去进行扩容</p>
 <blockquote>
 <p>什么情况下使用 ArrayList 和 LinkedList<br>Arraylist 底层是 Object[]，空间连续，支持随机访问，适用于查找和遍历的操作<br>LinkedList 底层是双向链表，内存空间不连续，适用于快速的插入和删除操作</p>
 </blockquote>
 <h3 id="遍历方式"><a href="#遍历方式" class="headerlink" title="遍历方式"></a>遍历方式</h3><p>遍历方式 fori foreach 增强 for 问题出在遍历时候进行修改<br>对 ArrayList 遍历并修改会触发快速失败机制会抛出 Concurrent Modification Exception。原因在于集合在遍历过程中改变了 modcount 值，与迭代器 next 的 Modcount 值不相同则报错触发快速失败机制，</p>
 <h3 id="说一说-ConcurrentHashMap-的实现原理"><a href="#说一说-ConcurrentHashMap-的实现原理" class="headerlink" title="说一说 ConcurrentHashMap 的实现原理"></a>说一说 ConcurrentHashMap 的实现原理</h3><p>ConcurrentHashMap 和 HashMap 的功能基本一致，区别在于 ConcurrentHashMap 是线程安全的</p>
+<ul>
+<li><p>JDK1.7 之前使用分段锁实现，里面包含了多个 segment 数组，每个 segment 类似于一个 hashMap 结构，默认 segment 数组大小为 16；</p>
+<ul>
+<li>put 根据 hash 值定位到具体的 Segment，segment 为空则初始化 ，否则使用 Reentrantlock 加锁，获取锁失败则自旋，超过一定次数则失败，获取成功则进行 hashEntry 遍历</li>
+<li>rehash 机制和 1.7 之前的 hashmap 一样，扩容至原先大小的两倍</li>
+</ul>
+</li>
+<li><p>jdk1.8 之后 不在使用分段锁结构，使用数组链表+红黑树结构。</p>
+<ul>
+<li>通过自旋和 CAS 操作完成初始化</li>
+</ul>
+</li>
+</ul>
 <h3 id="说一说-HashMap-的扩容机制"><a href="#说一说-HashMap-的扩容机制" class="headerlink" title="说一说 HashMap 的扩容机制"></a>说一说 HashMap 的扩容机制</h3><p>当 hashMap 中的元素大于数组长度*阈值后需要进行扩容。将所有元素散列到扩容后的容器中。存放 key 的桶数组容量固定，在 jdk1.8 后扩容不需要进行重新计算 hash 进行定位，扩容后的元素要么在原先位置要么在原先位置加上旧容量的长度</p>
 <h3 id="redis-字典的-rehash-为啥是渐进式的"><a href="#redis-字典的-rehash-为啥是渐进式的" class="headerlink" title="redis 字典的 rehash 为啥是渐进式的"></a>redis 字典的 rehash 为啥是渐进式的</h3><p>这样做的原因在于，若 hash 桶的个数比较少那么服务器可以在瞬间就将<br>这些键值对全部 rehash 到 新的表中，但是，如果哈希表里保存的键值对数量不是四个，而是四百万、四千方基至四亿个键值对，那么要一次性将这些键值对全部 rehash 新的表中会造成服务器在一段时间内停止服务。<br><strong>渐进式的步骤</strong><br>在 h[0]表中维护一个索引计数指针，每次对字典执行操作之外在对计数指针上的键值对进行 rehash 到 h[1]表中直到所有键值对 rehash 完成。同时渐进式的 rehash 会在两张表中执行相同的删除、查找、更新操作，但添加操作只在新表 h[1]中进行，保证 h[0]只减不增，</p>
 <h3 id="为什么-HashMap-的数组长度要取-2-的整数幂"><a href="#为什么-HashMap-的数组长度要取-2-的整数幂" class="headerlink" title="为什么 HashMap 的数组长度要取 2 的整数幂"></a>为什么 HashMap 的数组长度要取 2 的整数幂</h3><p>在得到 hash 值后，对其进行取模运算从而得到对应的数组下标（将数组长度-1 与&amp; hash 值）而 2 的幂次方长度的数组-1 会使得 hash 值高位为 0 只保留低位</p>
@@ -552,7 +571,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-05 15:25:17" itemprop="dateModified" datetime="2023-10-05T15:25:17+08:00">2023-10-05</time>
+                <time title="修改时间：2023-10-16 14:47:27" itemprop="dateModified" datetime="2023-10-16T14:47:27+08:00">2023-10-16</time>
               </span>
 
           
@@ -566,7 +585,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="启动线程的方式"><a href="#启动线程的方式" class="headerlink" title="启动线程的方式"></a>启动线程的方式</h3><p>线程继承 Thread 类 实现 Callable 或者 Runable<br>继承 Thread 类或者实现 Runale 方法可以重写 run 方法实现线程主体<br>实现 Callable 需要实现 call 方法实现线程主体，并且可以借助 Future 接口放回线程的执行结果和异常<br>使用 start（）在处理器中注册线程并执行 run 方法<br>若只执行 run 方法会相当于执行了 Main 函数的一个方法体 并没有启动真正意义的新的线程。</p>
+          <h3 id="启动线程的方式"><a href="#启动线程的方式" class="headerlink" title="启动线程的方式"></a>启动线程的方式</h3><p>继承 Thread 类或者实现 Runale 方法可以重写 run 方法实现线程主体<br>实现 Callable 需要实现 call 方法实现线程主体，并且可以借助 Future 接口返回线程的执行结果和异常<br>使用 start（）在处理器中注册线程并执行 run 方法<br>若只执行 run 方法会相当于执行了 Main 函数的一个方法体 并没有启动真正意义的新的线程。</p>
 <h3 id="sleep-和-wait-的这-5-个区别"><a href="#sleep-和-wait-的这-5-个区别" class="headerlink" title="sleep( ) 和 wait( ) 的这 5 个区别"></a>sleep( ) 和 wait( ) 的这 5 个区别</h3><p>使用 sleep 方法可以让让当前线程休眠，时间一到当前线程继续往下执行,休眠时依旧保持 cpu 资源<br>sleep() 方法没有释放锁，而 wait() 方法释放了锁<br>wait() 方法被调用后，线程不会自动苏醒，需要别的线程调用同一个对象上的 notify()，sleep 会自动苏醒</p>
 <h2 id="线程之间的通信"><a href="#线程之间的通信" class="headerlink" title="线程之间的通信"></a>线程之间的通信</h2><p>java 线程通根据内存共享（隐形不可见）和消息传递（显示的）来实现<br>Java 的内存中堆是共享的。</p>
 <h3 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h3><p>JMM 时 Java 内存模型一种规范，屏蔽了各种硬件和操作系统对内存访问的差异，从而在不同平台上达到一直的内存访问效果，同时也规定了线程和内存之间的关系。JMM 控制了 Java 线程之间的通信</p>
@@ -610,13 +629,17 @@
 <p>HashMap key 和 value 可以 null 因为 HashMap 本身不是线程安全的不需要设计到并发安全问题</p>
 </blockquote>
 <h3 id="key-为什么不能为-null"><a href="#key-为什么不能为-null" class="headerlink" title="key 为什么不能为 null"></a>key 为什么不能为 null</h3><p>Java 的集合框架通常禁止键或值为 null，以确保编程规范的一致性。null 无法散列不能确定 hash 位置</p>
+<h3 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h3><p>本地线程变量，访问改变量的线程都会有一个本地拷贝，从而线程操作该变量的时候实际上是操作自己内存中拷贝，从而实现线程隔离的效果。实际上是个 map 集合<br>ThreadLocal 主要用来保存用户信息的上下文，这样多线程用户访问的各个请求会根据 ThreadLocal 的数据确定具体的用户</p>
+<ul>
+<li>内存泄露的问题<br>如果 ThreadLocal（ThreadLocalMap 的 Key）被垃圾回收器回收了，但是 ThreadLocalMap 生命周期和 Thread 是一样的，它这时候如果不被回收，就会出现这种情况：ThreadLocalMap 的 key 没了，value 还在，这就会造成了内存泄漏问题。<br>我们需要在 ThreadLocal 用完后对其进行回收 remove</li>
+</ul>
 <h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><p>好处：</p>
 <ol>
 <li>降低资源消耗。通过重复是利用资源降低线程创建和销毁造成的消耗</li>
 <li>提高响应速度。任务到达线程池中不需要等待即可执行任务</li>
 <li>提高线程的可管理性。利用线程池对线程的分配和调优监控，做到合理的管理线程</li>
 </ol>
-<p>线程池工作流程：<br>当提交过来一个线程后<br>线程池判断当前运行的线程数小于核心线程数，则启动一个新的线程处理任务<br>若核心线程数达到最大值后，任务会被放入等待队列中进行排队。<br>若等待队列达到最大值，此时判断线程池中的非核心线程数+核心线程数是否达到最大线程数量 若没达到则创建线程来处理等待队列中的任务。否则任务进入到拒绝策略中。<br>线程从等待队列中取任务执行，执行完毕后在超过非核心线程的最长等待时间会，且当前线程数超过核心线程数会被关闭。</p>
+<p>线程池工作流程：<br>当提交过来一个线程后<br>线程池判断当前运行的线程数小于核心线程数，则启动一个新的线程处理任务<br>若核心线程数达到最大值后，<strong>任务会被放入等待队列中进行排队</strong>。<br>若等待队列达到最大值，此时判断线程池中的非核心线程数+核心线程数是否达到最大线程数量 若没达到则创建线程来处理等待队列中的任务。否则任务进入到拒绝策略中。<br>线程从等待队列中取任务执行，执行完毕后在超过非核心线程的最长等待时间会，且当前线程数超过核心线程数会被关闭。</p>
 <h4 id="创建线程池的方式"><a href="#创建线程池的方式" class="headerlink" title="创建线程池的方式"></a>创建线程池的方式</h4><p>通过 Executors 创建<br>通过 ThreadPoolExecutor 手动创建线程池。</p>
 <ul>
 <li>线程池参数<br>核心线程数<br>最大线程数<br>非核心线程数空闲时间<br>时间单位<br>等待队列<br>线程工厂<br>拒绝策略</li>
@@ -629,17 +652,19 @@
 <li>PriorityBlockingQueue 优先级队列</li>
 </ul>
 </li>
-<li>拒绝策略<br>AbortPolicy ：直接抛出异常，默认使用此策略<br>CallerRunsPolicy：用调用者所在的线程来执行任务，哪来回哪去<br>DiscardOldestPolicy：丢弃阻塞队列里最老的任务，也就是队列里靠前的任务，把最前面的挤掉<br>DiscardPolicy ：当前任务直接丢弃。</li>
+<li>拒绝策略<br>AbortPolicy ：直接抛出异常，<strong>默认</strong>使用此策略<br>CallerRunsPolicy：用调用者所在的线程来执行任务，哪来回哪去<br>DiscardOldestPolicy：丢弃阻塞队列里最老的任务，也就是队列里靠前的任务，把最前面的挤掉<br>DiscardPolicy ：当前任务直接丢弃。</li>
 </ul>
-<h3 id="为什么阿里规范不能用-Executors-创建"><a href="#为什么阿里规范不能用-Executors-创建" class="headerlink" title="为什么阿里规范不能用 Executors 创建"></a>为什么阿里规范不能用 Executors 创建</h3><p><code>线程池不允许使用 Executors 去创建，而是通过 ThreadPoolExecutor 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险</code></p>
+<h3 id="核心线程数可以大于最大线程数吗"><a href="#核心线程数可以大于最大线程数吗" class="headerlink" title="核心线程数可以大于最大线程数吗"></a>核心线程数可以大于最大线程数吗</h3><h3 id="为什么阿里规范不能用-Executors-创建"><a href="#为什么阿里规范不能用-Executors-创建" class="headerlink" title="为什么阿里规范不能用 Executors 创建"></a>为什么阿里规范不能用 Executors 创建</h3><p><code>线程池不允许使用 Executors 去创建，而是通过 ThreadPoolExecutor 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险</code></p>
+<p>使用 Executors 创建出来的常见线程池有</p>
 <ul>
-<li>FixedThreadPool 和 SingleThreadPool 允许的请求队列长度为 Integer.MAX_VALUE 可能会造成 OOM</li>
-<li>CachedThreadPo 和 ScheduledThreadPool 允许的创建线程数量为 Integer.MAX_VALUE 可能会创建大量的线程，从而导致 OOM</li>
+<li>newFixedThreadPool 固定线程数的线程池，其阻塞队列是无界队列会产生 OOM</li>
+<li>newCachedThreadPool 没有限制线程的数量会消耗大量的资源</li>
+<li>Executors.newSingleThreadExecutor()方法创建的线程池只有一个工作线程，在线程异常终止后会创建新的线程替代，使得消耗大量的系统资源</li>
+<li>同时 Executors 类隐藏了线程池的一些细节，例如线程池的最大容量、队列类型等，这可能导致在某些情况下无法满足特定的需求，例如需要限制线程池的大小或者使用特定类型的队列。</li>
 </ul>
 <h4 id="线程池-submit-和-execute-方法的区别"><a href="#线程池-submit-和-execute-方法的区别" class="headerlink" title="线程池 submit 和 execute 方法的区别"></a>线程池 submit 和 execute 方法的区别</h4><p>submit 会返回线程执行的异步结果 future 对象 根据 future 对象可以判断是否执行成功<br>execute 用于提交不需要返回值的任务</p>
 <h4 id="线程池的关闭"><a href="#线程池的关闭" class="headerlink" title="线程池的关闭"></a>线程池的关闭</h4><p>shutdown() 将线程池状态置为 shutdown,并不会立即停止，任务不能继续提交，直到线程池内部处理完成才结束<br>shutdownNow()能立即停止线程池，正在跑的和正在等待的任务都停下了</p>
-<h4 id="创建线程池和手动创建线程区别在哪里？面试题"><a href="#创建线程池和手动创建线程区别在哪里？面试题" class="headerlink" title="创建线程池和手动创建线程区别在哪里？面试题"></a>创建线程池和手动创建线程区别在哪里？面试题</h4><p>即创建线程池的好处</p>
-<h3 id="介绍一下锁，从-AQS-到-CLH，再到-ReentrantLock-和-synchronized"><a href="#介绍一下锁，从-AQS-到-CLH，再到-ReentrantLock-和-synchronized" class="headerlink" title="介绍一下锁，从 AQS 到 CLH，再到 ReentrantLock 和 synchronized"></a>介绍一下锁，从 AQS 到 CLH，再到 ReentrantLock 和 synchronized</h3><p>AQS 是一种抽象同步队列</p>
+<h4 id="线程池重启后"><a href="#线程池重启后" class="headerlink" title="线程池重启后"></a>线程池重启后</h4><h3 id="介绍一下锁，从-AQS-到-CLH，再到-ReentrantLock-和-synchronized"><a href="#介绍一下锁，从-AQS-到-CLH，再到-ReentrantLock-和-synchronized" class="headerlink" title="介绍一下锁，从 AQS 到 CLH，再到 ReentrantLock 和 synchronized"></a>介绍一下锁，从 AQS 到 CLH，再到 ReentrantLock 和 synchronized</h3><p>AQS 是一种抽象同步队列</p>
 
       
     </div>
@@ -968,7 +993,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/08/30/%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -982,7 +1007,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/articles/2023/08/30/%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95/" class="post-title-link" itemprop="url">秋招笔试</a>
+            <a href="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/" class="post-title-link" itemprop="url">项目</a>
         </h2>
 
         <div class="post-meta">
@@ -992,14 +1017,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-30 09:28:05" itemprop="dateCreated datePublished" datetime="2023-08-30T09:28:05+08:00">2023-08-30</time>
+              <time title="创建时间：2023-08-21 17:48:42" itemprop="dateCreated datePublished" datetime="2023-08-21T17:48:42+08:00">2023-08-21</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-28 11:10:07" itemprop="dateModified" datetime="2023-09-28T11:10:07+08:00">2023-09-28</time>
+                <time title="修改时间：2023-10-16 20:36:30" itemprop="dateModified" datetime="2023-10-16T20:36:30+08:00">2023-10-16</time>
               </span>
 
           
@@ -1013,24 +1038,189 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="笔试骗分"><a href="#笔试骗分" class="headerlink" title="笔试骗分"></a>笔试骗分</h3><p>对于输出 yes no 的二值题<br>使用随机数</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Random</span> <span class="variable">random</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>();</span><br><span class="line"><span class="type">int</span> <span class="variable">randomInt</span> <span class="operator">=</span> random.nextInt(<span class="number">50</span>) + <span class="number">10</span>;<span class="comment">//random生成50的范围 10-60</span></span><br><span class="line"><span class="comment">//       随机数概论小于60 yes</span></span><br><span class="line"> System.out.println((<span class="keyword">new</span> <span class="title class_">Random</span>().nextInt() % <span class="number">100</span>) &lt; <span class="number">60</span> ? <span class="string">&quot;YES&quot;</span> : <span class="string">&quot;NO&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="8-29-哔哩哔哩"><a href="#8-29-哔哩哔哩" class="headerlink" title="8-29 哔哩哔哩"></a>8-29 哔哩哔哩</h3><ul>
-<li>TCP 三次握手中的序列号码<br>序列号：seq 通过 SYN 包发送 在建立连接时随机生成作为初始值 每发送一次连接就将 seq 数+1 用来解决数据包乱序问题<br>应答确认号：ACK 回应连接 表明了下一次连接期望发送过来的序列号 发送端通过确认号 确认接收端正确接收 用来解决丢包问题<blockquote>
-<p>无论时接受方还是发送方 都需要发送 seq 第一次发送的 seq 均是自己随机生成的.<br>其次 接收方接收到信息后均会在发送确认信息 Ack ack 即表示下一次对方发送的序列号作为确认标识.<br>三次握手 后面两次都需要序列号和确认应答号</p>
+          <h3 id="如何准备项目-写在前面"><a href="#如何准备项目-写在前面" class="headerlink" title="如何准备项目 写在前面"></a>如何准备项目 写在前面</h3><p>首先要明白公司要什么样的人：（招聘的目的）<br>扎实的基础知识。优秀的编程能力（知识变现的能力）。好的学习能力</p>
+<p>做题：先写 todo 搭框架<br>再写步骤，然后写细节</p>
+<p>学习基础，在项目中怎么用，原理，应用和类似应用的区别<br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PsJb32dS-1IbMLeN-7j_BQ">https://mp.weixin.qq.com/s/PsJb32dS-1IbMLeN-7j_BQ</a></p>
+<h3 id="自我介绍"><a href="#自我介绍" class="headerlink" title="自我介绍"></a>自我介绍</h3><p>面试官您好，我是 2024 届计算机专业的硕士研究生，本科就读于 安徽工程大学的软件工程专业，硕士就读于 汕头大学的计算机技术 专业。在本科阶段和研究生阶段我获得过多次奖学金并通过了六级考试，同时发表了一篇 sci 论文，在专业知识方面我深入了解过 Java 集合并发编程，MySQL、Redis 等相关的内容，今年的六月到九月我在亚信科技做过 Java 开发实习生的工作（实习经历），所在部门负责中国移动 APP 拉端搜索相关业务的开发，之前还做过一个关于学生购票方面的项目。在简历投递之前我了解到咱们公司是行业领先的企业管理软件及电子商务应用解决方案供应商，拥有强大的创新能力和丰富的业务经验，对此我非常希望能够得到在这里学习和成长的机会，并继续从事 Java 开发方向的工作。那么这里的我的自我介绍完毕。</p>
+<h3 id="讲一下项目的整体，从设计思路、背景、框架、流程、核心技术、完成的工作、哪方面技术做的比较困难或者比较好这些方面来整体讲一下"><a href="#讲一下项目的整体，从设计思路、背景、框架、流程、核心技术、完成的工作、哪方面技术做的比较困难或者比较好这些方面来整体讲一下" class="headerlink" title="讲一下项目的整体，从设计思路、背景、框架、流程、核心技术、完成的工作、哪方面技术做的比较困难或者比较好这些方面来整体讲一下"></a>讲一下项目的整体，从设计思路、背景、框架、流程、核心技术、完成的工作、哪方面技术做的比较困难或者比较好这些方面来整体讲一下</h3><p>架构图<br><a target="_blank" rel="noopener" href="https://tianweichang.blog.csdn.net/article/details/120170388?spm=1001.2101.3001.6650.14&amp;utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-14-120170388-blog-128361733.235%5Ev38%5Epc_relevant_anti_vip_base&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-14-120170388-blog-128361733.235%5Ev38%5Epc_relevant_anti_vip_base&amp;utm_relevant_index=15">https://tianweichang.blog.csdn.net/article/details/120170388?spm=1001.2101.3001.6650.14&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-14-120170388-blog-128361733.235%5Ev38%5Epc_relevant_anti_vip_base&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-14-120170388-blog-128361733.235%5Ev38%5Epc_relevant_anti_vip_base&amp;utm_relevant_index=15</a></p>
+<h2 id="项目描述"><a href="#项目描述" class="headerlink" title="项目描述"></a>项目描述</h2><p>这是一个模拟了高并发场景的商城系统，它具备秒杀功能，并在经过几个版本的迭代之后成为支持高并发的高性能系统。为了解决秒杀场景下的高并发问题。引入了 redis 作为缓存中间件，主要作用是缓存预热、预减库存等等。针对高并发场景进行了页面优化，缓存页面至浏览器，前后端分离降低服务器压力，加快用户访问速度。在安全性问题上，我使用双重 MD5 密码校验，隐藏了秒杀接口地址，设置了接口限流防刷。最后还使用数学公式验证码不仅可以防恶意刷访问，还起到了削峰的作用。通过 Jmeter 压力测试，系统的 QPS 从 150&#x2F;s 提升到 2000&#x2F;s。</p>
+<h2 id="秒杀系统"><a href="#秒杀系统" class="headerlink" title="秒杀系统"></a>秒杀系统</h2><h3 id="用户登录验证"><a href="#用户登录验证" class="headerlink" title="用户登录验证"></a>用户登录验证</h3><p>JWT 是一种基于 token 的认证流程实现，主要结合 SpringSecurity 生成 token</p>
+<ul>
+<li>客户端向服务器端发送用户名和密码</li>
+<li>服务器端验证通过后，在当前会话（session）中保存相关数据，比如说登录时间、登录 IP 等。</li>
+<li>服务器端向客户端返回一个 session_id，客户端将其保存在 Cookie 中。</li>
+<li>客户端再向服务器端发起请求时，将 session_id 传回给服务器端。</li>
+<li>服务器端拿到 session_id 后，对用户的身份进行鉴定</li>
+</ul>
+<blockquote>
+<p>使用 JWT 和 Session 的区别<br>JWT 需要每次请求的时候验证一次，并且只要 JWT 没有过期，哪怕服务器端重启了，认证仍然有效。<br>Session 在没有过期的情况下是不需要重新对用户信息进行验证的，当服务器端重启后，用户需要重新登录获取新的 Session</p>
 </blockquote>
+<h3 id="登录存活-Http-无状态-用户进行登录后如何完成支付"><a href="#登录存活-Http-无状态-用户进行登录后如何完成支付" class="headerlink" title="登录存活 Http 无状态 用户进行登录后如何完成支付"></a>登录存活 Http 无状态 用户进行登录后如何完成支付</h3><blockquote>
+<p>? 例如登录-&gt;添加购物车-&gt;下单-&gt;结算-&gt;支付，这系列操作都要知道用户的身份才行。但服务器不知道这些请求是有关联的，每次都要问一遍身份信息。</p>
+</blockquote>
+<ul>
+<li>cookie 中</li>
+<li>基于 token 的登录校验：在用户登录时将 token 写到 redis 中，并将 token 返回，前端通过 axios 拦截器将 token 放入到请求头中，当前用户每次请求都会携带请求头信息，服务器在根据请求头对 redis 进行验证。也可以将 token 放在 cookie 中不过 cookie 中并不安全 并且 cookie 中存在大小限制一般是 4kb</li>
+</ul>
+<h2 id="缓存问题"><a href="#缓存问题" class="headerlink" title="缓存问题"></a>缓存问题</h2><h3 id="缓存穿透的解决方案有哪些？"><a href="#缓存穿透的解决方案有哪些？" class="headerlink" title="缓存穿透的解决方案有哪些？"></a>缓存穿透的解决方案有哪些？</h3><p>缓存穿透是指 请求的数据在 redis 和 数据库中都不存在，大量的请求会直接打到数据库中<br>解决的方法：</p>
+<ul>
+<li>缓存 null 值</li>
+<li>布隆过滤</li>
+<li>增强 id 的复杂度，避免被猜测 id 规律</li>
+<li>做好数据的基础格式校验</li>
+<li>加强用户权限校验</li>
+<li>做好热点参数的限流</li>
+</ul>
+<h3 id="缓存击穿问题"><a href="#缓存击穿问题" class="headerlink" title="缓存击穿问题"></a>缓存击穿问题</h3><p>热点 key 失效问题，高并发访问的 key 失效，大量的访问请求达到了数据库<br>方法：</p>
+<ol>
+<li>缓存预热：在项目中先将商品信息在项目启动时便加载到 redis 中；<br>实现方式：<br>秒杀 controller 中实现 InitializingBean 方法会在 Bean 初始化后将商品对应的库存缓存到 redis 中。Springboot 的 Bean 的默认作用域是单例的，因此会在项目启动时加载初始化 Bean</li>
+<li>互斥锁 使用 Redission 互斥锁，每个线程的请求均需要拿到锁，这样保存线程一次只有一个线程来请求数据，不会出现大量请求失效的问题。但是使用互斥锁的项目性能不能保证，会降低系统的吞吐量。</li>
+<li>逻辑过期</li>
+<li>热点 key 永不过期 实际上热点数据是商品的信息，当商品过期也就意味着缓存中的数据没有意义，因此设置热点 key 过期时间和秒杀过期时间一致</li>
+<li>在缓存上实现接口限流<br>在秒杀接口等重要接口上做好限流策略，同时使用缓存预减库存即使判断数据库存，快速失败。</li>
+</ol>
+<h3 id="缓存雪崩问题及解决思路"><a href="#缓存雪崩问题及解决思路" class="headerlink" title="缓存雪崩问题及解决思路"></a>缓存雪崩问题及解决思路</h3><p>缓存雪崩是指在同一时段大量的缓存 key 同时失效或者 Redis 服务宕机，导致大量请求到达数据库，带来巨大压力。</p>
+<p>解决方案：</p>
+<ul>
+<li>每次秒杀请求的路径进行随机初始化，方式用户恶意刷单</li>
+<li>给不同的 Key 的 TTL 添加随机值，</li>
+<li>利用 Redis 集群提高服务的可用性</li>
+<li>给缓存业务添加降级限流策略</li>
+<li>给业务添加多级缓存</li>
+</ul>
+<h3 id="登录使用-JWT"><a href="#登录使用-JWT" class="headerlink" title="登录使用 JWT"></a>登录使用 JWT</h3><p><strong>JWT</strong>:<br>以 json 为载体将信息进行安全封装并传递</p>
+<ul>
+<li>作用：JWT 最常见的场景就是授权认证，一旦用户登录，后续每个请求都将包含 JWT,系统在每次处理用户请求的之前，都要先进行 JWT 安全校验，通过之后再进行处理。<br>组成：<code>&quot;token&quot;:  &quot;Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNjkyNjkwNTY2LCJleHAiOjE2OTI2OTIzNjZ9.jL468EdvkxQHuCo3V2ydkTWeR8dbfoP1rAvIVlHXQPUCIqP-dQ2HSqPRPv9PXszhRE4ku7B3A7vxiI4llZyJCw&quot;,</code>由.分割为三部分当用户下次在进行登陆是携带 token 并后台解析进行判断。<br>生成的 token 直接存放在前端<br>优势：自然是服务端不需要维护一个登陆表了，节省空间，特别是用户多的情况<br>无状态<br>缺点：<br>因为是无状态的不能够随时注销，这样点 session 可以<br><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-21-18-08-42.png" alt="asset_img"><br>登陆：<br>自定义登陆接口 认证通过生成 JWT 将用户信息存入 Redis<br>自定义 user DetailService 中实现数据库<br>校验：<br>定义 JWT 认证过滤器<br>获取 token<br>将 token 存入到客户端中的，需要客户端保存好就行，无论什么保持方式，甚至你让用户写纸条揣兜里都可以！</li>
+</ul>
+<h3 id="项目中的-AOP-思想的体现"><a href="#项目中的-AOP-思想的体现" class="headerlink" title="项目中的 AOP 思想的体现"></a>项目中的 AOP 思想的体现</h3><p>使用过滤器和拦截器以及 log 日志记录</p>
+<h3 id="RabbitMq-异步下单"><a href="#RabbitMq-异步下单" class="headerlink" title="RabbitMq 异步下单"></a>RabbitMq 异步下单</h3><p>执行流程：</p>
+<ol>
+<li>系统初始化将商品数量加载到 Redis 中</li>
+<li>后端收到秒杀请求后，先在 redis 中预减库存，提前判断如果库存数量不足则返回秒杀失败，从而直接截断了后续请求。</li>
+<li>否则判断这个秒杀订单是否形成，判断是否已经秒杀到了，避免一个账户秒杀多个商品</li>
+<li>秒杀单形成并且库存充足无重复秒杀，将秒杀请求封装后放入消息队列，同时返回前端秒杀标识 ，前端接收到数据后，显示排队中，并根据商品 id 轮询请求服务器（200ms 轮询一次。</li>
+<li>后端 RabbitMQ 监听秒杀 MIAOSHA_QUEUE 的这个名字的通道，如果有消息过来就获取到传入的信息，执行真正的秒杀之前，要判断数据库的库存，判断是否重复秒杀，然后执行秒杀事务（秒杀事务是一个原子操作：库存减 1，下订单、写入订单详情）</li>
+</ol>
+<p><strong>秒杀中出现的问题</strong><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-18-16-51-58.png" alt="asset_img"></p>
+<p>执行秒杀事务的时候，先生成订单详情，然后生成秒杀订单，为了进一步确保秒杀过程中一个用户只能秒杀一件商品，可以给秒杀订单表 miaosha_order 添加一个唯一索引，如果再次插入相同的 user_id 与 goods_id，那么将不会被允许，从而在事务中插入失败而回滚：</p>
+<h3 id="秒杀库存如何防止超卖"><a href="#秒杀库存如何防止超卖" class="headerlink" title="秒杀库存如何防止超卖"></a>秒杀库存如何防止超卖</h3><p>扣减库存时候，要保证数据库中的字段值不能为负数，</p>
+<ol>
+<li>通常在扣减库存的场景下使用行级锁，通过数据库引擎本身对记录加锁的控制，保证数据库的更新的安全性，并且通过 where 语句的条件，保证库存不会被减到 0 以下。意思是在 sql 语句对数据库进行操作时候进行控制。</li>
+<li>通过对库存字段设置为无符号型 那么出现负数则报错。</li>
+</ol>
+<h4 id="秒杀的-ABA-问题"><a href="#秒杀的-ABA-问题" class="headerlink" title="秒杀的 ABA 问题"></a>秒杀的 ABA 问题</h4><h3 id="秒杀系统的设计"><a href="#秒杀系统的设计" class="headerlink" title="秒杀系统的设计"></a>秒杀系统的设计</h3><p>1.秒杀页面静态，将活动页面缓存到 redis 中，用户浏览商品等常规操作不会请求到服务端。只有到了秒杀时间点且用户点了秒杀按钮才允许访问服务端，这样处理能过滤掉绝大多数的无效请求</p>
+<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><p>将参与秒杀的商品缓存到 redis 中，并设置内存标记每个商品是否有库存，当用户点击秒杀按钮是前端发送请求，后端根据每位用户生成唯一的秒杀路径，并存入到 redis 中，前端将路径进行拼接为新的 url，发送给后端并进行路径校验，进行秒杀，先查询内存标记有库存在查询 redis 进行预减，当 redis 库存小于 0 后，返回失败，否则将请求放入到消息队列中进行排队，从队列中取出订单并更新数据库，创建订单并完成秒杀。</p>
+<h3 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h3><ul>
+<li>接口限流<br>拦截器拦截请求，用户每点击一次请求按钮，都会在用户 id 的缓存请求 key 中记录访问次数，查看是否有接口限流的注解，得到限流信息，并提取 request 的请求地址和用户 id 和访问路径组合为 key 作为用户的唯一标示符，value 为访问次数，通过查询访问次数是否合法来决定是否对请求进行放行，</li>
+</ul>
+<h3 id="分布式-session-实现"><a href="#分布式-session-实现" class="headerlink" title="分布式 session 实现"></a>分布式 session 实现</h3><p>用户登录成功之后，给这个用户生成一个 sessionId(用 token 来标识这个用户)，并写到 cookie 中传递给客户端；然后客户端在随后的访问中，都在 cookie 中传递这个 token，服务端拿到这个 token 之后，就根据这个 token 来取得对应的 session 信息（token 利用 uuid 生成）</p>
+<h3 id="登录密码的加盐加密"><a href="#登录密码的加盐加密" class="headerlink" title="登录密码的加盐加密"></a>登录密码的加盐加密</h3><p>防止查表法和彩虹表攻击 在密码中混入随机字符（加盐）生成随机盐值混入密码中，使得每次相同的密码得到不同的哈希值，盐值和密码应该放在服务器中存放在用户对应的数据库中</p>
+<h3 id="接口设计"><a href="#接口设计" class="headerlink" title="接口设计"></a>接口设计</h3><ul>
+<li>参数校验<br>GET 请求参数会在 URL 中 使用 requestParam&#x2F;PathVariable 传递参数<br>POST、PUT 向服务器提交数据 参数在请求体中使用 requestBody 传递参数</li>
+</ul>
+<h3 id="流量削峰"><a href="#流量削峰" class="headerlink" title="流量削峰"></a>流量削峰</h3><ul>
+<li>消息队列</li>
+<li>用户答题 填写验证码 延缓请求，起到对请求流量进行削峰的作用，从而让系统能够更好地支持瞬时的流量高峰</li>
+<li></li>
+</ul>
+<h3 id="系统缓存"><a href="#系统缓存" class="headerlink" title="系统缓存"></a>系统缓存</h3><ul>
+<li>页面缓存+URL 缓存+对象缓存<br>页面缓存 减少服务器压力 直接访问 redis</li>
+<li>用户信息缓存 更新用户需要保证数据一致性问题 先更新数据库在修改 redis</li>
+</ul>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>缓存一致性问题<br>先更新数据库在更新缓存<br>修改 token 关联的对象以及 id 关联的对象，先更新数据库后删除缓存，不能直接删除 token，删除之后就不能登录了，再将 token 以及对应的用户信息一起再写回缓存里面去</p>
+<ul>
+<li><p>缓存穿透 对这些不存在的数据缓存一个空数据，对这类请求进行过滤</p>
+</li>
+<li><p>缓存击穿 使用互斥锁，只有拿到这把互斥锁的线程可以进数据库请求数据，其他线程等待，待该线程查到数据存入缓存后其他线程直接使用缓存中的数据</p>
+</li>
+<li><p>缓存雪崩 为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存 及时更新用户缓存</p>
+</li>
+<li><p>消息队列 用户的请求，服务器接收后，首先写入消息队列，秒杀业务<br>假如消息队列长度超过最大数量，则直接抛弃用户请求或跳转到错误页面。</p>
 </li>
 </ul>
+<h3 id="唯一-ID-一人一单"><a href="#唯一-ID-一人一单" class="headerlink" title="唯一 ID 一人一单"></a>唯一 ID 一人一单</h3><p>在分布式情况下使用 setnx 操作对下单进行加锁，并在<br>使用 redis 的 setnx(只有在键不存在时才会执行存储操作)，同时增加过期时间防止死锁，当线程进行操作是判断是否有其他线程获取锁，没有则执行，否则等待</p>
+<ul>
+<li>问题<br>存在分布式锁误删问题，当 a 线程阻塞并是的分布式锁超时删除，B 线程拿到锁后 a 线程会将锁进行误删，此时需要在线程中加入线程标识，每次删除锁需要对线程进行判断防止误删。最后使用 Lua 脚本对加锁和解锁做原子操作</li>
+</ul>
 <hr>
-<p>请在 UP 主视频数据表中，筛选发布视频平均时长大于 300 秒的 up 主，按 UP 主视频平均时长排序，视频 iD 升序，返回第 3 行到 6 行的视频 iD。</p>
-<p>2: 712. 两个字符串的最小 ASCII 删除和</p>
-<h2 id="CVTE"><a href="#CVTE" class="headerlink" title="CVTE"></a>CVTE</h2><p>第一题最小的 k 个元素 leetcode 原题，第二题最短路径</p>
-<h3 id="微众银行"><a href="#微众银行" class="headerlink" title="微众银行"></a>微众银行</h3><h3 id="卓望数码"><a href="#卓望数码" class="headerlink" title="卓望数码"></a>卓望数码</h3><p>很多微服务相关的题目</p>
-<h3 id="wps"><a href="#wps" class="headerlink" title="wps"></a>wps</h3><p>笔试感觉还行 挂 记事本写题 快排写错</p>
-<h3 id="中缀表达式转后缀表达式"><a href="#中缀表达式转后缀表达式" class="headerlink" title="中缀表达式转后缀表达式"></a>中缀表达式转后缀表达式</h3><p>对应的中序遍历转为后序遍历</p>
-<h3 id="前序和中序转后序"><a href="#前序和中序转后序" class="headerlink" title="前序和中序转后序"></a>前序和中序转后序</h3>
+<h3 id="如何解决超卖问题"><a href="#如何解决超卖问题" class="headerlink" title="如何解决超卖问题"></a>如何解决超卖问题</h3><p>关键在与扣减库存是否多线程出问题：</p>
+<ol>
+<li>sql 语句扣减库存时候使用乐观锁办法，判断库存数量是否&gt;0,加上行级锁但性能较低，该如何解决。不推荐使用</li>
+<li>利用 redis 的 incr、decr 的原子性 + 异步队列<br>内存标记并预减库存<br>超卖现象是多线程安全问题，使用乐观锁</li>
+</ol>
+<h4 id="预减库存"><a href="#预减库存" class="headerlink" title="预减库存 **"></a>预减库存 **</h4><p>使用 Redis 预减库存主要是为了做什么呢,就是它能解决什么问题<br>主要目的减少对数据库的访问,可以拦截卖完了之后多余的请求，防止多个请求不断达到数据库造成压力，同时不需要考虑库存数据一致性<br>实现思路：</p>
+<ol>
+<li>先将商品信息加载到 Redis 缓存中</li>
+<li>当收到秒杀请求时，在访问 Redis 之前先在内存标记中获取对应商品的库存数量，做到不需要对 Redis 进行访问就得到了库存，减少了高并发下的 Redis 压力，再判断 Redis 中的缓存商品数量预减并判断是否足够，不足则直接返回异常，并标记内存库存不足。</li>
+<li>否则将订单信息发送到消息队列中，并返回前端成功标志，之后队列消费依次创建秒杀订单完成秒杀，前端进行轮询判断是否秒杀成功。</li>
+</ol>
+<h3 id="减库存出现的数据不一致问题"><a href="#减库存出现的数据不一致问题" class="headerlink" title="减库存出现的数据不一致问题"></a>减库存出现的数据不一致问题</h3><p>先删除缓存，再更新数据库 会出现脏数据<br>如果不采用给缓存设置过期时间策略，该数据永远都是脏数据。<br><strong>应该先操作数据库再删除缓存</strong><br>采用延迟双删的思路</p>
+<h4 id="高并发-减少数据库访问"><a href="#高并发-减少数据库访问" class="headerlink" title="高并发 减少数据库访问"></a>高并发 减少数据库访问</h4><ul>
+<li><p>预减少库存，秒杀地址隐藏，使用内存标记</p>
+</li>
+<li><p>redis 的预见库存 防止大量的请求，请求到数据库中<br>先对每个商品进行 hashMap 内存标记，标记是否还有库存剩余，扣减库存时候 先查询内存标记，如果为 FALSE 直接返回，不需要查数据库查询 redis 的商品库存，先对该商品进行减少，库存数小于 0 是则不需要访问数据库 直接返回失败</p>
+</li>
+</ul>
+<h3 id="接口地址隐藏-防止根据秒杀的链接提前秒杀"><a href="#接口地址隐藏-防止根据秒杀的链接提前秒杀" class="headerlink" title="接口地址隐藏 防止根据秒杀的链接提前秒杀"></a>接口地址隐藏 防止根据秒杀的链接提前秒杀</h3><p>只有秒杀时候再将秒杀的 url 地址通过 UUID 拼接数字，随机生成地址并缓存在 redis 中并发给前端，前端请求过来后验证秒杀的路径，通过再执行秒杀。</p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>实现分布式情况下多线程互斥效果，为了防止超卖和重复下单 当线程过来请求<br>利用 SetNx 添加过期时间防止死锁，但是过期时间如何评估，<br>分布式锁误删：<br>（a 线程阻塞后，超时释放锁，b 线程拿到锁后 a 线程继续执行到删除锁操作造成误删）利用 UUID+线程标识 标定当前线程 需要删除锁时进行判断<br>当 a 要删除锁时到期了，致使线程阻塞，可以使用 lua 脚本保证删除操作的原子性</p>
+<p><strong>问题</strong><br>Sentnx 不可重入 不能重复调用<br>redis 分布式锁无法自动续期<br>解决：<br>使用 Redisson 实现分布式锁 可以不断的重入<br>但是 Redissson 默认释放时间是 30s，如果 30S 加锁业务没有完成，那么在 30-10S 时间进行一次时间延长。一直到锁释放完成<br><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-28-20-24-10.png" alt="asset_img"><br>watchDog 是一个当前线程启动的后台线程，每隔十秒会检查一次，当前客户端在默认时间内一直持有锁就需要进行延长，<br>Redisss 实现可重入锁，<br>利用底层中的 voaltile 的 state 变量记录重入状态，每一次加锁都会进行记录+1，每释放一次 state-1 直到 state&#x3D;&#x3D;0，释放锁<br><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-28-20-30-26.png" alt="asset_img"></p>
+<h3 id="如何防止重复下单"><a href="#如何防止重复下单" class="headerlink" title="如何防止重复下单"></a>如何防止重复下单</h3><p>如何判断重复订单：<br>用户在秒杀页面对同一个秒杀按钮多次点击</p>
+<ol>
+<li>使用自定义接口注解，规定在 5 秒内只能访问秒杀接口 5 次</li>
+<li>每次的订单请求都会先查询数据库，订单有唯一索引（用户 id+商品 id）,当重复订单落库时数据库会报错</li>
+<li>使用分布式锁只有获取到锁的线程才能够下单，未获取到锁则为重复下单<br>之后在判断是否</li>
+</ol>
+<p>不断查询数据库 性能比较低<br>需要放在 redis 中使用 set&lt;good_id,userID&gt; 集合保存已经下过商品订单的 userID，当再次下同一个商品时去判断该用户是否存在</p>
+<h3 id="为什么要异步下单"><a href="#为什么要异步下单" class="headerlink" title="为什么要异步下单"></a>为什么要异步下单</h3><p>将消费和生产步骤解耦<br>将下单部分拆分开来 减少业务耗时<br>经过 redis 完成预减库存，防止重复消费（分布式锁），和抢单操作后<br>将下单业务放在消息队列中，异步完成下单过程</p>
+<h3 id="数据不一致问题"><a href="#数据不一致问题" class="headerlink" title="数据不一致问题"></a>数据不一致问题</h3><p>（延迟双删）<br>问题存在与 MySQL 和 redis 的数据不一致</p>
+<p>先更新缓存还是数据库<br>先更新缓存，那么数据库中可能是旧数据，当缓存失效后查询数据库便可能得到旧数据<br>先更新数据库，那么缓存中可能是旧数据，当缓存失效后查询数据库就一直是新数据。当更新缓存阻塞时，其他线程依旧会获取旧数据。<br>但当在并发条件下，频繁进行读多写少环境下，缓存不断更新会出现阻塞等问题使得缓存更新出现问题</p>
+<p>在修改数据库时先把缓存删除，当查询缓存发现缓存不存在时从数据库中更新写入缓存。</p>
+<p>延迟双删：让写请求去删除两次缓存，从而达到一个刷脏数据的效果，更新完数据库后线程休眠一段时间之后在删除缓存，其中延迟删除的时间应该略大于写操作时间</p>
+<h3 id="如何保证下单功能和减库存事务的一致性：库存扣减成功但是订单生成失败"><a href="#如何保证下单功能和减库存事务的一致性：库存扣减成功但是订单生成失败" class="headerlink" title="如何保证下单功能和减库存事务的一致性：库存扣减成功但是订单生成失败"></a>如何保证下单功能和减库存事务的一致性：库存扣减成功但是订单生成失败</h3><p>使用 Spring 事务@Transactional 更新库存成功后在生成订单 或者使用 lua 脚本.将减库存与生成订单操作组合为一个事务。要么一起成功，要么一起失败。</p>
+<h3 id="追问：Spring-事务-如何失效何时失效"><a href="#追问：Spring-事务-如何失效何时失效" class="headerlink" title="追问：Spring 事务 如何失效何时失效"></a>追问：Spring 事务 如何失效何时失效</h3><p>@Transactional 开启事务，如果执行异常则进行回滚</p>
+<ol>
+<li>方法不是 public ，申明式事务基于 AOP 通过代理模式实现，只有 public 方法才能被访问和调用。使用了 final 修饰</li>
+<li>方法内部调用没有使用代理对象</li>
+<li>类未被 spring 管理</li>
+<li>异常被捕获并处理 事务检测不到异常 无法判断是否回滚</li>
+</ol>
+<h3 id="为什么使用雪花算法"><a href="#为什么使用雪花算法" class="headerlink" title="为什么使用雪花算法"></a>为什么使用雪花算法</h3><p><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-30-13-52-10.png" alt="asset_img"><br>高并发分布式环境下生成不重复 id，每秒可生成百万个不重复 id。 基于时间戳，以及同一时间戳下序列号自增，基本保证 id 有序递增。 不依赖第三方库或者中间件</p>
+<h3 id="项目中难点"><a href="#项目中难点" class="headerlink" title="项目中难点"></a>项目中难点</h3><ul>
+<li>流量削峰问题</li>
+</ul>
+<h3 id="项目中出现的问题"><a href="#项目中出现的问题" class="headerlink" title="项目中出现的问题"></a>项目中出现的问题</h3><hr>
+<h3 id="如何实现点赞功能"><a href="#如何实现点赞功能" class="headerlink" title="如何实现点赞功能"></a>如何实现点赞功能</h3><p>用户不能无限制点赞，不能简单的将数据库数据+1<br>需求：</p>
+<ul>
+<li>同一个用户只能点赞一次，再次点击则取消点赞</li>
+<li>如果当前用户已经点赞，则点赞按钮高亮显示（前端已实现，判断字段 Blog 类的 isLike 属性）<br><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-09-30-22-06-59.png" alt="asset_img"></li>
+</ul>
+<h3 id="对布隆过滤器的理解"><a href="#对布隆过滤器的理解" class="headerlink" title="对布隆过滤器的理解"></a>对布隆过滤器的理解</h3><p>解决缓存穿透</p>
+<h3 id="替换-ThreadLocal"><a href="#替换-ThreadLocal" class="headerlink" title="替换 ThreadLocal"></a>替换 ThreadLocal</h3><p>ThreadLocal 在多线程存在大量数据访问时可能会造成内存溢出</p>
+<ul>
+<li>MQ 如何包装重复消费问题：</li>
+</ul>
+<h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><h3 id="为什么选择-RabbitMQ"><a href="#为什么选择-RabbitMQ" class="headerlink" title="为什么选择 RabbitMQ"></a>为什么选择 RabbitMQ</h3><p>相对成熟，社区活跃，吞吐量高，使用 ErLang 开发，性能比较好同时有完善的可视化界面</p>
+<h3 id="消息队列的优缺点"><a href="#消息队列的优缺点" class="headerlink" title="消息队列的优缺点"></a>消息队列的优缺点</h3><ul>
+<li>异步处理 - 相比于传统的串行、并行方式，提高了系统吞吐量，和系统响应速度</li>
+<li>应用解耦 - 系统间通过消息通信，不用关心其他系统的处理</li>
+<li>流量削锋 - 可以通过消息队列长度控制请求量；将短时间内的大量请求分成一个时间段来处理，从而提供了请求的缓冲，提高了系统的并发量。<br>缺点：<br>提高了系统的复杂度和维护成本，需要考虑消息丢失，重复消费，消息顺序性和一致性的问题系统的复杂度增大</li>
+</ul>
+<h3 id="消息如何路由"><a href="#消息如何路由" class="headerlink" title="消息如何路由"></a>消息如何路由</h3><h3 id="如何解决消息的顺序问题"><a href="#如何解决消息的顺序问题" class="headerlink" title="如何解决消息的顺序问题"></a>如何解决消息的顺序问题</h3><h3 id="高并发情况下接口幂等的解决方案"><a href="#高并发情况下接口幂等的解决方案" class="headerlink" title="高并发情况下接口幂等的解决方案"></a>高并发情况下接口幂等的解决方案</h3><p>幂等是指: 多次调用方法或者接口不会改变业务状态，可以保证重复调用的结果和单次调用的结果一致。<br>对数据库操作过程中的读取和删除都是天然幂等的，需要注意的是创建和更新操作</p>
+<ul>
+<li>对数据库使用行锁</li>
+<li>redis 使用分布式锁</li>
+</ul>
+<h3 id="如何消息不丢失"><a href="#如何消息不丢失" class="headerlink" title="如何消息不丢失"></a>如何消息不丢失</h3><p>主要通过持久化机制，确保消息不丢，RabbitMQ 持久化机制分为队列持久化、消息持久化、交换器持久化。</p>
+<ul>
+<li><p>RabbitMQ 默认不会持久化到硬盘<br>要想做到消息持久化，必须满足以下三个条件：<br>Exchange 设置持久化<br>Queue 设置持久化<br>Message 持久化发送：发送消息设置发送模式 deliveryMode&#x3D;2，代表持久化消息</p>
+</li>
+<li><p>消息 ACK 机制<br>使用手动 ACK 机制，处理完成手动调用 MQ 的 ACK 方法通知 MQ 删除消息。</p>
+</li>
+</ul>
+<h3 id="什么是延迟队列"><a href="#什么是延迟队列" class="headerlink" title="什么是延迟队列"></a>什么是延迟队列</h3><p>RabbitMQ 延迟队列就是存储延迟消息的队列，延迟消息指的就是消息投递到队列后，消费者不能立刻消费，需要等待一段时间，消费者才能消费消息。重点是定时任务<br>RabbitMQ 原生不支持延迟消息，目前主要通过死信交换机 + 消息 TTL 方案或者使用插件完成</p>
+<h3 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h3><p>当消息在一个队列中变成死信 (dead message) 之后，它能被重新被发送到另一个交换机中，这个交换机就是 DLX，绑定 DLX 的队列就称之为死信队列。<br>导致死信的原因：</p>
+<p>消息被拒（Basic.Reject &#x2F;Basic.Nack) 且 requeue &#x3D; false。<br>消息 TTL 过期。<br>队列满了，无法再添加。</p>
+
       
     </div>
 
@@ -1049,7 +1239,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/08/25/%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E8%AE%B0%E5%BD%95/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/articles/2023/08/20/%E7%BA%BF%E4%B8%8A%E7%AE%80%E5%8E%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1063,7 +1253,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/articles/2023/08/25/%E7%A7%8B%E6%8B%9B%E9%9D%A2%E8%AF%95%E8%AE%B0%E5%BD%95/" class="post-title-link" itemprop="url">秋招面试记录</a>
+            <a href="/articles/2023/08/20/%E7%BA%BF%E4%B8%8A%E7%AE%80%E5%8E%86/" class="post-title-link" itemprop="url">线上简历</a>
         </h2>
 
         <div class="post-meta">
@@ -1073,14 +1263,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-25 19:31:29" itemprop="dateCreated datePublished" datetime="2023-08-25T19:31:29+08:00">2023-08-25</time>
+              <time title="创建时间：2023-08-20 17:50:53" itemprop="dateCreated datePublished" datetime="2023-08-20T17:50:53+08:00">2023-08-20</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-26 15:41:47" itemprop="dateModified" datetime="2023-09-26T15:41:47+08:00">2023-09-26</time>
+                <time title="修改时间：2023-10-13 09:34:44" itemprop="dateModified" datetime="2023-10-13T09:34:44+08:00">2023-10-13</time>
               </span>
 
           
@@ -1094,104 +1284,35 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="面试总结"><a href="#面试总结" class="headerlink" title="面试总结"></a>面试总结</h2><p>面试过程中如何进行引导<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/592682805">https://zhuanlan.zhihu.com/p/592682805</a></p>
-<h2 id="各个视频面试"><a href="#各个视频面试" class="headerlink" title="各个视频面试"></a>各个视频面试</h2><p>飞书面试 鼠标移出飞书面试官会得到提示</p>
-<h2 id="连连支付"><a href="#连连支付" class="headerlink" title="连连支付"></a>连连支付</h2><p>8-25</p>
-<ul>
-<li><p>接口响应慢怎么解决</p>
-<ol>
-<li>排查数据库问题，是否是存在慢查询，操作数据库的线程处于等待状态，导致变慢，此时也可能会出现 OOM 问题，是否索引失效；</li>
-<li>网络连接是否正常，WEB 应用：可通过前端浏览器，开发者工具，network 查看前端耗时较长的接口，逐层定位</li>
-<li>业务中是否有多层 if-else 嵌套或者循环嵌套</li>
-</ol>
-</li>
-<li><p>追问:explain 语句各个字段意思（如何查看执行计划）；如何查看索引失效<br>在 select 语句之前添加 explain 会返回语句的执行计划。执行计划中的 key 字段显示了所使用的索引。</p>
-</li>
-</ul>
-<hr>
-<ul>
-<li><p>联合索引失效的场景 查询 a&#x3D;1 c&#x3D;2 b&#x3D;2 这样的查询顺序会失效吗<br>不会失效，查询优化器会自动优化<br>原因：<br><code>alter table </code>test<code> add index search(a,b,c,d)</code>建立联合索引 a b c d<br>联合索引遵循最左匹配原则，mysql 会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，当 a&gt;2 时即使 a 为最左匹配同样不能使用索引，当查询 b&#x3D;2 c&#x3D;2 时候未使用最左匹配 不能使用索引。其中使用&#x3D;和 in 时 abcd 的索引顺序和乱序，查询优化器会自动优化可识别的形态</p>
-<p>当建立一个联合索引 (a,b,c,d) 时，查询条件 a, b, c, d 的顺序不会影响是否使用索引。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35275233/article/details/87888809">https://blog.csdn.net/qq_35275233/article/details/87888809</a></p>
-</li>
-</ul>
-<hr>
-<ul>
-<li>这里你做了那个秒杀的项目,这里使用 Redis 预减库存主要是为了做什么呢,就是它能解决什么问题<br>你主要是就是它这个优化是到底是在优化什么呢它能解决什么问题呢<br>使用 Redis 预减库存主要是为了做什么呢,就是它能解决什么问题<br>主要目的减少对数据库的访问,可以拦截卖完了之后多余的请求，防止多个请求不断达到数据库造成压力，同时不需要考虑库存数据一致性<br>实现思路：</li>
-</ul>
-<ol>
-<li>先将商品信息加载到 Redis 缓存中</li>
-<li>当收到秒杀请求时，在访问 Redis 之前先在内存标记中获取对应商品的库存数量，做到不需要对 Redis 进行访问就得到了库存，减少了高并发下的 Redis 压力，再判断 Redis 中的缓存商品数量预减并判断是否足够，不足则直接返回异常，并标记内存库存不足。</li>
-<li>否则请求入队并返回前端并进入秒杀队列，前端进行轮询判断是否秒杀成功。</li>
-</ol>
-<hr>
-<ul>
-<li>秒杀的时候你是怎么解决超卖的问题<ul>
-<li>追问:如果就是这种行解锁,其实对于你本身这个秒杀接口的性能有了限制，那有没有其他方案去实现解决这种超卖的问题</li>
-<li>追问直接使用 SetNx 会不会有问题</li>
-<li>追问：setnx 如何评估释放锁的时间<br>watchDog</li>
-</ul>
-</li>
-<li>如何保证缓存数据的一致性<br>（缓存延时双删的问题）先删除缓存后：<br>当 a 先删除缓存后 B 去查询缓存，此时 a 还未跟新缓存，则 b 得到了缓存中的旧值，是否会更新缓存造成缓存中存在脏读信息，</li>
-<li>如何保证下单功能和减库存事务的一致性：库存扣减成功但是订单生成失败<br>使用 Spring 事务@Transactional 更新库存成功后在生成订单 或者使用 lua 脚本</li>
-<li>追问：Spring 事务 如何失效何时失效</li>
-<li>分布式还是单体应用</li>
-<li>为什么用雪花算法</li>
-<li>JVM 的三色标记</li>
-<li>为什么用 RabbitMQ</li>
-<li>RabbitMQ 如何解决消息重复和一致性问题</li>
-<li>使用过什么设计模式</li>
-<li>说一下责任链模式</li>
-<li>查看 Linux 中的某一个进程</li>
-<li>查看 Linux 中所有进程</li>
-</ul>
-<h2 id="卓望数码一面"><a href="#卓望数码一面" class="headerlink" title="卓望数码一面"></a>卓望数码一面</h2><ul>
-<li><p>自我介绍</p>
-</li>
-<li><p>实习项目介绍</p>
-</li>
-<li><p>介绍 list 集合</p>
-<ul>
-<li>ArrayList 和 LinkedList 区别</li>
-<li>扩容机制 （这里答错了写成了 15）</li>
-</ul>
-</li>
-<li><p>事务的 ACID 属性</p>
-</li>
-<li><p>Spring 中事务失效的场景（**）</p>
-</li>
-<li><p>单例模式</p>
-<ul>
-<li>如何保持单例模式的线程安全</li>
-</ul>
-</li>
-<li><p>ThreadLocal 存储原理和使用场景</p>
-<ul>
-<li>避免 ThreadLocal 避免 OOM</li>
-</ul>
-</li>
-<li><p>为什么我们不用 Executors 默认创建线程池的方法，而直接自己手动去调用 ThreadPoolExecutor 去创建线程池</p>
-</li>
-<li><p>springboot 常见注解</p>
-<ul>
-<li>springboot 的@SpringBootApplication 组合注解</li>
-<li>springBoot 如何切换生产或者测试环境</li>
-<li>spring 的 bootStrap.yml 和 application.aproties 文件加载顺序</li>
-</ul>
-</li>
-<li><p>微服务相关</p>
-<ul>
-<li>降级和熔断的区别</li>
-</ul>
-</li>
-<li><p>Mysql 数据库的索引</p>
-<ul>
-<li>mysql 的主键自增的原因<br>为什么自增：</li>
-<li>表连接的三种方式</li>
-<li>表锁和行锁</li>
-<li>锁升级表锁的情况行</li>
-</ul>
-</li>
-</ul>
+          <p>奖学金<br>填写时学历注意是否标注第一学历<br>身份证<br>340823199804043717</p>
+<p>本科学号<br>3160704113<br>2016.9.1-2020.6.30<br>研究生学号<br>152109074<br>开始 2021.10.9-2024.6.30</p>
+<p>手机号<br>17855378518</p>
+<p>家庭住址<br>江苏省苏州市常熟市海虞镇四季花园小区</p>
+<p>紧急联系人<br>18326617871<br>实习公司<br>亚信科技控股有限公司 亚信科技中移在线项目部<br>证明 訾万强 18356017512</p>
+<p>085404 计算机技术（专业学位）</p>
+<p>家庭住址：江苏省苏州市常熟市海虞镇四季花园小区</p>
+<p>论文：Water Quality Prediction Based on the KF-LSTM Encoder-Decoder Network: A Case Study with Missing Data Collection</p>
+<p>课题：基于机器学习的汕头市练江水域水质检测。</p>
+<p>社区活动<br>志愿者组员</p>
+<p>获奖：<br>2018-11-13 三等学业奖学金</p>
+<p>论文：<br>主要研究在水质监测数据存在大量缺失值的情况下的水质预测。为了充分挖掘监测数据中有价值的特征，提高水质预测模型的精度，提出了一种结合卡尔曼滤波器(KF)和注意机制的长短期记忆(LSTM)编解码模型。所提出的 KF-LSTM 模型在预测现实世界水质数据方面有着广泛的应用，为智能城市的未来水质管理和环境保护提供了新的解决方案，并有助于解决自然语言处理(NLP)的挑战。</p>
+<p>爱好<br>热爱生活，爱好运动，坚持跑步健身五年，喜爱旅行喜欢结交不同地方的朋友，热爱阅读和感悟历史</p>
+<p>六级成绩 450<br>四级 477 21.3.9<br>本科课程<br>数据结构、计算机网络、计算机组成原理、操作系统、软件工程专业导论，数据库理论与实践，高等数学，面向对象技术，互联网网络开 发（JavaEE），软件项目管理，现代数据库技术，信息安全概论，数据挖掘技术，软件测试技术，Linux 操作系统与程序设计</p>
+<p>1192513470（QQ） 本科辅导员</p>
+<p>方向：计算机软件与应用(计算机)<br>研究生课程<br>实时系统、数据挖掘、软件工程伦理、软件架构和设计模式、形式化方法、组合数学，工程伦理（计算机），软件架构与设计模式</p>
+<p>荣誉：</p>
+<p>校内活动<br>加入学校程序设计小组，并积极参加每周程序设计比赛，讨论并组织每周周赛。<br>加入学校志愿者小队，参加各类校内校外组织的志愿者活动，包括社区老人服务，图书馆志愿整理，校运动会志愿活动等。既能为社会做出贡献，又能培养自己的社会责任感和团队合作精神</p>
+<p>参与汕头大学 P3 级生物实验室管理项目开发，负责和校内老师需求的沟通，校外开发人员需求的沟通，校开发人员任务的分配，前后端联调，部分接口的编写。</p>
+<p>校内实践：<br>参与汕头市练江水质检测管理整治项目，并根据当地监测站信息搭建机器学习平台，利用监测站数据对练江某监测站数据做预测，并证明了所搭建的机器学习平台的有效性，根据实验数据撰写并发表 sci 论文一篇。</p>
+<p>评价：<br>本人性格开朗、乐观向上，具备良好的沟通能力和团队合作意识。我善于与他人合作，并能快速适应新环境和挑战。同时，我也非常注重细节，喜欢追求完美，积极主动解决问题，乐于接受反馈和学习成长。<br>在编程能力方面，我有坚实的 Java 基础知识，熟悉常用的数据结构和算法，并能运用它们解决实际问题。我熟悉面向对象编程的思维方式，善于设计和编写高质量的代码热爱计算机技术，对软件开发有着浓厚兴趣，熟练使用 Spring、SpringMVC、SpringBoot、MyBatis、Junit 等开发框架进行项目开发，我也有良好的问题排查和调试能力，能够快速定位并解决代码中的 bug。</p>
+<p>职业规划</p>
+<p>加入银行的职业规划<br>我非常激动有机会加入银行科技团队，我充满热情并有着明确的职业生涯规划。以下是我对未来职业发展的展望和规划：</p>
+<p>学习和专业发展：作为银行科技领域的一员，我意识到技术和行业知识的重要性。我计划通过参加行业培训和研讨会，持续学习最新的技术趋势和发展，并获取相关的认证。我将不断提升自己的技术技能，以应对不断变化的科技挑战。</p>
+<p>寻求项目和团队贡献机会：我希望能够积极参与银行科技团队的项目，并尽力提供高质量的解决方案。我将努力和团队成员合作，共同解决问题和实现目标。在项目中，我将尽可能发挥自己的优势，并不断追求创新和卓越。</p>
+<p>认识银行业务：为了更好地履行银行科技岗位的职责，我将深入了解银行的业务流程和需求。这将有助于我更好地理解技术与业务之间的关联，从而提供更贴合实际情况和用户需求的解决方案</p>
+<p>领导与管理能力的发展：我对拓展我的领导和管理能力充满热情。在未来，我期望能够承担更多的责任，带领团队完成重要项目，并协助新员工的成长。我将积极寻找培训和导师资源，不断提升我的领导和沟通技能。</p>
+<p>跨部门合作：除了在银行科技团队内部的成长，我也将积极与其他部门合作。与风险管理、业务发展和客户服务等团队紧密合作，协同解决问题和实现共同目标。</p>
+<p>最重要的是，我希望能够在银行科技领域发挥出最佳的潜力，并为公司的成功贡献力量。我相信，通过不断学习和努力工作，我能够实现自己的职业目标，并与公司一起取得共同的成就。</p>
 
       
     </div>
@@ -1210,7 +1331,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1276,7 +1397,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">100</span>
+          <span class="site-state-item-count">79</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

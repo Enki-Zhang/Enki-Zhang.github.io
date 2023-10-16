@@ -28,7 +28,7 @@
 <meta property="og:description" content="面试总结面试过程中如何进行引导https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;592682805 各个视频面试飞书面试 鼠标移出飞书面试官会得到提示 连连支付8-25  接口响应慢怎么解决  排查数据库问题，是否是存在慢查询，操作数据库的线程处于等待状态，导致变慢，此时也可能会出现 OOM 问题，是否索引失效； 网络连接是否正常，WEB 应用：可通过前端浏览器，开发者工具，network">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-25T11:31:29.000Z">
-<meta property="article:modified_time" content="2023-09-26T07:41:47.763Z">
+<meta property="article:modified_time" content="2023-10-15T13:39:25.039Z">
 <meta property="article:author" content="Enki">
 <meta name="twitter:card" content="summary">
 
@@ -45,7 +45,7 @@
   };
 </script>
 
-  <title>秋招面试记录 | 学习博客</title>
+  <title>秋招面试记录 | 学习博客</title><meta name="robots" content="noindex">
   
 
 
@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-09-26 15:41:47" itemprop="dateModified" datetime="2023-09-26T15:41:47+08:00">2023-09-26</time>
+                <time title="修改时间：2023-10-15 21:39:25" itemprop="dateModified" datetime="2023-10-15T21:39:25+08:00">2023-10-15</time>
               </span>
 
           
@@ -296,14 +296,124 @@
 </li>
 <li><p>Mysql 数据库的索引</p>
 <ul>
-<li>mysql 的主键自增的原因<br>为什么自增：</li>
+<li>mysql 的主键自增的原因<br>可以聊到索引的数据结构 B+树，目的在于提高查询的范围和效率、增加排序的效率，提高扫表的能力，当一张数据页满后能够直接在新的数据页中继续写即可<br>为什么自增：</li>
 <li>表连接的三种方式</li>
 <li>表锁和行锁</li>
-<li>锁升级表锁的情况行</li>
+<li>锁升级表锁的情况</li>
 </ul>
 </li>
 </ul>
-
+<h2 id="你的职业规划是什么"><a href="#你的职业规划是什么" class="headerlink" title="你的职业规划是什么"></a>你的职业规划是什么</h2><p>首先我热爱技术，同时我也意识到技术和知识的重要性，我希望自己 3 年内能够扎根自己的岗位职责，努力做好技能提升和学习，让自己成为出色的 Java 开发领域的专家。<br>其次珍惜公司提供的平台，不断了解公司的业务发展需求，更好地理解技术与业务之间的关联，在岗位中成为独当一面的人才，在匹配公司发展的前提下，做到专业深耕，为公司做出属于自己的出色贡献。</p>
+<h3 id="爱旭太阳能-深圳"><a href="#爱旭太阳能-深圳" class="headerlink" title="爱旭太阳能 深圳"></a>爱旭太阳能 深圳</h3><ul>
+<li><p>IDEA 的快捷键<br>搜索： Ctrl+F<br>搜索替换 Ctrl+R<br>撤销 Ctrl+Z<br>代码格式化 Ctrl + Alt + L<br>全局查找 Ctrl + Shift + F<br>全局查找替换 Ctrl + Shift + R<br>注释 Ctrl+ &#x2F;<br>代码块注释 CTRL+ shift+&#x2F;<br>try catch 快捷键 ctrl + alt +t</p>
+</li>
+<li><p>Linux 常用命令<br>cd 目录 进入指定目录<br>cd &#x2F;home<br>cd .. 返回上一级<br>pwd 显示工作路径<br>ls 展示当前目录下的文件<br>mv -f&#x2F;-i&#x2F;-u 移动文件<br>修改权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chmod u=rwx,g=rwx,o=rwx aa.txt/或者目录</span><br><span class="line">chmod o+w 文件/目录（将文件或者目录的其他用户加上写权限）</span><br><span class="line">chmod a-x 文件/目录 (将文件的全部用户的权限取消执行权限)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>前后端分离项目<br>前后端的程序员根据开发文档进行并行编写并调试，遇到问题可以同步协商解决</p>
+<blockquote>
+<p>VUE 是想响应式的前端开发框架，是使用 JS 封装。</p>
+</blockquote>
+</li>
+<li><p>Spring、SpringMVC 和 SpringBoot 之间的关系<br>Spring 是个多模块的集合，旨在简化 Java 企业开发<br>提供了很多的功能和支持包括 AOP DI,支持 RESTful Java 应用程序的开发。</p>
+</li>
+<li><p>SpringCloud 是构建在 Spring Boot 之上的服务治理框架，能够使得开发者更加快递启动和开发。提供了全套的分布式系统解决方案，包含了：服务注册与发现、配置中心、服务网关、智能路由、负载均衡、断路器、监控跟踪、分布式消息队列等等。</p>
+<p>SpringMVC 是 Spring 中的一个重要模块，主要赋予<br>MVC 架构开发 Web 应用的能力<br>Spring Boot 是简化配置 Spring 开发，减少编写配置类 xml 等显示配置的过程，提供了默认的配置和约定大于配置的理念，其中集成了很多常用框架工具</p>
+</li>
+<li><p>软件开发生命周期<br>1、可行性研究阶段；确定软件的开发目标及其可行性。<br>2、需求分析阶段；对软件需要实现的各个功能进行详细分析<br>3、设计阶段；分为两个阶段概要设计， 确定整个软件的技术蓝图，负责将需求分析的结果转化为技术层面的设计方案<br>详细设计概要设计的基础上进行进一步的细化<br>4、实现阶段；<br>5、测试阶段；<br>6、维护阶段。做好软件的维护和故障排除工作</p>
+</li>
+<li><p>springcloud 组件。</p>
+</li>
+<li><p>Redis 在 SpringCloud 中的作用<br>充当主数据库，缓存或消息代理</p>
+</li>
+<li><p>SpringMVC 的请求流程</p>
+</li>
+<li><p>Vue 显示和隐藏<br>v-if 以删除或添加 dom 结点控制元素的显示隐藏<br>v-show 是通过添加样式 display:none 控制元素的显示隐藏</p>
+</li>
+<li><p>Java 基础</p>
+</li>
+<li><p>集合源码</p>
+<ul>
+<li>实现一个 arraylist 怎么做</li>
+</ul>
+</li>
+<li><p>说一下 countdown，juc 那个计数器</p>
+</li>
+<li><p>线程安全和不安全</p>
+</li>
+<li><p>不用 juc 包的类，你怎么保证线程安全</p>
+</li>
+<li><p>Java 内存模型 JMM 之一内存交互操作</p>
+</li>
+<li><p>如果让你设计一张表怎么设计</p>
+</li>
+</ul>
+<h3 id="江苏专利审查中心"><a href="#江苏专利审查中心" class="headerlink" title="江苏专利审查中心"></a>江苏专利审查中心</h3><p>笔试：翻译一篇英文文献+根据材料写小作文（11 月 9 号，时间一个小时，注意不同岗位翻译的文章不同）<br>现场笔试：给一件报考专业领域内的外文专利进行阅读，发一张草稿纸，记下你觉得重点的内容，一小时后收卷，留下草稿纸等待下一轮面试（一定要记得带字典，说实话来现场面试的时候面试形式我都不知道是啥，随便穿了一件打了个车就来了（我也是心大），一进门看见穿着西装的帅哥美女人手一本英文字典我的内心：orz）<br>现场面试：多对多面试，分组进行(11 月 14 号)<br>首先是自我介绍，大家的自我介绍都好全面，因为报考的是专利审查员的岗位，对编程技术不需要太多要求，所以建议具体的技术可以不做过多介绍，重点介绍成绩，干部经历，论文+专利（很看重，需要复印件），做过的项目，兴趣爱好+各种自身的优势（我自己就没答，前面的妹子说了一大堆，吃亏了）<br>然后针对笔试阅读的专利内容进行提问，有一定的难度，第一个人问的问题是比较简单的，后面依次会逐渐深入（我是靠后的，就需要说的比较详细，也心疼我后面的老哥，我 balabala 说了一堆他没啥好说的了 hahaha）<br>介绍一下研究方向，论文，专利的内容（一定要提前准备，把自己做过的都要过一遍做到心里有数）<br>开放性问题，涉密就不过多讲了，主要考察你是否适合这份工作，你的求职意愿是否强烈，还有你个人的价值观和性格等方面的因素。</p>
+<p>10.8 投递，收到测评（48h 内完成）<br>10.17 笔试（给一篇英文专利，进行翻译）<br>10.19 收到面试通知<br>10.22&#x2F;23 线上面试 同样给一篇英文专利，有一小时阅读时间（可带纸质英文词典）。然后多对多群面。会问看的专利之中的问题，然后就一些常规问题吧，和其他考生轮流作答。<br>10.24 进入体检环节。差额体检，即进了体检也不一定会发 offer。<br>11.4 发第一批 offer。<br>因为有些同学没办法体检，所以是分批次发 offer 的。</p>
+<h3 id="金蝶"><a href="#金蝶" class="headerlink" title="金蝶"></a>金蝶</h3><ul>
+<li><p>jvm（gc、调优）</p>
+</li>
+<li><p>mybatis 读取参数<br>#{} ${}<br>顺序传参法 #{}里面的数字代表传入参数的顺序<br>@Param 注解传参法 #{}里面的名称对应的是注解@Param 括号里面修饰的名称<br>Java Bean 传参法 #{}里面的名称对应的是 User 类里面的成员属性</p>
+</li>
+<li><p>mybatis 加载过程，二级缓存<br>一级缓存的作用域是同一个 SqlSession，在同一个 sqlSession 中两次执行相同的 sql 语句，第一次执行完毕会将数据库中查询的数据写到缓存（内存），第二次会从缓存中获取数据将不再从数据库查询，从而提高查询效率。<br>二级缓存是 SqlSessionFactory 级别，通过同一个 SqlSessionFactory 创建的 SqlSession 查询的结果会被缓存；此后若再次执行相同的查询语句，结果就会从缓存中获取</p>
+<ul>
+<li>数据库表怎么设计的<br>主键<br>时间格式</li>
+</ul>
+</li>
+<li><p>索引</p>
+</li>
+<li><p>数据库三大范式，什么是传递依赖<br>列不可拆分<br>非主键完全依赖于主键<br>非主键只依赖于主键</p>
+</li>
+<li><p>redis 为什么快</p>
+</li>
+<li><p>为什么缓存使用 redis，而不是 jvm</p>
+</li>
+<li><p>Redis 的 缓存击穿、雪崩、穿透场景以及解决方法<br>&#x3D;&#x3D; 和 equals 方法区别<br>LinkedList 和 ArrayList 区别<br>深拷贝和浅拷贝区别<br>Java 中值传递的具体描述<br>创建线程的方法<br>线程创建的参数以及具体的工作流程<br>生产者消费者模式<br>Java IO 流中使用的设计模式<br>了解的设计模式：单例、工厂、生产者消费者<br>MySQL 索引的优缺点以及其底层的数据结构<br>使用过的性能测试的工具<br>出现 OOM 的原因，以及分析工具、分析方法、以及解决思路</p>
+</li>
+<li><p>Redis 的具体使用到的场景</p>
+</li>
+<li><p>实习工作<br>实习收获</p>
+</li>
+<li><p>1.自我介绍</p>
+<p>2.询问实习经历，介绍实习工作，提问实习项目如何优化</p>
+<p>3.扣项目，项目难点，如何实现？如何优化？能想到几种优化方案全都说？</p>
+<p>4.项目服务部署多份时，定时任务会出现的问题？如何解决？能给出两种以上的方案吗？</p>
+</li>
+</ul>
+<p>说了分布式锁，追问还有其他方案吗？继续回答了一些方案。</p>
+<p>5.Redis 实现分布式锁你的理解和常见的应用场景？<br>保证数据的正确性：<br>比如：秒杀的时候防止商品超卖，表单重复提交，接口幂等性。<br>避免重复处理数据：<br>比如：调度任务在多台机器重复执行，缓存过期所有请求都去加载数据库。</p>
+<p>互斥：同一时刻只能有一个线程获得锁。<br>可重入：当一个线程获取锁后，还可以再次获取这个锁，避免死锁发生。<br>高可用：当小部分节点挂掉后，仍然能够对外提供服务。<br>高性能：要做到高并发、低延迟。<br>6.MVC？SpringMVC?SpringMVC 的执行流程？拦截器在这个流程中如何？拦截器方法什时候执行？</p>
+<p>7.SpringBoot 约定大于配置你的理解？</p>
+<p>8.锁相关的东西，Lock 等</p>
+<ol start="9">
+<li>mysql 如何解决幻读问题的？<br>隔离级别：串行化 或者使用 MVCC 10.多线程，<br>是通过 MVCC 方式解决了幻读，因为可重复读隔离级别下，事务执行过程中看到的数据，一直跟这个事务启动时看到的数据是一致的，即使中途有其他事务插入了一条数据，是查询不出来这条数据的，所以就很好了避免幻读问题。</li>
+</ol>
+<p>你是如何使用多线程的？有哪些注意事项？如何判断一个线程的任务已经执行结束？<br>继承 Tread 或者实现 Runable 和 Callbale 接口重写 run 或者 call 方法，<br>join 当前线程等待调用执行 join 方法的线程执行完毕在继续<br>启动方式 调用 start 方法<br>或者用线程池的方式<br>避免死锁，考虑创建多线程的性能消耗 使用线程池考虑线程之间的内存可见性</p>
+<ul>
+<li><p>.一道算法口述，大概就是给你一系列时间戳，找到某一月内出现两次以上的时间戳，答了 hashMap 记录，然后根据日期遍历 HashMap，以为是口述就大概讲讲思路，结果在一些细节问题上被抓时间戳如何换算日期什么的</p>
+</li>
+<li><p>MySQL 索引，redis 数据结构，IO 多路复用，RabbitMQ<br>IOC、AOP<br>多线程，死锁，避免死锁<br>HTTP 协议状态码<br>springboot 作用<br>9-19</p>
+</li>
+<li><p>介绍一下实习期间的项目，在项目里做了什么<br>项目当中用了 java 中的什么 API，用了什么框架<br>jvm 的原理了解吗，比如 jvm 生成类的过程，类的生命周期<br>实习项目用的什么数据库<br>实习当中设计过数据库表吗，谈谈怎么设计的<br>怎么优化数据库的查询速度<br>FTP 协议位于五层模型的哪一层<br>二叉树前序遍历的算法，描述一下思路过程<br>linux 下拷贝一个文件的命令，查看一个文件比如配置文件详细内容的命令</p>
+</li>
+<li><p>10-11<br>1、面向对象的概念？<br>面向对象，把构成问题的事务分解成各个对象，而建立对象的目的也不是为了完成一个个步骤，而是为了描述某个事件在解决整个问题的过程所发生的行为。 目的是为了写出通用的代码，加强代码的重用，屏蔽差异性。<br>2、封装、继承、多态概念？<br>封装是将数据和方法封装在类中；不允许外部对象直接访问对象的内部信息<br>继承是允许子类继承父类的属性和方法；可以快速地创建新的类，可以提高代码的重用，程序的可维护性，节省大量创建新类的时间<br>多态，表示一个对象具有多种的状态，具体表现为父类的引用指向子类的实例。<br>3、Java 如何实现多态的？ Java 多态是同一个行为具有不同的表现形式，具体的实现方式是重载 重写父类引用指向子类对象 灵活 可扩充 消除类型之间的耦合关系<br>4、Java 基本数据类型和引用类型？ float a &#x3D; 1.2 报错默认是 double 会出现精度丢失 1.2f double &#x3D; 5 不报错 短的<br>引用类型 类 接口 数组枚举<br>5、基本数据类型的包装类，为什么要用包装类？<br>对基本数据类型的包装，使其具有对象的特性并增加了一些附加功能，使其更加灵活和实用，基本数据类型方便、简单、高效，但泛型不支持、集合元素不支持<br>6、什么情况下用基本数据类型，什么情况用包装类？<br>包装类 允许 null 这个字段允不允许 null 值，如果允许 null 值，则必然要用封装类<br>7、String，为什么是引用类型？<br>final 修饰的类<br>String 真正不可变有下面几点原因：<br>保存字符串的数组被 final 修饰且为私有的，并且 String 类没有提供&#x2F;暴露修改这个字符串的方法。String 类被 final 修饰导致其不能被继承，进而避免了子类破坏 String 不可变。</p>
+<p>字符串对象通过“+”的字符串拼接方式，实际上是通过<br>StringBuilder 调用 append() 方法实现的，拼接完成之后调用 toString() 得到一个 String 对象 。<br>这意味着每循环一次就会创建一个 StringBuilder 对象。<br>9、接口和抽象类的区别？<br>通过关键字 abstract 定义的类叫做抽象类,抽象类中还能有不是抽象方法的方法<br>接口通过关键字 interface 来定义<br>抽象类可以有方法体的方法，但接口没有（Java 8 以前）。<br>接口中的成员变量隐式为 static final，但抽象类不是的。<br>一个类可以实现多个接口，但只能继承一个抽象类。</p>
+<p>10、什么时候用接口，什么时候用抽象类？（从继承、组合&#x2F;聚合层面回答）</p>
+<p>组合体现的是整体与部分、拥有的关系，即 has - a 的关系 要利用多继承的优势。<br>继承体现的是父与子，有一个层次的关系，即 is - a 的关系， 一些类提供公共的实现代码<br>11、多线程，线程池的好处？<br>12、设计模式，为什么要用？<br>是一套被反复使用、多数人知晓的、经过分类编目的、代码设计经验的总结。<br>使用设计模式是为了可重用代码、让代码更容易被他人理解、保证代码可靠性、程序的重用性</p>
+</li>
+</ul>
+<h3 id="自我介绍"><a href="#自我介绍" class="headerlink" title="自我介绍"></a>自我介绍</h3><p>面试官您好，我是 2024 届计算机专业的硕士研究生，本科就读于 安徽工程大学的软件工程专业，硕士就读于 汕头大学的计算机技术 专业。在本科阶段和研究生阶段我获得过多次奖学金并通过了六级考试，同时发表了一篇 sci 论文，在专业知识方面我深入了解过 Java 集合并发编程，MySQL、Redis 等相关的内容，今年的六月到九月我在亚信科技做过 Java 开发实习生的工作（实习经历），所在部门负责中国移动 APP 拉端搜索相关业务的开发，之前还做过一个关于学生购票方面的项目。在简历投递之前我了解到咱们公司是行业领先的企业管理软件及电子商务应用解决方案供应商，拥有强大的创新能力和丰富的业务经验，对此我非常希望能够得到在这里学习和成长的机会，并继续从事 Java 开发方向的工作。那么这里的我的自我介绍完毕。</p>
+<h3 id="朗新科技"><a href="#朗新科技" class="headerlink" title="朗新科技"></a>朗新科技</h3><ul>
+<li><p>Java 8 的改进<br>只包含一个抽象方法的接口，称为函数式接口。</p>
+</li>
+<li><p>springCloud 组件</p>
+</li>
+<li><p>熔断和降级的区别<br>服务降级指的是当服务器压力剧增的情况下，根据当前业务情况及流量对一些服务和页面有策略的降级，以此释放服务器资源以保证核心任务的正常运行。<br>熔断是应对微服务雪崩效应的一种链路保护机制<br>降级的目的在于应对系统自身的故障，而熔断的目的在于应对当前系统依赖的外部系统或者第三方系统的故障。</p>
+</li>
+<li><p>消息队列中的应用场景、幂等、可靠性、顺序性等内容<br>幂等：<br>不重复消费 互斥锁 防止超卖 数据库的行锁</p>
+</li>
+</ul>
+<!-- flag of hidden posts -->
     </div>
 
     
@@ -316,16 +426,6 @@
 
 
         
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/" rel="prev" title="八股--项目">
-      <i class="fa fa-chevron-left"></i> 八股--项目
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/articles/2023/08/30/%E7%A7%8B%E6%8B%9B%E7%AC%94%E8%AF%95/" rel="next" title="秋招笔试">
-      秋招笔试 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
       </footer>
     
   </article>
@@ -383,7 +483,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">面试总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E4%B8%AA%E8%A7%86%E9%A2%91%E9%9D%A2%E8%AF%95"><span class="nav-number">2.</span> <span class="nav-text">各个视频面试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E8%BF%9E%E6%94%AF%E4%BB%98"><span class="nav-number">3.</span> <span class="nav-text">连连支付</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%93%E6%9C%9B%E6%95%B0%E7%A0%81%E4%B8%80%E9%9D%A2"><span class="nav-number">4.</span> <span class="nav-text">卓望数码一面</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">面试总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E4%B8%AA%E8%A7%86%E9%A2%91%E9%9D%A2%E8%AF%95"><span class="nav-number">2.</span> <span class="nav-text">各个视频面试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E8%BF%9E%E6%94%AF%E4%BB%98"><span class="nav-number">3.</span> <span class="nav-text">连连支付</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%93%E6%9C%9B%E6%95%B0%E7%A0%81%E4%B8%80%E9%9D%A2"><span class="nav-number">4.</span> <span class="nav-text">卓望数码一面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%A0%E7%9A%84%E8%81%8C%E4%B8%9A%E8%A7%84%E5%88%92%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">5.</span> <span class="nav-text">你的职业规划是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%88%B1%E6%97%AD%E5%A4%AA%E9%98%B3%E8%83%BD-%E6%B7%B1%E5%9C%B3"><span class="nav-number">5.1.</span> <span class="nav-text">爱旭太阳能 深圳</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B1%9F%E8%8B%8F%E4%B8%93%E5%88%A9%E5%AE%A1%E6%9F%A5%E4%B8%AD%E5%BF%83"><span class="nav-number">5.2.</span> <span class="nav-text">江苏专利审查中心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%91%E8%9D%B6"><span class="nav-number">5.3.</span> <span class="nav-text">金蝶</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D"><span class="nav-number">5.4.</span> <span class="nav-text">自我介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%97%E6%96%B0%E7%A7%91%E6%8A%80"><span class="nav-number">5.5.</span> <span class="nav-text">朗新科技</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -397,7 +497,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">100</span>
+          <span class="site-state-item-count">79</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

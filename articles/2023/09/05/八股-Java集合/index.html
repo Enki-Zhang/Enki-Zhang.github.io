@@ -27,13 +27,13 @@
 <meta property="og:site_name" content="学习博客">
 <meta property="og:description" content="框架集合可以更灵活有效的存储对象，相比于数组大小可变支持泛型，元素操作方便 ArrayList初始容量 10 1.5 倍扩容 将原数组拷贝给过去进行扩容  什么情况下使用 ArrayList 和 LinkedListArraylist 底层是 Object[]，空间连续，支持随机访问，适用于查找和遍历的操作LinkedList 底层是双向链表，内存空间不连续，适用于快速的插入和删除操作  遍历方式">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/image-18.png">
+<meta property="og:image" content="http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/2023-10-10-13-58-05.png">
 <meta property="article:published_time" content="2023-09-05T08:29:03.000Z">
-<meta property="article:modified_time" content="2023-10-04T09:26:07.012Z">
+<meta property="article:modified_time" content="2023-10-10T08:25:48.084Z">
 <meta property="article:author" content="Enki">
 <meta property="article:tag" content="八股">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/image-18.png">
+<meta name="twitter:image" content="http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/2023-10-10-13-58-05.png">
 
 <link rel="canonical" href="http://example.com/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/">
 
@@ -194,7 +194,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-10-04 17:26:07" itemprop="dateModified" datetime="2023-10-04T17:26:07+08:00">2023-10-04</time>
+                <time title="修改时间：2023-10-10 16:25:48" itemprop="dateModified" datetime="2023-10-10T16:25:48+08:00">2023-10-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -217,13 +217,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><p><img src="/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/image-18.png" alt="Alt text"><br>集合可以更灵活有效的存储对象，相比于数组大小可变支持泛型，元素操作方便</p>
+        <h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><p><img src="/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/2023-10-10-13-58-05.png" alt="asset_img"><br>集合可以更灵活有效的存储对象，相比于数组大小可变支持泛型，元素操作方便</p>
 <h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>初始容量 10 1.5 倍扩容 将原数组拷贝给过去进行扩容</p>
 <blockquote>
 <p>什么情况下使用 ArrayList 和 LinkedList<br>Arraylist 底层是 Object[]，空间连续，支持随机访问，适用于查找和遍历的操作<br>LinkedList 底层是双向链表，内存空间不连续，适用于快速的插入和删除操作</p>
 </blockquote>
 <h3 id="遍历方式"><a href="#遍历方式" class="headerlink" title="遍历方式"></a>遍历方式</h3><p>遍历方式 fori foreach 增强 for 问题出在遍历时候进行修改<br>对 ArrayList 遍历并修改会触发快速失败机制会抛出 Concurrent Modification Exception。原因在于集合在遍历过程中改变了 modcount 值，与迭代器 next 的 Modcount 值不相同则报错触发快速失败机制，</p>
 <h3 id="说一说-ConcurrentHashMap-的实现原理"><a href="#说一说-ConcurrentHashMap-的实现原理" class="headerlink" title="说一说 ConcurrentHashMap 的实现原理"></a>说一说 ConcurrentHashMap 的实现原理</h3><p>ConcurrentHashMap 和 HashMap 的功能基本一致，区别在于 ConcurrentHashMap 是线程安全的</p>
+<ul>
+<li><p>JDK1.7 之前使用分段锁实现，里面包含了多个 segment 数组，每个 segment 类似于一个 hashMap 结构，默认 segment 数组大小为 16；</p>
+<ul>
+<li>put 根据 hash 值定位到具体的 Segment，segment 为空则初始化 ，否则使用 Reentrantlock 加锁，获取锁失败则自旋，超过一定次数则失败，获取成功则进行 hashEntry 遍历</li>
+<li>rehash 机制和 1.7 之前的 hashmap 一样，扩容至原先大小的两倍</li>
+</ul>
+</li>
+<li><p>jdk1.8 之后 不在使用分段锁结构，使用数组链表+红黑树结构。</p>
+<ul>
+<li>通过自旋和 CAS 操作完成初始化</li>
+</ul>
+</li>
+</ul>
 <h3 id="说一说-HashMap-的扩容机制"><a href="#说一说-HashMap-的扩容机制" class="headerlink" title="说一说 HashMap 的扩容机制"></a>说一说 HashMap 的扩容机制</h3><p>当 hashMap 中的元素大于数组长度*阈值后需要进行扩容。将所有元素散列到扩容后的容器中。存放 key 的桶数组容量固定，在 jdk1.8 后扩容不需要进行重新计算 hash 进行定位，扩容后的元素要么在原先位置要么在原先位置加上旧容量的长度</p>
 <h3 id="redis-字典的-rehash-为啥是渐进式的"><a href="#redis-字典的-rehash-为啥是渐进式的" class="headerlink" title="redis 字典的 rehash 为啥是渐进式的"></a>redis 字典的 rehash 为啥是渐进式的</h3><p>这样做的原因在于，若 hash 桶的个数比较少那么服务器可以在瞬间就将<br>这些键值对全部 rehash 到 新的表中，但是，如果哈希表里保存的键值对数量不是四个，而是四百万、四千方基至四亿个键值对，那么要一次性将这些键值对全部 rehash 新的表中会造成服务器在一段时间内停止服务。<br><strong>渐进式的步骤</strong><br>在 h[0]表中维护一个索引计数指针，每次对字典执行操作之外在对计数指针上的键值对进行 rehash 到 h[1]表中直到所有键值对 rehash 完成。同时渐进式的 rehash 会在两张表中执行相同的删除、查找、更新操作，但添加操作只在新表 h[1]中进行，保证 h[0]只减不增，</p>
 <h3 id="为什么-HashMap-的数组长度要取-2-的整数幂"><a href="#为什么-HashMap-的数组长度要取-2-的整数幂" class="headerlink" title="为什么 HashMap 的数组长度要取 2 的整数幂"></a>为什么 HashMap 的数组长度要取 2 的整数幂</h3><p>在得到 hash 值后，对其进行取模运算从而得到对应的数组下标（将数组长度-1 与&amp; hash 值）而 2 的幂次方长度的数组-1 会使得 hash 值高位为 0 只保留低位</p>
@@ -329,7 +342,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">100</span>
+          <span class="site-state-item-count">79</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
