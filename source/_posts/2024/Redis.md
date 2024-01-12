@@ -1,14 +1,12 @@
 ---
-title: 面试场次记录
+title: Redis
 top: false
 cover: false
 toc: true
 mathjax: true
-date: 2023-05-09 13:05:17
+date: 2024-01-12 20:28:47
 password:
 summary:
 tags:
 categories:
 ---
-
-# 金蝶江苏

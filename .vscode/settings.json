@@ -1,3 +1,7 @@
 {
-  "liveServer.settings.port": 5518
+  "liveServer.settings.port": 5518,
+  "DevChat.PythonForChat": "c:\\Users\\Enki\\.vscode\\extensions\\merico.devchat-0.1.39\\tools\\python-3.11.6-embed-amd64\\python.exe",
+  "devchat.defaultModel": "gpt-3.5-turbo-1106",
+  "DevChat.PythonForCommands": "C:\\Users\\Enki\\.chat\\mamba\\envs\\devchat-commands\\python.exe",
+  "DevChat.Language": "en"
 }

@@ -13,7 +13,7 @@ categories: Java
 
 ## 框架
 
-![Alt text](image-18.png)
+![asset_img](八股-Java集合/2023-10-10-13-58-05.png)
 集合可以更灵活有效的存储对象，相比于数组大小可变支持泛型，元素操作方便
 
 ### ArrayList
@@ -24,6 +24,10 @@ categories: Java
 > Arraylist 底层是 Object[]，空间连续，支持随机访问，适用于查找和遍历的操作
 > LinkedList 底层是双向链表，内存空间不连续，适用于快速的插入和删除操作
 
+### LinkedList
+
+双向链表，被当作栈，队列使用
+
 ### 遍历方式
 
 遍历方式 fori foreach 增强 for 问题出在遍历时候进行修改
@@ -32,6 +36,14 @@ categories: Java
 ### 说一说 ConcurrentHashMap 的实现原理
 
 ConcurrentHashMap 和 HashMap 的功能基本一致，区别在于 ConcurrentHashMap 是线程安全的
+
+- JDK1.7 之前使用分段锁实现，里面包含了多个 segment 数组，每个 segment 类似于一个 hashMap 结构，默认 segment 数组大小为 16；
+
+  - put 根据 hash 值定位到具体的 Segment，segment 为空则初始化 ，否则使用 Reentrantlock 加锁，获取锁失败则自旋，超过一定次数则失败，获取成功则进行 hashEntry 遍历
+  - rehash 机制和 1.7 之前的 hashmap 一样，扩容至原先大小的两倍
+
+- jdk1.8 之后 不在使用分段锁结构，使用数组链表+红黑树结构。
+  - 通过自旋和 CAS 操作完成初始化
 
 ### 说一说 HashMap 的扩容机制
 

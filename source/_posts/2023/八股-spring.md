@@ -1,5 +1,5 @@
 ---
-title: 八股--spring
+title: Spring
 top: false
 cover: false
 toc: true
@@ -45,7 +45,7 @@ ApplicationContext：对 BeanFactory 的拓展。在启动时加载所有 bean
 
 一般分为实例化、属性赋值、初始化、销毁这 4 个大阶段
 实例化： 创建 bean 的实例
-属性配置：将任何配置的依赖通过 setter 方法、构造函数等方式注入到 bean 中
+属性配置：将任何配置的依赖通过 setter 方法、构造函数等方式注入到 bean 中,为 bean 设置相关的属性和依赖
 初始化 ：
 
 ### 设计模式
@@ -77,3 +77,10 @@ properties 邮
 - Bean 是单例的被所有线程共享，Spring 中的单例 Bean 不是线程安全的。全局只有一个 Bean 被所有线程共享。对于无状态的 Bean 即不对其进行修改操作的是安全的。否则则是线程不安全的
   常见的解决办法：
   使用 ThreadLocal 对线程进行隔离，将需要的成员变量保存在 ThreadLocal 中，或者使用锁也可以解决
+
+### Spring 中事务失效的场景（\*\*）
+
+- 事务方法的权限：spring 要求被代理方法必须是 public 的。或者将事务方法定义为 final 也会导致事务失效。因为事务底层使用了 AOP 动态代理，final 修饰方法无法进行重写不能添加事务
+- 方法的内部直接调用
+- 未被 Spring 管理
+- 事务不能抛出异常，导致事务无法回滚
