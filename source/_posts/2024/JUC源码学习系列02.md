@@ -194,3 +194,16 @@ abstract static class Sync extends AbstractQueuedSynchronizer {
         sync = fair ? new FairSync() : new NonfairSync();
     }
 ```
+
+> ReentrantLock 和 synchronized 的区别是什么
+
+- 中断：
+  ReentrantLock 提供了能够响应中断的锁获取方式，即线程可以在等待锁的过程中被中断。
+  synchronized 不支持中断等待，一旦一个线程获取不到锁，就会一直等待下去。
+- 公平
+  ReentrantLock 可以选择是否公平锁，默认是非公平锁。非公平锁有更高的吞吐量，但是可能会导致线程饥饿。
+  synchronized 是一种非公平锁。
+
+两者都是可重入锁，但总体而言 ReentrantLock 更加灵活，但也需要投入更多注意，因此大部分情况使用 synchronized 基本可以了，他由 JVM 维护更加省心。
+
+> 实际使用了，当遇到超高并发情况下，ReentrantLock 的性能是要优于 synchronized 的大概 40 万以上并发量

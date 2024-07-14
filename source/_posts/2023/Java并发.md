@@ -129,7 +129,7 @@ synchronized 的锁存放于对象头中，其中的 Mark word 标记字段记�
   如果该线程继续重入锁，则计数器继续+1.
   锁释放：进过 monitorexit 每次将计数器-1，一直减到 0 表示该线程释放锁。
   如果其他线程获取锁失败，会进去到同步队列进行阻塞，一直到锁被释放才能够尝试获取锁。
-  ![Alt text](image-37.png)
+  ![asset_img](Java并发/2024-01-19-15-28-35.png)
   对象监视器，同步队列以及执行线程状态之间的关系
 - 可重入锁
   统一进程再次获取相同锁的时候不会因为锁未释放而阻塞，会自动获取。
@@ -265,7 +265,7 @@ _CAS 三大问题_
 
 ### AQS
 
-用来构建锁和同步器的框架。AQS 是将每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点(Node)来实现锁的分配。使用 volatile 修饰变量 state 表示同步状态，同时当资源被占用是，线程会使用 CLH 锁实现线程的阻塞和分配。
+用来构建锁和同步器的框架。AQS 是将每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点(Node)来实现锁的分配。使用 volatile 修饰变量 state 表示同步状态，同时当资源被占用时，线程会使用 CLH 锁实现线程的阻塞和分配。
 
 ---
 
@@ -281,7 +281,28 @@ _CAS 三大问题_
   ![Alt text](image-42.png)
   当找不到对象引用时候，会进行加锁。当 A 线程走到 7，其中出现了对创建对象的重排序，使得先完成对象内存空间的分配，在进行初始化对象，而 B 线程访问 4 时知道对象不为 null，会去访问 instance 但此时 instance 还未创建完成，从而访问一个未初始化的对象。因此我们需要在创建对象的时候禁止 JMM 的重排序。
 - 双重校验锁
-  ![Alt text](image-43.png)
+
+  ```java
+  public class Singleton {
+  private volatile static Singleton uniqueSingleton;
+
+      private Singleton() {
+      }
+
+      public Singleton getInstance() {
+          if (null == uniqueSingleton) {
+              synchronized (Singleton.class) {
+                  if (null == uniqueSingleton) {
+                      uniqueSingleton = new Singleton();
+                  }
+              }
+          }
+          return uniqueSingleton;
+      }
+
+  }
+  ```
+
 - 静态内部类初始化
   ![Alt text](image-44.png)
 
@@ -336,6 +357,8 @@ _CAS 三大问题_
 ### 核心线程数可以大于最大线程数吗
 
 不可以
+
+### 拒绝策略
 
 ### 为什么阿里规范不能用 Executors 创建
 
