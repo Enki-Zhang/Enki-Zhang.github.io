@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html>
+  <!-- meta/link... -->
+  
+
+
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+  <title>Java并发 | Enki的小书房</title>
+
+  <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
+  <link href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="/js/swiper/swiper@5.4.1.min.css" rel="stylesheet">
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/animate.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    <link href="https://unpkg.com/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" rel="stylesheet">
+  
+  
+    
+<link rel="stylesheet" href="/js/shareJs/share.min.css">
+
+  
+  <style>
+        @media (max-width: 992px) {
+            #waifu {
+                display: none;
+            }
+        }
+    </style>
+    <script defer src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+    
+    
+    <!-- 依赖于jquery和vue -->
+    <script src="https://unpkg.com/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js"></script>
+
+    <!-- import link -->
+    
+        
+            
+        
+            
+        
+    
+    <!-- import script -->
+    
+        
+            
+        
+            
+        
+    
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+  
+  <!-- 预加载动画 -->
+  
+  
+  <div class="preloader_6" id="loader">
+  <div class="loader"></div>
+</div>
+  <script>
+    var endLoading = function () {
+      document.body.style.overflow = 'auto';
+      document.getElementById('loader').classList.add("loaded");
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+  </script>
+
+
+  <body>
+    <!-- 判断是否为暗黑风格 -->
+    <!-- 判断是否为黑夜模式 -->
+<script defer>
+  let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+
+  if (isDark) {
+    $(document.body).addClass('darkModel');
+  }
+</script>
+
+    <!-- 需要在上面加载的js -->
+    <script>
+  function loadScript(src, cb) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var HEAD = document.getElementsByTagName("head")[0] || document.documentElement;
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        if (cb) {
+          if (JSON.stringify(cb)) {
+            for (let p in cb) {
+              if (p == "onload") {
+                script[p] = () => {
+                  cb[p]()
+                  resolve()
+                }
+              } else {
+                script[p] = cb[p]
+                script.onload = resolve
+              }
+            }
+          } else {
+            script.onload = () => {
+              cb()
+              resolve()
+            };
+          }
+        } else {
+          script.onload = resolve
+        }
+        script.setAttribute("src", src);
+        HEAD.appendChild(script);
+      });
+    });
+  }
+
+  //https://github.com/filamentgroup/loadCSS
+  var loadCSS = function (src) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var link = document.createElement('link');
+        link.rel = "stylesheet";
+        link.href = src;
+        link.onload = resolve;
+        document.getElementsByTagName("head")[0].appendChild(link);
+      });
+    });
+  };
+
+</script> 
+
+<!-- 轮播图所需要的js -->
+<script src="/js/swiper/swiper.min.js"></script>
+<script src="/js/swiper/vue-awesome-swiper.js"></script>
+<script src="/js/swiper/swiper.animate1.0.3.min.js"></script>
+
+<script type="text/javascript">
+  Vue.use(window.VueAwesomeSwiper)
+</script>
+
+
+  <script src="/js/vue-typed-js/index.js"></script>
+
+
+<!-- 首页的公告滚动插件的js需要重新加载 -->
+<script src="/js/vue-seamless-scroll/index.js"></script>
+
+<!-- 打字机效果js -->
+<script src="https://unpkg.com/typed.js@2.0.11"></script>
+
+
+    <div id="safearea">
+      <main class="main" id="pjax-container">
+        <!-- 头部导航 -->
+        
+<header class="header  " 
+  id="navHeader"
+  style="position: fixed;
+  left: 0; top: 0; z-index: 10;width: 100%;"
+>
+  <div class="header-content">
+    <div class="bars">
+      <div id="appDrawer" class="sidebar-image">
+  <div class="drawer-box-icon">
+    <i class="fas fa-bars" aria-hidden="true" @click="showDialogDrawer"></i>
+  </div>
+  
+  <transition name="fade">
+    <div class="drawer-box_mask" v-cloak style="display: none;" v-show="visible" @click.self="cancelDialogDrawer">
+    </div>
+  </transition>
+  <div class="drawer-box" :class="{'active': visible}">
+    <div class="drawer-box-head bg-color">
+      <img class="drawer-box-head_logo lazyload placeholder" src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="logo">
+      <h3 class="drawer-box-head_title">Enki的小书房</h3>
+      <h5 class="drawer-box-head_desc">多看 多学 多做 多想</h5>
+    </div>
+    
+    <div class="drawer-box-content">
+      <ul class="drawer-box-content_menu">
+        
+        
+          <li class="drawer-box-content_item">
+            <a target="_blank" rel="noopener" href="https://github.com/Enki-Zhang">
+              <i class="fas fa-github" aria-hidden="true"></i>
+              <span>Github</span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDrawer',
+    data: {
+      visible: false,
+      top: 0,
+      openArr: [],
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      isOpen(index) {
+        if (this.openArr.includes(index)) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      openOrCloseMenu(curIndex) {
+        const index = this.openArr.indexOf(curIndex);
+        if (index !== -1) {
+          this.openArr.splice(index, 1);
+        } else {
+          this.openArr.push(curIndex);
+        }
+      },
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'width: 100%; height: 100%;overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      }
+    },
+    created() {}
+  })
+</script>
+
+    </div>
+    <div class="blog-title" id="author-avatar">
+      
+        <div class="avatar">
+          <img src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="logo">
+        </div>
+      
+      <a href="/" class="logo">Enki的小书房</a>
+    </div>
+    <nav class="navbar">
+      <ul class="menu">
+        
+      </ul>
+      
+      
+        <div id="appSearch">
+  <div class="search"  @click="showDialog()"><i class="fas fa-search" aria-hidden="true"></i></div>
+  <transition name="fade">
+    <div class="message-box_wrapper" style="display: none;" v-cloak v-show="dialogVisible" @click.self="cancelDialogVisible()">
+      <div class="message-box animated bounceInDown">
+        <h2>
+          <span>
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <span class="title">本地搜索</span>
+          </span>
+          <i class="fas fa-times close" pointer style="float:right;" aria-hidden="true" @click.self="cancelDialogVisible()"></i>
+        </h2>
+        <form class="site-search-form">
+          <input type="text"
+            placeholder="请输入关键字"
+            id="local-search-input" 
+            @click="getSearchFile()"
+            class="st-search-input"
+            v-model="searchInput"
+          />
+        </form>
+        <div class="result-wrapper">
+          <div id="local-search-result" class="local-search-result-cls"></div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+<script src="/js/local_search.js"></script>
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appSearch',
+    data: {
+      dialogVisible: false,
+      searchInput: '',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+      window.addEventListener('pjax:complete', () => {
+        this.cancelDialogVisible();
+      })
+    },
+    methods: {
+      showDialog() {
+        this.dialogVisible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'overflow: hidden;';
+      },
+      getSearchFile() {
+        if (!this.searchInput) {
+          getSearchFile("/search.xml");
+        }
+      },
+      cancelDialogVisible() {
+        this.dialogVisible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+    },
+    created() {}
+  })
+</script>
+<!-- 解决刷新页面闪烁问题，可以在元素上添加display: none, 或者用vue.extend方法，详情：https://blog.csdn.net/qq_31393401/article/details/81017912 -->
+<!-- 下面是搜索基本写法 -->
+<!-- <script type="text/javascript" id="local.search.active">
+  var inputArea = document.querySelector("#local-search-input");
+  inputArea.onclick   = function(){ getSearchFile(); this.onclick = null }
+  inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
+</script> -->
+
+      
+
+    </nav>
+  </div>
+  
+    <a target="_blank" rel="noopener" href="https://github.com/Enki-Zhang" class="github-corner color-primary" aria-label="View source on GitHub"><svg width="60" height="60" viewBox="0 0 250 250" style="fill:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+  
+  
+</header>
+        <!-- 内容区域 -->
+        
+<!-- prismjs 代码高亮 -->
+
+
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('https://pic4.zhimg.com/80/v2-e434e3a2888fb4efb1844845b8791d1f_1440w.webp')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        Java并发
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> 发表于：2023-09-05 |
+        </span>
+      
+
+      
+
+      
+    
+  </div>
+  
+  
+    <script defer src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="post-detail-content post-row" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <blockquote>
+<p>java 中的 this 当一个对象创建后，Java 虚拟机（JVM）就会给这个对象分配一个引用自身的指针，这个指针的名字就是 this。</p>
+</blockquote>
+<h2 id="线程基础"><a href="#线程基础" class="headerlink" title="线程基础"></a>线程基础</h2><h3 id="线程状态"><a href="#线程状态" class="headerlink" title="线程状态"></a>线程状态</h3><p>初始，可运行(分为拿到了 cpu 资源或者等待 cpu 时间片对应于操作系统的运行和就绪态)，阻塞（等待获取锁资源），无限等待（等待其它线程显式地唤醒，否则不会被分配 CPU 时间片），有限等待（超时自动唤醒），终止<br><img src="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-39.png" class="lazyload placeholder" data-srcset="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-39.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="Alt text"></p>
+<blockquote>
+<p>关于线程等待 Thread.sleep(time)常用一个<code>线程睡眠</code>进行描述<br>Object.wait() 线程进入等待或者无限等待状态 常用<code>线程挂起</code>进行描述<br>睡眠和挂起描述的是行为，阻塞和等待描述的是状态<br>阻塞是被动的而等待是主动的</p>
+</blockquote>
+<h3 id="线程常用方法"><a href="#线程常用方法" class="headerlink" title="线程常用方法"></a>线程常用方法</h3><ul>
+<li>sleep( ) 和 wait( ) 的这 5 个区别<br>Thread.sleep()不会释放锁资源，Object.wait()会释放锁资源<br>sleep 必须传入时间，时间到自动苏醒<br>wait 可以不传入时间表示一直阻塞直到 notify 进行唤醒，带时间会自动苏醒当苏醒后立即获得锁便继续执行，否则进入到等待队列中去。<br>sleep() 方法没有释放锁，而 wait() 方法释放了锁<br>wait() 方法被调用后，线程不会自动苏醒，需要别的线程调用同一个对象上的 notify()，sleep 会自动苏醒</li>
+<li>yield()<br>告诉调度器，当前线程愿意放弃 cpu</li>
+<li>interrupt() 调用线程的 interrupt() 方法会设置线程的中断标记，中断标记的作用在于向目标线程发出 中断请求，告知该线程需要停止执行当前任务，并在合适的时机终止执行。它是一种协作机制，用于线程之间的协调和通信。调用 interrupt 不会立即中断线程，只标记当前线程为中断状态，在合适的时机进行实际中断。<blockquote>
+<p>因此可以在循环体中使用 interrupted() 方法来判断线程是否处于中断状态，从而提前结束线程。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="线程和进程的区别"><a href="#线程和进程的区别" class="headerlink" title="线程和进程的区别"></a>线程和进程的区别</h3><p>进程：进程是代码在数据集合上的一次运行活动，是系统进行资源分配和调度的基本单位。<br>线程：线程是进程的一个执行路径，一个进程中至少有一个线程，多个线程共享进程资源。</p>
+<h3 id="启动线程的方式"><a href="#启动线程的方式" class="headerlink" title="启动线程的方式"></a>启动线程的方式</h3><p>继承 Thread 类或者实现 Runable 接口可以重写 run 方法实现线程主体<br>实现 Callable 接口 需要实现 call 方法实现线程主体，并且可以借助 Future 接口返回线程的执行结果和异常<br>使用 start（）在处理器中注册线程并执行 run 方法<br>若只执行 run 方法会相当于执行了 Main 函数的一个方法体 并没有启动真正意义的新的线程。</p>
+<hr>
+<h3 id="Volatile-是轻量级同步机制"><a href="#Volatile-是轻量级同步机制" class="headerlink" title="Volatile 是轻量级同步机制"></a>Volatile 是轻量级同步机制</h3><p>Volatile 是轻量级同步机制，保证可见性，禁止指令重排、不保证原子性</p>
+<blockquote>
+<ol>
+<li>指令重排序：<br>对象分配的过程：1. 分配内存空间即 new 关键字执行 2. 初始化对象即执行构造函数 3. 将对象的引用指向分配的内存空间，即通过 *.*访问对象属性和方法<br>其中 2 和 3 的顺序可以颠倒，致使未初始化的对象引用暴露出来。</li>
+<li>保证可见性：当变量被 Volatile 修饰后，对一个 Volatile 变量的读，总能看到任意线程对于 Volatile 变量的最后的写入。</li>
+<li>原子性：<br>单个的 volatile 变量的读写具有原子性，但复合操作不具有。</li>
+</ol>
+</blockquote>
+<ul>
+<li><p>禁止指令重排： 在对这个变量进行读写操作的时候，会通过插入特定的 内存屏障 的方式来禁止指令重排序。</p>
+</li>
+<li><p>如何保证可见性<br>volatile 在写操作执行之前会出发 lock 前缀指令。</p>
+<ol>
+<li>将当前处理器中的数据写回到系统内存中去。利用缓存锁定，根据缓存一致性机制阻止多个处理器修改同一内存数据。</li>
+<li>一个处理器的缓存回写到内存会导致其他处理器的缓存无效.</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p>处理器数据先从内存中进入到缓存中去，并不直接操作内存 这样提高数据的处理速度。</p>
+<ol>
+<li>总线锁<br>当一个处理器在总线上输出此信号时，其他处理器的请求将被阻塞住，那么该<br>处理器可以独占共享内存。</li>
+<li>缓存锁： 阻止同时修改由两个以上处理器缓存的内存区域数据</li>
+</ol>
+</blockquote>
+<ul>
+<li>不能保证原子性：对于复合操作不能保证原子性</li>
+</ul>
+<h3 id="Volatile-的内存规则和行为"><a href="#Volatile-的内存规则和行为" class="headerlink" title="Volatile 的内存规则和行为"></a>Volatile 的内存规则和行为</h3><ul>
+<li>写：<br>写入一个 volatile 变量后，会将改线程本地内存中的该变量值刷新到共享内存中去</li>
+<li>读：<br>读取一个 volatile 变量，会将本地内存中的该变量旧值设置为无效，并从共享内存中去读取新值。<br>通过借助共享内存给桥梁，实现了两个线程之间的通信，保证了读线程能够及时看到写线程对共享变量的修改。</li>
+</ul>
+<blockquote>
+<p>锁释放与 volatile 写有相同的内存语义；锁获取与 volatile 读有相同的内存语义<br>CAS 操作同时具备 volatile 读和 volatile 写的内存语义，即 CAS 读取共享数据时的过程和 volatile 读过程相同，总是将共享变量读取到内存中去，从而读取到最新值。CAS 的修改数据也会将数据刷新到共享内存中去。</p>
+</blockquote>
+<hr>
+<h2 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h2><ul>
+<li><p>什么是 Synchronized：这是 Java 控制多线程访问共享资源的一种方式，是线程之间通信的一种方式。</p>
+</li>
+<li><p>什么同步代码块：同步代码块用于阻止多个线程同时对同一方法中的部分代码进行访问。<br>理解起来，可以看成同步代码块相当于一个保护共享资源的一块区域，这个区域需要有特定身份的线程才能够进行访问，而这个身份便是锁。</p>
+</li>
+<li><p>什么是锁：锁是一个概念，Java 中任何对象都能够成为一把锁，且只要获得了被同步代码块认可的锁即可访问同步代码块中的共享资源。</p>
+</li>
+</ul>
+<p>一般而言 Synchronized 的形式为</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Synchronized(锁)&#123;</span><br><span class="line">    <span class="comment">//同步代码块</span></span><br><span class="line">    <span class="comment">//这里访问共享资源</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>总体而言，Synchronized 修改的地方分为方法和代码块上：<br>修饰代码块，我们知道锁定的便是代码块中的内容。<br>修饰方法，则可以分为修饰的是静态方法还是普通方法：</p>
+<ol>
+<li>静态方法：静态方法属于类，其锁住的便是整个 Class 对象。只要是同一个类便是同一个锁</li>
+<li>普通方法：锁住的是方法调用该方法的对象。只要是同一个类下的同一个方法实例便是同一个锁</li>
+</ol>
+<ul>
+<li>Synchronized 特点<br>原子性，有序性，可见性，可重入性，不能禁止重排序</li>
+</ul>
+<p><strong>实现原理</strong><br>synchronized 的锁存放于对象头中，其中的 Mark word 标记字段记录了锁的变化，Mark Word 存储对象的 HashCode 分代年龄 锁标志位。</p>
+<ul>
+<li>加锁和解锁的过程<br>通过锁监视器，同一个对象同一时间只与一个 monitor 相关联，当对象尝试获得锁时，monitorenter 会将 monitor 计数器+1，表示占有锁，其他线程在想要需要等待。<br>如果该线程继续重入锁，则计数器继续+1.<br>锁释放：进过 monitorexit 每次将计数器-1，一直减到 0 表示该线程释放锁。<br>如果其他线程获取锁失败，会进去到同步队列进行阻塞，一直到锁被释放才能够尝试获取锁。<br><img src="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/2024-01-19-15-28-35.png" class="lazyload placeholder" data-srcset="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/2024-01-19-15-28-35.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="asset_img"><br>对象监视器，同步队列以及执行线程状态之间的关系</li>
+<li>可重入锁<br>统一进程再次获取相同锁的时候不会因为锁未释放而阻塞，会自动获取。</li>
+</ul>
+<h3 id="synchronized-锁升级过程"><a href="#synchronized-锁升级过程" class="headerlink" title="synchronized 锁升级过程"></a>synchronized 锁升级过程</h3><p>总结而言： 偏向锁通过对比 Mark Word 解决加锁问题，避免执行 CAS 操作。而轻量级锁是通过用 CAS 操作和自旋来解决加锁问题，避免线程阻塞和唤醒而影响性能。重量级锁是将除了拥有锁的线程以外的线程都阻塞。</p>
+<p>jdk1.6 之前的 synchronized 基于进入和退出 monitor 对象来同步代码块。这种锁称为重量级锁，为了提升获得锁和释放锁带来的性能增加了“偏向锁”和“轻量级锁”，锁随着竞争关系不断升级，同时这种锁升级却不能降级。</p>
+<ol>
+<li><p>偏向锁<br>当同步代码块中只有一个线程在访问，不存在竞争的情况下，会使用偏向锁来偏向于第一个访问锁的进程，从而达到减少锁释放和获取所消耗的性能。<br>偏向锁获取过程如下：</p>
+<ol>
+<li><p>第一次访问，当前线程进入到同步代码块获得锁时，在对象头和栈帧中存储线程 ID 并设置锁标志位为偏向锁，以后带有相同线程 ID 的线程尝试获取锁时不需要进行加锁和解锁的过程。</p>
+</li>
+<li><p>进程访问同步代码块获取锁时，判断对象头中的标志位是否是偏向锁，且线程 ID 是否指向当前线程。若是则直接执行同步代码，否则若线程 ID 未指向当前线程，通过 CAS 竞争将 mark word 中的线程 Id 设置为当前线程之后，指向同步代码块，若竞争失败，会在全局安全点即（在这个时间点上没有字节码正在执行）上对进程进行挂起，偏向锁升级为轻量级锁。</p>
+</li>
+</ol>
+<blockquote>
+<ol>
+<li>偏向锁的释放，只在其他线程尝试竞争时才会释放。适用于无竞争状态<br>竞争过程偏向锁是在无锁争用的情况下使用的，也就是同步开在当前线程没有执行完之前，没有其它线程会执行该同步块，一旦有了第二个线程的争用，偏向锁就会升级为轻量级锁，如果轻量级锁自旋到达阈值后，没有获取到锁，就会升级为重量级锁；(旋转的阈值在 1.6 之后引入了自适应阈值，并不是固定的)</li>
+<li>这里的 CAS 竞争：它会尝试原子性地将对象头的锁状态从无锁（或其他状态）修改为自己的线程 ID，尝试获取锁的过程中可能会涉及多次循环尝试，直到成功获取锁。如果 CAS 竞争失败，代表当前线程无法直接获得偏向锁，因为有其他线程尝试获取同一个对象的锁</li>
+</ol>
+</blockquote>
+</li>
+<li><p>当偏向锁有竞争时会升级为轻量级锁。当进程进入同步代码块中 JVM 在当前线程栈帧中创建存储锁记录的空间用于拷贝对象头的 mark word, 之后使用 CAS 将对象头中的 mark word 替换为指向锁记录的指针，若成功则获得轻量级锁，若失败则表示有竞争继续 cas 自旋操作。<br>轻量级锁在释放时将锁记录中的 Mark word 替换会对象头，如果成功表示没有竞争, 失败则表示存在竞争需要进行锁膨胀为重量级锁</p>
+</li>
+</ol>
+<blockquote>
+<p>轻量级锁通过 CAS 自旋获取锁，避免了竞争过程中线程的阻塞，提高了执行效率。但自旋也会消耗 cpu。</p>
+</blockquote>
+<h3 id="synchronized-和-volatile-有什么区别"><a href="#synchronized-和-volatile-有什么区别" class="headerlink" title="synchronized 和 volatile 有什么区别"></a>synchronized 和 volatile 有什么区别</h3><p>synchronized 可以用在方法和代码块上，多用于实现多线程之间的同步，volatile 只能修饰变量，多用于解决变量之间的可见性。volatile 是轻量级的同步实现，能够保证数据的可见性 和 禁止指令重排序不能保证原子性 sys 可以保证原子性和可见性</p>
+<hr>
+<h2 id="JMM"><a href="#JMM" class="headerlink" title="JMM"></a>JMM</h2><h3 id="线程之间的通信"><a href="#线程之间的通信" class="headerlink" title="线程之间的通信"></a>线程之间的通信</h3><p>java 线程通根据内存共享（隐形不可见）和消息传递（显示的）来实现<br>Java 的内存中堆是共享的。通过读写内存的公共状态进行隐式通信<br>在消息传递的并发模型中通过线程之间的消息传递进行通信。</p>
+<h3 id="Java-内存模型"><a href="#Java-内存模型" class="headerlink" title="Java 内存模型"></a>Java 内存模型</h3><p><img src="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/2023-12-31-20-22-10.png" class="lazyload placeholder" data-srcset="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/2023-12-31-20-22-10.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="asset_img"></p>
+<ul>
+<li>JMM 是 Java 内存模型一种规范，屏蔽了各种硬件和操作系统对内存访问的差异，从而在不同平台上达到一致性的内存访问效果，同时也规定了线程和内存之间的关系，线程之间的共享变量 存储在主内存中，每个线程有自己的本地私有内存，其中存储了 主内存中的共享变量的副本，以主内存作为变量共享以及更新的桥梁从而，JMM 控制了 Java 线程之间的通信<br><strong>内存的可见性的实现:smiley:</strong></li>
+<li>线程通过 JMM 的通信：<br>线程 A 向其他线程发送消息，需要借助共享内存去实现通信，即线程 A 先将自身本地内存中的变量刷到共享内存中去，其他线程在从共享内存中去读取线程 A 更新过的共享变量。<br>所以 JMM 控制本地内存和共享变量的交互从而实现了内存的<em>可见性</em>。</li>
+<li>指令的重排序<br>Java 源代码到执行过程实现： 1.编译器的重排序，2. 指令的并行重排序，3. 内存系统重排序，最终执行的指令排序。这些重排序可能会导致多线程程序出现内存可见性问题。<blockquote>
+<p>1 属于编译器重排序，2 和 3 属于处理器重排序<br>针对禁止编译器重排序依赖于 JMM 的编译器重排序<br>针对处理器重排序，依赖于在指令排序之前插入特定的类型的内存屏障</p>
+</blockquote>
+</li>
+</ul>
+<p>由于处理器对内存的读&#x2F;写操作的执行顺序，不一定与内存实际发生的读&#x2F;写操作顺序一致。处理器内部的写缓存对外不可见，且一般都允许进行重排序，从而造成了结果的不一致。<br>为了保证内存可见性，Java 编译器在<strong>生成指令序列的适当位置</strong>会插入内存屏障指令来禁止特定类型的处理器重排序。</p>
+<blockquote>
+<p>相当于在指令位置插入红绿灯，人为的控制指令的执行前后顺序。</p>
+</blockquote>
+<ul>
+<li>happens-before 原则<br>解释操作之间的内存可见性。如果一个操作执行的结果需要对另一个操作可见，那么这两个操作之间必须要存在 happens-before 关系，但并不意味着 A 操作要在 B 操作之前执行，仅仅是 A 操作的结果对 B 可见。<br>而 happens-before 的实现来自于 JMM 限制编译器和处理器的重排序优化。<blockquote>
+<p>MM 可以通过 happens-before 关系向程序员提供跨线程的内存可见性保证</p>
+</blockquote>
+</li>
+</ul>
+<hr>
+<h2 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h2><p>重排序遵循数据依赖性，不改变存在依赖的数据执行顺序<br><strong>对单线程的影响</strong></p>
+<ul>
+<li><p>as-if-serial，单线程下对存在控制依赖的操作重排序，不会改变执行结果</p>
+<blockquote>
+<p>控制依赖：如 if-else while 等判断</p>
+</blockquote>
+<p><strong>对多线程的影响</strong><br>在多线程程序中，对存在控制依赖的操作重排序，可能会改变程序的执行结果。通过 happens-before 完成对多线程内存可见性的保证。</p>
+</li>
+</ul>
+<hr>
+<h2 id="顺序一致性模型"><a href="#顺序一致性模型" class="headerlink" title="顺序一致性模型"></a>顺序一致性模型</h2><p>在顺序一致性模型中，系统中的所有处理器都能够看到相同的、全局一致的操作序列。</p>
+<ul>
+<li><p>什么是数据竞争<br>多个线程未同步且同一个变量进行读写操作</p>
+</li>
+<li><p>顺序一致性模型的特点</p>
+<ol>
+<li>一个线程中的所有操作必须按照程序的顺序来执行</li>
+<li>每个操作对所有线程来说都是原子执行的，并且操作的结果对所有线程都是立刻可见的<br>顺序一致性模型中，所有操作完全按程序的顺序串行执行</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><p><img src="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-36.png" class="lazyload placeholder" data-srcset="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-36.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="Alt text"></p>
+<h3 id="说说乐观锁和悲观锁"><a href="#说说乐观锁和悲观锁" class="headerlink" title="说说乐观锁和悲观锁"></a>说说乐观锁和悲观锁</h3><p>乐观锁与悲观锁是一种广义上的概念，体现了看待线程同步的不同角度<br>悲观锁：在对共享数据操作的过程中，认为每次对数据的使用过程中都会有其他线程试图修改数据，所以在每次的线程访问时都需要加锁，其他线程的操作只能等待。可以使用 synchronized 关键字或 Lock 类来实现悲观锁。适合于写操作较多的场景。（数据库的行锁和表锁）</p>
+<p>乐观锁：认为线程在访问共享资源时候，不会有其他线程试图修改数据，只在数据更新时候去检查是否有其他线程修改了数据。 由无锁编程实现，适合于读多写少的场景，使用版本号或者 cas 实现</p>
+<h4 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h4><p>对比交换，是一条 cpu 原子指令，解释为：CAS 操作输入一个操作前的旧值和想要更新的新值，在操作期间若旧值没有变化，则更新，否则不更新。也因为 CAS 是原子操作，并发时不需要使用锁，也因为是无锁机制，cas 是乐观锁的一种<br><em>CAS 三大问题</em></p>
+<ul>
+<li>CAS 的 ABA 问题<br>CAS 检查旧值无法判断旧值的变化次数，假如旧值 A 在检查前变为 B 又变为 A，CAS 无法知道旧值已经发生了变化。对于次，我们可以添加版本号，每次变量更新时都将版本号+1</li>
+<li>循环时间长开销大<br>自旋情况下回消耗 cpu 资源</li>
+<li>只能保证一个共享变量的原子操作<br>是对多个共享变量操作时，循环 CAS 就无法保证操作的原子性，这个时候就可以用锁</li>
+</ul>
+<h3 id="自旋锁-VS-适应性自旋锁"><a href="#自旋锁-VS-适应性自旋锁" class="headerlink" title="自旋锁 VS 适应性自旋锁"></a>自旋锁 VS 适应性自旋锁</h3><p>为什么需要自旋锁：锁在切换线程过程中，需要对线程进行阻塞或者唤醒，这中间需要 cpu 状态切换完成，资源消耗非常明显，而对于锁定时间很短的同步资源而言，利用系统级的阻塞和唤醒花费的时间要明显大于其锁定时间，因此在多处理器中我们让想要获取锁的线程稍微等待一下，不要进入阻塞状态而继续占有 cpu，让占有锁的线程释放锁之后去直接获取锁。<br>这其中的“等待一会”便是线程的自旋操作，但自旋也有时间限制，要求要小于系统对线程切换的时间，防止得不偿失，白白占用 cpu 资源，一般当自旋超过 10 次（默认）便需要考虑阻塞。</p>
+<p>适应性自旋锁：为了更灵活的使用自旋锁，减少在占有锁的进程中在自旋进程刚刚自旋完就释放锁的情况，自适应自旋锁将根据上一次锁自旋时间和对应锁占有者释放情况控制当前锁自旋次数。若上一次成功获得过锁，会增加自旋次数，反之认为获得锁的概论小而减少自旋时间。</p>
+<h3 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h3><p>可以实现公平锁（默认）和非公平锁，</p>
+<p>内部维护了表示锁占用状态的 state 变量，当同一个线程来获取锁时，state 会+1 并<br>继续获得锁，依次达到锁可重入效果，同时若获取失败进入到 CLH 队列中等待，ReentrantLock 释放锁的次数和重入锁的次数相同才能够释放。</p>
+<h3 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h3><p>用来构建锁和同步器的框架。AQS 是将每条请求共享资源的线程封装成一个 CLH 锁队列的一个结点(Node)来实现锁的分配。使用 volatile 修饰变量 state 表示同步状态，同时当资源被占用时，线程会使用 CLH 锁实现线程的阻塞和分配。</p>
+<hr>
+<h2 id="双重校验锁"><a href="#双重校验锁" class="headerlink" title="双重校验锁"></a>双重校验锁</h2><ul>
+<li><p>版本 1<br><img src="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-40.png" class="lazyload placeholder" data-srcset="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-40.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="Alt text"><br>B 线程执行到 2 时候，为完成初始化，此时 A 依旧会向下走，从而创建多个初始化对象</p>
+</li>
+<li><p>版本 2<br><img src="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-41.png" class="lazyload placeholder" data-srcset="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-41.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="Alt text"><br>在创建对象的方法上同步锁，会使得其他线程阻塞，而消耗资源</p>
+</li>
+<li><p>旧版的双重校验锁<br><img src="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-42.png" class="lazyload placeholder" data-srcset="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-42.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="Alt text"><br>当找不到对象引用时候，会进行加锁。当 A 线程走到 7，其中出现了对创建对象的重排序，使得先完成对象内存空间的分配，在进行初始化对象，而 B 线程访问 4 时知道对象不为 null，会去访问 instance 但此时 instance 还未创建完成，从而访问一个未初始化的对象。因此我们需要在创建对象的时候禁止 JMM 的重排序。</p>
+</li>
+<li><p>双重校验锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Singleton</span> &#123;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton uniqueSingleton;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">Singleton</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Singleton <span class="title function_">getInstance</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == uniqueSingleton) &#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (Singleton.class) &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="literal">null</span> == uniqueSingleton) &#123;</span><br><span class="line">                    uniqueSingleton = <span class="keyword">new</span> <span class="title class_">Singleton</span>();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> uniqueSingleton;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>静态内部类初始化<br><img src="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-44.png" class="lazyload placeholder" data-srcset="/articles/2023/09/05/Java%E5%B9%B6%E5%8F%91/image-44.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="Alt text"></p>
+</li>
+</ul>
+<hr>
+<h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><p>好处：</p>
+<ol>
+<li>降低资源消耗。通过重复是利用资源降低线程创建和销毁造成的消耗</li>
+<li>提高响应速度。任务到达线程池中不需要等待即可执行任务</li>
+<li>提高线程的可管理性。利用线程池对线程的分配和调优监控，做到合理的管理线程</li>
+</ol>
+<p>线程池工作流程：<br>当提交过来一个线程后<br>线程池判断当前运行的线程数小于核心线程数，则启动一个新的线程处理任务<br>若核心线程数达到最大值后，<strong>任务会被放入等待队列中进行排队</strong>。<br>若等待队列达到最大值，此时判断线程池中的非核心线程数+核心线程数是否达到最大线程数量 若没达到则创建线程来处理等待队列中的任务。否则任务进入到拒绝策略中。<br>线程从等待队列中取任务执行，执行完毕后在超过非核心线程的最长等待时间会，且当前线程数超过核心线程数会被关闭。</p>
+<h4 id="创建线程池的方式"><a href="#创建线程池的方式" class="headerlink" title="创建线程池的方式"></a>创建线程池的方式</h4><p>通过 Executors 创建<br>通过 ThreadPoolExecutor 手动创建线程池。</p>
+<ul>
+<li>线程池参数<br>核心线程数<br>最大线程数<br>非核心线程数空闲时间<br>时间单位<br>等待队列<br>线程工厂<br>拒绝策略</li>
+</ul>
+<ul>
+<li>等待队列<br>有界队列：<ul>
+<li>ArrayBlockingQueue 按照先进先出排序 数组实现</li>
+<li>LinkedBlockingQueue 链表实现 可设置容量 不设置容量为无限队列容量 Integer.MAX_VALUE</li>
+<li>DelayQueue 延迟队列 执行定时周期任务的队列<br>无界队列</li>
+<li>PriorityBlockingQueue 优先级队列</li>
+</ul>
+</li>
+<li>拒绝策略<br>AbortPolicy ：直接抛出异常，<strong>默认</strong>使用此策略<br>CallerRunsPolicy：用调用者所在的线程来执行任务，哪来回哪去<br>DiscardOldestPolicy：丢弃阻塞队列里最老的任务，也就是队列里靠前的任务，把最前面的挤掉<br>DiscardPolicy ：当前任务直接丢弃。</li>
+</ul>
+<h3 id="线程池重启后的任务"><a href="#线程池重启后的任务" class="headerlink" title="线程池重启后的任务"></a>线程池重启后的任务</h3><p>此时应用重启了，那么这些任务将会丢失</p>
+<h3 id="核心线程数可以大于最大线程数吗"><a href="#核心线程数可以大于最大线程数吗" class="headerlink" title="核心线程数可以大于最大线程数吗"></a>核心线程数可以大于最大线程数吗</h3><p>不可以</p>
+<h3 id="拒绝策略"><a href="#拒绝策略" class="headerlink" title="拒绝策略"></a>拒绝策略</h3><h3 id="为什么阿里规范不能用-Executors-创建"><a href="#为什么阿里规范不能用-Executors-创建" class="headerlink" title="为什么阿里规范不能用 Executors 创建"></a>为什么阿里规范不能用 Executors 创建</h3><p><code>线程池不允许使用 Executors 去创建，而是通过 ThreadPoolExecutor 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险</code></p>
+<p>使用 Executors 创建出来的常见线程池有</p>
+<ul>
+<li>newFixedThreadPool 固定线程数的线程池，其阻塞队列是无界队列会产生 OOM</li>
+<li>newCachedThreadPool 没有限制线程的数量会消耗大量的资源</li>
+<li>Executors.newSingleThreadExecutor()方法创建的线程池只有一个工作线程，在线程异常终止后会创建新的线程替代，使得消耗大量的系统资源</li>
+<li>同时 Executors 类隐藏了线程池的一些细节，例如线程池的最大容量、队列类型等，这可能导致在某些情况下无法满足特定的需求，例如需要限制线程池的大小或者使用特定类型的队列。</li>
+</ul>
+<h4 id="线程池-submit-和-execute-方法的区别"><a href="#线程池-submit-和-execute-方法的区别" class="headerlink" title="线程池 submit 和 execute 方法的区别"></a>线程池 submit 和 execute 方法的区别</h4><p>submit 会返回线程执行的异步结果 future 对象 根据 future 对象可以判断是否执行成功<br>execute 用于提交不需要返回值的任务</p>
+<h4 id="线程池的关闭"><a href="#线程池的关闭" class="headerlink" title="线程池的关闭"></a>线程池的关闭</h4><p>shutdown() 将线程池状态置为 shutdown,并不会立即停止，任务不能继续提交，直到线程池内部处理完成才结束<br>shutdownNow()能立即停止线程池，正在跑的和正在等待的任务都停下了</p>
+<h3 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h3><p>并发环境下 hashMap 会产生环形链造成死循环。而 hashTable 的同步方法会阻塞其他线程的访问进去等待状态，效率底下。ConcurrentHashMap 是并发效率高的 hashMap 能够<br>证线程安全的同时又能保证高效的操作。<br>ConcurrentHashMap 使用了分段锁技术来提高 Hash table 中的访问问题，在写操作时通过使用分段锁技术对操作段加锁而不影响其他段的操作。<br>1.8 之前是使用分段锁技术，即由 Segment 和 HashEntry 实现，每个 segment 包含了 HashEntry 数组，当线程进行并发写时，只锁定具体的 segment，不涉及其他 segment。默认的 Segment 长度是 16。<br>put：根据插入的 key 计算 hash 确定对应的 segment，若 segment 不为空则使用 ReentrantLock 进行加锁，若锁获取失败则自旋，当拿到锁后遍历 entry 数组并若 key 相同则替换，不同则插入。<br>1.8 之后使用 Node 数组+链表+红黑树的方式实现并发安全。<br>put:计算 hash 确定对应的 node 若为空则 CAS+自旋进行初始化并写入数据，否则使用 synchronized 写入数据并判断链表长度大于 8 则树化，否插入到链表末尾。</p>
+<h3 id="ConcurrentHashMap-为什么-key-和-value-不能为-null"><a href="#ConcurrentHashMap-为什么-key-和-value-不能为-null" class="headerlink" title="ConcurrentHashMap 为什么 key 和 value 不能为 null"></a>ConcurrentHashMap 为什么 key 和 value 不能为 null</h3><p>因为 null 值由二义性，在并发条件下无法确定 null 到底是一个键或值不存在，还是真正的 null 值，不能够很好的保证并发情况下的安全。</p>
+<blockquote>
+<p>HashMap key 和 value 可以 null 因为 HashMap 本身不是线程安全的不需要设计到并发安全问题</p>
+</blockquote>
+<h3 id="key-为什么不能为-null"><a href="#key-为什么不能为-null" class="headerlink" title="key 为什么不能为 null"></a>key 为什么不能为 null</h3><p>Java 的集合框架通常禁止键或值为 null，以确保编程规范的一致性。null 无法散列不能确定 hash 位置</p>
+<h3 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h3><p>本地线程变量，访问改变量的线程都会有一个本地拷贝，从而线程操作该变量的时候实际上是操作自己内存中拷贝，从而实现线程隔离的效果。实际上是个 map 集合<br>ThreadLocal 主要用来保存用户信息的上下文，这样多线程用户访问的各个请求会根据 ThreadLocal 的数据确定具体的用户</p>
+<ul>
+<li>内存泄露的问题<br>如果 ThreadLocal（ThreadLocalMap 的 Key）被垃圾回收器回收了，但是 ThreadLocalMap 生命周期和 Thread 是一样的，它这时候如果不被回收，就会出现这种情况：ThreadLocalMap 的 key 没了，value 还在，这就会造成了内存泄漏问题。<br>我们需要在 ThreadLocal 用完后对其进行回收 remove</li>
+</ul>
+<hr>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://pdai.tech/md/java/thread/java-thread-x-lock-all.html">https://pdai.tech/md/java/thread/java-thread-x-lock-all.html</a></p>
+
+      </div>
+      <div class="post-tags-categories">
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>作者:  </strong>Enki</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>文章链接:  </strong>
+    <a href="/articles/2023/09/05/Java并发/" target="_blank" title="Java并发">http://example.com/articles/2023/09/05/Java并发/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明:   </strong>
+      本网站所有文章除特别声明外,均采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      许可协议。转载请注明出处!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+    </div>
+    <a href="/articles/2023/09/05/%E5%85%AB%E8%82%A1-Java%E9%9B%86%E5%90%88/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> 上一篇:
+        <div class="title-text">Java集合</div>
+      </div>
+      
+      <!-- <div class="content">
+        框架集合可以更灵活有效的存储对象，相比于数组大小可变支持泛型，元素操作方便
+ArrayList初始容量 10 1.5 倍
+      </div> -->
+    </a>
+  </div>
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="https://pic3.zhimg.com/80/v2-5f7cb7e900b9dcf5354c3d4d2c5cc3c2_1440w.webp" class="lazyload placeholder" data-srcset="https://pic3.zhimg.com/80/v2-5f7cb7e900b9dcf5354c3d4d2c5cc3c2_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" src="" alt="">
+    </div>
+    <a href="/articles/2023/08/30/%E5%85%AB%E8%82%A1-%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-nav-link">
+      <div class="title">
+        下一篇: <i class="fas fa-angle-right"></i>
+        <div class="title-text">八股--设计模式</div>
+      </div>
+      <!-- <div class="content">
+        Spring 中涉及的设计模式总结工厂设计模式Spring 使用工厂模式可以通过 BeanFactory 或 Appli
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="https://pica.zhimg.com/80/v2-61f99f8dcf899f54cad2a1aa28b21e44_1440w.webp" class="lazyload placeholder" data-srcset="https://pica.zhimg.com/80/v2-61f99f8dcf899f54cad2a1aa28b21e44_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="https://pic2.zhimg.com/80/v2-29e78b52051ce542adf6d786d61fbd19_1440w.webp" class="lazyload placeholder" data-srcset="https://pic2.zhimg.com/80/v2-29e78b52051ce542adf6d786d61fbd19_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
+</script>
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script defer src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+
+<!-- 还需要在后面这个地址里设置script, comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <aside id='l_side'>
+  
+    
+      <section class="widget side_blogger">
+  <div class='content'>
+    
+      
+        <a class='avatar flat-box rectangle' href='/about/'>
+          <img src='https://pic2.zhimg.com/80/v2-42b72d5ebee4b8d8aa70d9687effe87b_1440w.webp'/>
+        </a>
+      
+    
+    
+      <div class='text'>
+        
+          <h2>Enki</h2>
+        
+        
+        
+          <p><span id="jinrishici-sentence">Enki的小书房</span></p>
+          <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+        
+      </div>
+    
+    
+      <div class="social-wrapper">
+        
+          
+            <a href="/atom.xml"
+              class="social fas fa-rss flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+          
+            <a href="mailto:me@xxx.com"
+              class="social fas fa-envelope flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+          
+            <a href="https://github.com/yuang01/hexo-theme-bamboo"
+              class="social fab fa-github flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+          
+            <a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=你的qq号码"
+              class="social fab fa-qq flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+      </div>
+    
+  </div>
+</section>
+
+    
+  
+  
+  
+
+  <div class="layout_sticky">    
+    
+      
+<section class="widget side_toc">
+  
+  <header>
+    
+      <i style="color: " class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name' style="color: ">本文目录</span>
+    
+  </header>
+
+
+  <div class='content'>
+    <div class="toc-main">
+      <div class="toc-content">
+        <!-- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80"><span class="toc-text">线程基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="toc-text">线程状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-text">线程常用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%92%8C%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">线程和进程的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-text">启动线程的方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Volatile-%E6%98%AF%E8%BD%BB%E9%87%8F%E7%BA%A7%E5%90%8C%E6%AD%A5%E6%9C%BA%E5%88%B6"><span class="toc-text">Volatile 是轻量级同步机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Volatile-%E7%9A%84%E5%86%85%E5%AD%98%E8%A7%84%E5%88%99%E5%92%8C%E8%A1%8C%E4%B8%BA"><span class="toc-text">Volatile 的内存规则和行为</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#synchronized"><span class="toc-text">synchronized</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#synchronized-%E9%94%81%E5%8D%87%E7%BA%A7%E8%BF%87%E7%A8%8B"><span class="toc-text">synchronized 锁升级过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#synchronized-%E5%92%8C-volatile-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="toc-text">synchronized 和 volatile 有什么区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JMM"><span class="toc-text">JMM</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E4%B9%8B%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1"><span class="toc-text">线程之间的通信</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-text">Java 内存模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="toc-text">重排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%BA%E5%BA%8F%E4%B8%80%E8%87%B4%E6%80%A7%E6%A8%A1%E5%9E%8B"><span class="toc-text">顺序一致性模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%81"><span class="toc-text">锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%B4%E8%AF%B4%E4%B9%90%E8%A7%82%E9%94%81%E5%92%8C%E6%82%B2%E8%A7%82%E9%94%81"><span class="toc-text">说说乐观锁和悲观锁</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CAS"><span class="toc-text">CAS</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E6%97%8B%E9%94%81-VS-%E9%80%82%E5%BA%94%E6%80%A7%E8%87%AA%E6%97%8B%E9%94%81"><span class="toc-text">自旋锁 VS 适应性自旋锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ReentrantLock"><span class="toc-text">ReentrantLock</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AQS"><span class="toc-text">AQS</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8C%E9%87%8D%E6%A0%A1%E9%AA%8C%E9%94%81"><span class="toc-text">双重校验锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="toc-text">线程池</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-text">创建线程池的方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E9%87%8D%E5%90%AF%E5%90%8E%E7%9A%84%E4%BB%BB%E5%8A%A1"><span class="toc-text">线程池重启后的任务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E7%BA%BF%E7%A8%8B%E6%95%B0%E5%8F%AF%E4%BB%A5%E5%A4%A7%E4%BA%8E%E6%9C%80%E5%A4%A7%E7%BA%BF%E7%A8%8B%E6%95%B0%E5%90%97"><span class="toc-text">核心线程数可以大于最大线程数吗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%92%E7%BB%9D%E7%AD%96%E7%95%A5"><span class="toc-text">拒绝策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%98%BF%E9%87%8C%E8%A7%84%E8%8C%83%E4%B8%8D%E8%83%BD%E7%94%A8-Executors-%E5%88%9B%E5%BB%BA"><span class="toc-text">为什么阿里规范不能用 Executors 创建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0-submit-%E5%92%8C-execute-%E6%96%B9%E6%B3%95%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">线程池 submit 和 execute 方法的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E5%85%B3%E9%97%AD"><span class="toc-text">线程池的关闭</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ConcurrentHashMap"><span class="toc-text">ConcurrentHashMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ConcurrentHashMap-%E4%B8%BA%E4%BB%80%E4%B9%88-key-%E5%92%8C-value-%E4%B8%8D%E8%83%BD%E4%B8%BA-null"><span class="toc-text">ConcurrentHashMap 为什么 key 和 value 不能为 null</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#key-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E4%B8%BA-null"><span class="toc-text">key 为什么不能为 null</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ThreadLocal"><span class="toc-text">ThreadLocal</span></a></li></ol></li></ol> -->
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- 手机端目录按钮 -->
+<div id="toc-mobile-btn">
+  <i class="fas fa-list-ul" aria-hidden="true"></i>
+</div>
+
+      
+  <section class="widget side_recent_post">
+    
+  <header>
+    
+      <a style="color: " href='/tags/'><i class="fas fa-book fa-fw" aria-hidden="true"></i><span class='name'>最新文章</span></a>
+    
+  </header>
+
+
+    <div class='content'>
+      
+      <!-- hash算法 -->
+      
+      <div class="aside-list">
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/articles/2024/07/30/SpringMVC%E7%AC%94%E8%AE%B0/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">07-30</span>
+                
+              </div>
+              <a class="post-title" href="/articles/2024/07/30/SpringMVC%E7%AC%94%E8%AE%B0/">暂无标题</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/articles/2024/07/30/Redis%E5%AE%9E%E6%88%98%E7%AF%87/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">07-30</span>
+                
+              </div>
+              <a class="post-title" href="/articles/2024/07/30/Redis%E5%AE%9E%E6%88%98%E7%AF%87/">暂无标题</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/articles/2024/07/30/Redis/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">07-30</span>
+                
+              </div>
+              <a class="post-title" href="/articles/2024/07/30/Redis/">暂无标题</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/articles/2024/07/30/Netty04-%E4%BC%98%E5%8C%96%E4%B8%8E%E6%BA%90%E7%A0%81/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">07-30</span>
+                
+              </div>
+              <a class="post-title" href="/articles/2024/07/30/Netty04-%E4%BC%98%E5%8C%96%E4%B8%8E%E6%BA%90%E7%A0%81/">暂无标题</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/articles/2024/07/30/Netty03-%E8%BF%9B%E9%98%B6/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">07-30</span>
+                
+              </div>
+              <a class="post-title" href="/articles/2024/07/30/Netty03-%E8%BF%9B%E9%98%B6/">暂无标题</a>
+            </div>
+          </div>
+        
+      </div>
+    </div>
+  </section>
+
+    
+  </div>
+</aside>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script defer src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+  <script>
+  // https://github.com/theme-next/hexo-theme-next/blob/master/layout/_third-party/math/mathjax.swig
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = 'https://unpkg.com/mathjax@3.0/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    // 文章章节标题不能为 “MathJax” ，否则会报错。
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
+
+      </main>
+    </div>
+
+    <!-- 页脚 -->
+    
+  
+  
+    <!-- 底部鱼儿跳动效果，依赖于jquery-->
+<div id="j-fish-skip" style=" position: relative;height: 153px;width: auto;"></div>
+<script defer>
+  var RENDERER = {
+    POINT_INTERVAL: 5,
+    FISH_COUNT: 3,
+    MAX_INTERVAL_COUNT: 50,
+    INIT_HEIGHT_RATE: .5,
+    THRESHOLD: 50,
+    FISH_COLOR: '',
+    init: function () {
+      this.setFishColor(); this.setParameters(), this.reconstructMethods(), this.setup(), this.bindEvent(), this.render()
+    },
+    setFishColor: function () {
+      let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+      if (isDark) {
+        this.FISH_COLOR = '#222'; // 暗黑色，有时间把这整成一个变量
+      } else {
+        this.FISH_COLOR = '' || 'rgba(66, 185, 133, 0.8)';
+      }
+    },
+    setParameters: function () {
+      this.$window = $(window), this.$container = $("#j-fish-skip"), this.$canvas = $("<canvas />"), this.context = this.$canvas.appendTo(this.$container).get(0).getContext("2d"), this.points = [], this.fishes = [], this.watchIds = []
+    },
+    createSurfacePoints: function () {
+      var t = Math.round(this.width / this.POINT_INTERVAL);
+      this.pointInterval = this.width / (t - 1), this.points.push(new SURFACE_POINT(this, 0));
+      for (var i = 1; i < t; i++) {
+        var e = new SURFACE_POINT(this, i * this.pointInterval),
+          h = this.points[i - 1];
+        e.setPreviousPoint(h), h.setNextPoint(e), this.points.push(e)
+      }
+    },
+    reconstructMethods: function () {
+      this.watchWindowSize = this.watchWindowSize.bind(this), this.jdugeToStopResize = this.jdugeToStopResize.bind(this), this.startEpicenter = this.startEpicenter.bind(this), this.moveEpicenter = this.moveEpicenter.bind(this), this.reverseVertical = this.reverseVertical.bind(this), this.render = this.render.bind(this)
+    },
+    setup: function () {
+      this.points.length = 0, this.fishes.length = 0, this.watchIds.length = 0, this.intervalCount = this.MAX_INTERVAL_COUNT, this.width = this.$container.width(), this.height = this.$container.height(), this.fishCount = this.FISH_COUNT * this.width / 500 * this.height / 500, this.$canvas.attr({
+        width: this.width,
+        height: this.height
+      }), this.reverse = !1, this.fishes.push(new FISH(this)), this.createSurfacePoints()
+    },
+    watchWindowSize: function () {
+      this.clearTimer(), this.tmpWidth = this.$window.width(), this.tmpHeight = this.$window.height(), this.watchIds.push(setTimeout(this.jdugeToStopResize, this.WATCH_INTERVAL))
+    },
+    clearTimer: function () {
+      for (; this.watchIds.length > 0;) clearTimeout(this.watchIds.pop())
+    },
+    jdugeToStopResize: function () {
+      var t = this.$window.width(),
+        i = this.$window.height(),
+        e = t == this.tmpWidth && i == this.tmpHeight;
+      this.tmpWidth = t, this.tmpHeight = i, e && this.setup()
+    },
+    bindEvent: function () {
+      this.$window.on("resize", this.watchWindowSize), this.$container.on("mouseenter", this.startEpicenter), this.$container.on("mousemove", this.moveEpicenter)
+    },
+    getAxis: function (t) {
+      var i = this.$container.offset();
+      return {
+        x: t.clientX - i.left + this.$window.scrollLeft(),
+        y: t.clientY - i.top + this.$window.scrollTop()
+      }
+    },
+    startEpicenter: function (t) {
+      this.axis = this.getAxis(t)
+    },
+    moveEpicenter: function (t) {
+      var i = this.getAxis(t);
+      this.axis || (this.axis = i), this.generateEpicenter(i.x, i.y, i.y - this.axis.y), this.axis = i
+    },
+    generateEpicenter: function (t, i, e) {
+      if (!(i < this.height / 2 - this.THRESHOLD || i > this.height / 2 + this.THRESHOLD)) {
+        var h = Math.round(t / this.pointInterval);
+        h < 0 || h >= this.points.length || this.points[h].interfere(i, e)
+      }
+    },
+    reverseVertical: function () {
+      this.reverse = !this.reverse;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].reverseVertical()
+    },
+    controlStatus: function () {
+      for (var t = 0, i = this.points.length; t < i; t++) this.points[t].updateSelf();
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].updateNeighbors();
+      this.fishes.length < this.fishCount && 0 == --this.intervalCount && (this.intervalCount = this.MAX_INTERVAL_COUNT, this.fishes.push(new FISH(this)))
+    },
+    render: function () {
+      requestAnimationFrame(this.render), this.controlStatus(), this.context.clearRect(0, 0, this.width, this.height), this.context.fillStyle = this.FISH_COLOR;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].render(this.context);
+      this.context.save(), this.context.globalCompositeOperation = "xor", this.context.beginPath(), this.context.moveTo(0, this.reverse ? 0 : this.height);
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].render(this.context);
+      this.context.lineTo(this.width, this.reverse ? 0 : this.height), this.context.closePath(), this.context.fill(), this.context.restore()
+    }
+  },
+  SURFACE_POINT = function (t, i) {
+    this.renderer = t, this.x = i, this.init()
+  };
+  SURFACE_POINT.prototype = {
+    SPRING_CONSTANT: .03,
+    SPRING_FRICTION: .9,
+    WAVE_SPREAD: .3,
+    ACCELARATION_RATE: .01,
+    init: function () {
+      this.initHeight = this.renderer.height * this.renderer.INIT_HEIGHT_RATE, this.height = this.initHeight, this.fy = 0, this.force = {
+        previous: 0,
+        next: 0
+      }
+    },
+    setPreviousPoint: function (t) {
+      this.previous = t
+    },
+    setNextPoint: function (t) {
+      this.next = t
+    },
+    interfere: function (t, i) {
+      this.fy = this.renderer.height * this.ACCELARATION_RATE * (this.renderer.height - this.height - t >= 0 ? -1 : 1) * Math.abs(i)
+    },
+    updateSelf: function () {
+      this.fy += this.SPRING_CONSTANT * (this.initHeight - this.height), this.fy *= this.SPRING_FRICTION, this.height += this.fy
+    },
+    updateNeighbors: function () {
+      this.previous && (this.force.previous = this.WAVE_SPREAD * (this.height - this.previous.height)), this.next && (this.force.next = this.WAVE_SPREAD * (this.height - this.next.height))
+    },
+    render: function (t) {
+      this.previous && (this.previous.height += this.force.previous, this.previous.fy += this.force.previous), this.next && (this.next.height += this.force.next, this.next.fy += this.force.next), t.lineTo(this.x, this.renderer.height - this.height)
+    }
+  };
+  var FISH = function (t) {
+    this.renderer = t, this.init()
+  };
+  FISH.prototype = {
+    GRAVITY: .4,
+    init: function () {
+      this.direction = Math.random() < .5, this.x = this.direction ? this.renderer.width + this.renderer.THRESHOLD : -this.renderer.THRESHOLD, this.previousY = this.y, this.vx = this.getRandomValue(4, 10) * (this.direction ? -1 : 1), this.renderer.reverse ? (this.y = this.getRandomValue(1 * this.renderer.height / 10, 4 * this.renderer.height / 10), this.vy = this.getRandomValue(2, 5), this.ay = this.getRandomValue(.05, .2)) : (this.y = this.getRandomValue(6 * this.renderer.height / 10, 9 * this.renderer.height / 10), this.vy = this.getRandomValue(-5, -2), this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1, this.theta = 0, this.phi = 0
+    },
+    getRandomValue: function (t, i) {
+      return t + (i - t) * Math.random()
+    },
+    reverseVertical: function () {
+      this.isOut = !this.isOut, this.ay *= -1
+    },
+    controlStatus: function (t) {
+      this.previousY = this.y, this.x += this.vx, this.y += this.vy, this.vy += this.ay, this.renderer.reverse ? this.y > this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy -= this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(.05, .2)), this.isOut = !1) : this.y < this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy += this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1), this.isOut || (this.theta += Math.PI / 20, this.theta %= 2 * Math.PI, this.phi += Math.PI / 30, this.phi %= 2 * Math.PI), this.renderer.generateEpicenter(this.x + (this.direction ? -1 : 1) * this.renderer.THRESHOLD, this.y, this.y - this.previousY), (this.vx > 0 && this.x > this.renderer.width + this.renderer.THRESHOLD || this.vx < 0 && this.x < -this.renderer.THRESHOLD) && this.init()
+    },
+    render: function (t) {
+      t.save(), t.translate(this.x, this.y), t.rotate(Math.PI + Math.atan2(this.vy, this.vx)), t.scale(1, this.direction ? 1 : -1), t.beginPath(), t.moveTo(-30, 0), t.bezierCurveTo(-20, 15, 15, 10, 40, 0), t.bezierCurveTo(15, -10, -20, -15, -30, 0), t.fill(), t.save(), t.translate(40, 0), t.scale(.9 + .2 * Math.sin(this.theta), 1), t.beginPath(), t.moveTo(0, 0), t.quadraticCurveTo(5, 10, 20, 8), t.quadraticCurveTo(12, 5, 10, 0), t.quadraticCurveTo(12, -5, 20, -8), t.quadraticCurveTo(5, -10, 0, 0), t.fill(), t.restore(), t.save(), t.translate(-3, 0), t.rotate((Math.PI / 3 + Math.PI / 10 * Math.sin(this.phi)) * (this.renderer.reverse ? -1 : 1)), t.beginPath(), this.renderer.reverse ? (t.moveTo(5, 0), t.bezierCurveTo(10, 10, 10, 30, 0, 40), t.bezierCurveTo(-12, 25, -8, 10, 0, 0)) : (t.moveTo(-5, 0), t.bezierCurveTo(-10, -10, -10, -30, 0, -40), t.bezierCurveTo(12, -25, 8, -10, 0, 0)), t.closePath(), t.fill(), t.restore(), t.restore(), this.controlStatus(t)
+    }
+  }, $(function () {
+    RENDERER.init()
+    $('.dark').click(function () {
+      setTimeout(() => {
+        RENDERER.setFishColor();
+        RENDERER.context.fill();
+      });
+    })
+  });
+</script>
+  
+  <div class="footer bg-color">
+    <div class="footer-main">
+      
+        
+          <div class="link">
+            
+          </div>
+        
+      
+        
+          <div class="footer-copyright">
+            <p>Copyright © 2019 - 2020 <a target="_blank" rel="noopener" href="https://github.com/yuang01">yuang01</a> | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/yuang01/theme">Bamboo</a> </p>
+
+          </div>
+        
+      
+        
+          <div class="footer-custom">
+            
+          </div>
+        
+      
+    </div>
+  </div>
+
+
+
+    <!-- 渲染暗黑按钮 -->
+    
+      <div class="dark" onclick="toggleDarkMode()">
+  <div class="dark-content">
+    <i class="fas" id="darkIcon" aria-hidden="true"></i>
+  </div>
+</div>
+
+<script defer>
+  $(function() {
+    // 初始化暗黑模式状态
+    let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+    updateDarkModeIcon(isDark);
+  });
+
+  function toggleDarkMode() {
+    const isDark = $(document.body).hasClass('darkModel');
+    $(document.body).toggleClass('darkModel');
+    localStorage.setItem('dark', !isDark);
+    updateDarkModeIcon(!isDark);
+  }
+
+  function updateDarkModeIcon(isDark) {
+    const iconElement = document.getElementById('darkIcon');
+    if (isDark) {
+      iconElement.classList.remove('fa-moon');
+      iconElement.classList.add('fa-lightbulb');
+    } else {
+      iconElement.classList.remove('fa-lightbulb');
+      iconElement.classList.add('fa-moon');
+    }
+  }
+</script>
+
+    
+    <!-- 渲染回到顶部按钮 -->
+    
+      <div class="goTop top-btn-color" pointer>
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</div>
+<script defer src="/js/goTop.js"></script>
+
+    
+    <!-- 渲染左下角音乐播放器 -->
+    
+
+    <!-- 图片放大 -->
+    
+      <script src="https://unpkg.com/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    
+
+    <!-- 百度解析 -->
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script async>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <!-- 背景彩带 -->
+    
+      <script async type="text/javascript" size="100" alpha='0.4' zIndex="-1" src="/js/ribbon.min.js"></script>
+    
+
+    <script src="/js/utils/index.js"></script>
+    <script src="/js/app.js"></script>
+    
+    <!-- 文章目录所需js -->
+<!-- <link href="/js/tocbot/tocbot.css" rel="stylesheet">
+<script src="/js/tocbot/tocbot.min.js"></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.min.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.css">
+
+<script>
+  var headerEl = 'h2, h3, h4',  //headers 
+    content = '.post-detail',//文章容器
+    idArr = {};  //标题数组以确定是否增加索引id
+  //add #id
+  var option = {
+    // Where to render the table of contents.
+    tocSelector: '.toc',
+    // Where to grab the headings to build the table of contents.
+    contentSelector: content,
+    // Which headings to grab inside of the contentSelector element.
+    headingSelector: headerEl,
+    scrollSmooth: true,
+    scrollSmoothOffset: -70,
+    // headingsOffset: -($(window).height() * 0.4 - 45),
+    headingsOffset: -($(window).height() * 0.4 - 70),
+    // positionFixedSelector: '.toc-main',
+    // positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    activeLinkClass: 'is-active-link',
+    orderedList: true,
+    collapseDepth: 20,
+    // onClick: function (e) {},
+  }
+  if ($('.toc').length > 0) {
+
+    $(content).children(headerEl).each(function () {
+      //去除空格以及多余标点
+      var headerId = $(this).text().replace(/[\s|\~|`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\_|\+|\=|\||\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\：|\，|\。]/g, '');
+
+      headerId = headerId.toLowerCase();
+      if (idArr[headerId]) {
+        //id已经存在
+        $(this).attr('id', headerId + '-' + idArr[headerId]);
+        idArr[headerId]++;
+      }
+      else {
+        //id未存在
+        idArr[headerId] = 1;
+        $(this).attr('id', headerId);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      tocbot.init(option);
+      mobileTocClick();
+    });
+
+  }
+
+  window.tocScrollFn = function () {
+    return bamboo.throttle(function () {
+      findHeadPosition();
+    }, 100)()
+  }
+  window.addEventListener('scroll', tocScrollFn);
+
+  const findHeadPosition = function (top) {
+    if ($('.toc-list').length <= 0) {
+      return false;
+    }
+    setTimeout(() => {  // or DOMContentLoaded 
+      autoScrollToc();
+    }, 0);
+  }
+
+  const autoScrollToc = function () {
+    const $activeItem = document.querySelector('.is-active-link');
+    const $cardToc = document.querySelector('.toc-content');
+    const activePosition = $activeItem.getBoundingClientRect().top
+    const sidebarScrollTop = $cardToc.scrollTop
+    if (activePosition > (document.documentElement.clientHeight - 100)) {
+      $cardToc.scrollTop = sidebarScrollTop + 150
+    }
+    if (activePosition < 150) {
+      $cardToc.scrollTop = sidebarScrollTop - 150
+    }
+  }
+
+  document.addEventListener('pjax:send', function () {
+    if ($('.toc').length) {
+      tocbot.destroy();
+    }
+  });
+
+  document.addEventListener('pjax:complete', function () {
+    if ($('.toc').length) {
+      tocbot.init(option);
+      mobileTocClick();
+    }
+  });
+  
+  // 手机端toc按钮点击出现目录
+  const mobileTocClick = function () {
+    const $cardTocLayout = document.getElementsByClassName('side_toc')[0];
+    const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0];
+    let right = '45px';
+    if (window.innerWidth >= 551 && window.innerWidth <= 992) {
+      right = '100px'
+    }
+    const mobileToc = {
+      open: () => {
+        $cardTocLayout.style.cssText = 'animation: toc-open .3s; opacity: 1; right: ' + right
+      },
+
+      close: () => {
+        $cardTocLayout.style.animation = 'toc-close .2s'
+        setTimeout(() => {
+          $cardTocLayout.style.cssText = "opacity:''; animation: ''; right: ''"
+        }, 100)
+      }
+    }
+    document.getElementById('toc-mobile-btn').addEventListener('click', () => {
+      if (window.getComputedStyle($cardTocLayout).getPropertyValue('opacity') === '0') mobileToc.open()
+      else mobileToc.close()
+    })
+
+    $cardToc.addEventListener('click', (e) => {
+      if (window.innerWidth < 992) { // 小于992px的时候
+        mobileToc.close()
+      }
+    })
+  }
+</script>
+
+<style>
+  /* .is-position-fixed {
+    position: sticky !important;
+    top: 74px;
+  }
+
+  .toc-main ul {
+    counter-reset: show-list;
+  }
+
+  .toc-main ul li::before {
+    content: counter(item)".";
+    display: block;
+    position: absolute;
+    left: 12px;
+    top: 0;
+  } */
+</style>
+ 
+
+<!-- 设置导航背景 -->
+<script>
+  let setHeaderClass = () => {
+    const nav = $('#navHeader');
+    const navTop = nav.outerHeight();
+    const winTop = $(window).scrollTop();
+    if(winTop > navTop) {
+      nav.addClass('header-bg-color');
+    }
+    else {
+      nav.removeClass('header-bg-color');
+    }
+  };
+
+  let scrollCollect = () => {
+    return bamboo.throttle(function (e) {
+      setHeaderClass();
+    }, 200)()
+  }
+
+  let initHeaderBg = () => {
+    setHeaderClass();
+  }
+
+  setHeaderClass();
+  window.addEventListener('scroll', scrollCollect);
+
+  document.addEventListener('pjax:send', function () {
+    window.removeEventListener('scroll', scrollCollect)
+  })
+  document.addEventListener('pjax:complete', function () {
+    window.addEventListener('scroll', scrollCollect);
+    setHeaderClass();
+  })
+</script> 
+
+<!-- 渲染issues标签里的内容 -->
+<script>
+  function loadIssuesJS() {
+    if ($(".post-detail").find(".issues-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/issues/index.js');
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof IssuesAPI == "undefined") {
+      loadIssuesJS();
+    }
+  })
+</script>
+
+<!-- 渲染远程json加载的图片标签(getPhotoOnline)里的内容 -->
+<script>
+  function loadPhotoOnlineJS() {
+    if ($(".post-detail").find(".getJsonPhoto-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/getPhotoOnline/index.js');
+  };
+  $(function () {
+    loadPhotoOnlineJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof getPhotoJson == "undefined") {
+      loadPhotoOnlineJS();
+    }
+  })
+</script>
+
+<!-- 渲染远程json加载的talk标签(getTalkOnline)里的内容 -->
+<script>
+  function loadTalkOnlineJS() {
+    if ($(".post-detail").find(".getJsonTalk-api").length == 0) {
+      return;
+    } 
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/waterfall.js/1.0.2/waterfall.min.js'); // 瀑布流插件，https://raphamorim.io/waterfall.js/
+    loadScript('/js/getTalkOnline/index.js');
+  };
+  $(function () {
+    loadTalkOnlineJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof getTalkJson == "undefined") {
+      loadTalkOnlineJS();
+    }
+  })
+</script>
+
+<!-- 渲染远程json加载的site-card标签(getSiteOnline)里的内容 -->
+<script>
+  function loadSiteOnlineJS() {
+    if ($(".post-detail").find(".getJsonSite-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/getSiteOnline/index.js');
+  };
+  $(function () {
+    loadSiteOnlineJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof getSiteJson == "undefined") {
+      loadSiteOnlineJS();
+    }
+  })
+</script>
+
+<!-- 输入框打字特效 -->
+<!-- 输入框打字特效 -->
+
+  <script src="/js/activate-power-mode.js"></script>
+  <script>
+    POWERMODE.colorful = true;  // 打开随机颜色特效
+    POWERMODE.shake = false;    // 关闭输入框抖动
+    document.body.addEventListener('input', POWERMODE);//监听打字事件
+  </script>
+
+
+<!-- markdown代码一键复制功能 -->
+
+  <link rel="stylesheet" href="https://unpkg.com/v-plugs-ayu/lib/ayu.css">
+  <script src="https://unpkg.com/v-plugs-ayu/lib/ayu.umd.min.js"></script>
+  <script src="/js/clipboard/clipboard.min.js"></script>
+  <div id="appCopy">
+  </div>
+  <script data-pjax>
+    var vm = new Vue({
+      el: '#appCopy',
+      data: {
+      },
+      computed: {
+      },
+      mounted() {
+        const that = this;
+        var copy = '复制';
+        /* code */
+        var initCopyCode = function () {
+          var copyHtml = '';
+          copyHtml += '<button class="btn-copy" data-clipboard-snippet="" style="position:absolute;top:0;right:0;z-index:1;">';
+          copyHtml += '<i class="fas fa-copy"></i><span>' + copy + '</span>';
+          copyHtml += '</button>';
+          $(".post-detail pre").not('.gutter pre').wrap("<div class='codeBox' style='position:relative;width:100%;'></div>")
+          $(".post-detail pre").not('.gutter pre').before(copyHtml);
+          new ClipboardJS('.btn-copy', {
+            target: function (trigger) {
+              return trigger.nextElementSibling;
+            }
+          });
+        }
+        initCopyCode();
+        $('.btn-copy').unbind('click').bind('click', function () {
+          doSomething();
+        })
+        $(document).unbind('keypress').bind('keypress', function (e) {
+          if (e.ctrlKey && e.keyCode == 67) {
+            doSomething();
+          }
+        })
+
+        function doSomething() {
+          that.$notify({
+            title: "成功",
+            content: "代码已复制，请遵守相关授权协议。",
+            type: 'success'
+          })
+        }
+      },
+      methods: {
+      },
+      created() { }
+    })
+  </script>
+  
+
+<!-- 图片懒加载 -->
+<script defer src="https://unpkg.com/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+<!-- 卡片滚动动画 -->
+   
+
+<!-- 评论所需js -->
+
+  
+        <script type="text/javascript">
+  var utteranceComment = {};
+
+  function check_utterance() {
+    let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+    if (isDark) {
+      utteranceComment.Theme = 'github-dark';
+    } else {
+      utteranceComment.Theme = 'github-light';
+    }
+
+    return document.getElementById("gitment-container");
+  }
+  comment_el = '#gitment-container';
+  load_utterance = function () {
+    if ($(comment_el).length) {
+      // 匿名函数，防止污染全局变量
+      const HEAD = check_utterance();
+
+      var utterances = document.createElement('script');
+      utterances.type = 'text/javascript';
+      utterances.async = true;
+      utterances.setAttribute('issue-term', 'pathname')
+      utterances.setAttribute('theme', utteranceComment.Theme)
+      utterances.setAttribute('repo', '')
+      utterances.crossorigin = 'anonymous';
+      utterances.src = 'https://utteranc.es/client.js';
+      // content 是要插入评论的地方
+      document.getElementById('gitment-container').appendChild(utterances);
+
+    }
+  }
+
+  function dark_utterance() {
+    const HEAD = check_utterance();
+    if (!HEAD) return;
+    const message = {
+      type: 'set-theme',
+      theme: utteranceComment.Theme
+    };
+    const utteranceIframe = document.querySelector('iframe');
+    utteranceIframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+
+  $(document).ready(load_utterance);
+  document.addEventListener('pjax:complete', function () {
+    load_utterance();
+  });
+
+  $('.dark').click(function () {
+    setTimeout(() => {
+      dark_utterance();
+    });
+  })
+
+</script>
+
+<style>
+  .utterances {
+    max-width: inherit !important;
+  }
+</style>
+      
+
+
+<!-- 鼠标点击特效 -->
+<!-- 爱心点击 -->
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" data-pjax></script>
+
+
+<!-- 轮播图标签 -->
+<script>
+  var bambooSwiperTag = {};
+  function load_swiper() {
+    if (!document.querySelectorAll(".post-swiper-container")[0]) return;
+    loadCSS("https://unpkg.com/swiper@6/swiper-bundle.min.css")
+    loadScript("https://unpkg.com/swiper@6/swiper-bundle.min.js").then(() => {
+      pjax_swiper();
+    });
+  }
+
+  load_swiper();
+
+  function pjax_swiper() {
+    bambooSwiperTag.swiper = new Swiper('.post-swiper-container', {
+      slidesPerView: 'auto',
+      spaceBetween: 8,
+      centeredSlides: true,
+      loop: true,
+      autoplay: true ? {
+        delay: 3000,
+        stopOnLastSlide: false,
+        disableOnInteraction: false,
+      } : false,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      on:{
+        init: function(){
+          swiperAnimateCache(this); //隐藏动画元素 
+          swiperAnimate(this); //初始化完成开始动画
+        }, 
+        slideChangeTransitionEnd: function(){ 
+          swiperAnimate(this); //每个slide切换结束时也运行当前slide动画
+          //this.slides.eq(this.activeIndex).find('.ani').removeClass('ani'); 动画只展现一次，去除ani类名
+        } 
+      }
+    });
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    if (!document.querySelectorAll(".post-swiper-container")[0]) return;
+    if (typeof bambooSwiperTag.swiper === "undefined") {
+      load_swiper();
+    } else {
+      pjax_swiper();
+    }
+  });
+</script>
+    <!-- pjax -->
+    
+
+<!-- pjax -->
+
+
+  <script src="/js/pjax@0.2.8/index.js"></script>
+  
+    <div class="pjax-animate">
+  
+    <div class="loading-circle"><div id="loader-circle"></div></div>
+    <script>
+      window.ShowLoading = function() {
+        $(".loading-circle").css("display", "block");
+      };
+      window.HideLoading = function() {
+        $(".loading-circle").css("display", "none");
+      }
+    </script>
+  
+	<script>
+    document.addEventListener('pjax:complete', function () {
+      window.HideLoading();
+    })
+    document.addEventListener('pjax:send', function () {
+      window.ShowLoading();
+    })
+    document.addEventListener('pjax:error', function () {
+      window.HideLoading();
+    })
+	</script>
+</div>
+
+  
+
+  <script>
+    var pjax = new Pjax({
+      elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([no-pjax])',   // 拦截正常带链接的 a 标签
+      selectors: ["#pjax-container","title"],                                   // 根据实际需要确认重载区域
+      cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+      timeout: 5000
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+
+    })
+    
+    document.addEventListener('pjax:complete', function () {
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      window.location.href = e.triggerElement.href;
+    })
+    
+    // 刷新不从顶部开始
+    document.addEventListener("DOMContentLoaded", function () {
+      history.scrollRestoration = 'auto';
+    })
+  </script>
+
+
+
+  </body>
+</html>

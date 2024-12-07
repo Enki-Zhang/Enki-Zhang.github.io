@@ -1,0 +1,2134 @@
+<!DOCTYPE html>
+<html>
+  <!-- meta/link... -->
+  
+
+
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+  <title>项目 | Enki的小书房</title>
+
+  <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
+  <link href="https://unpkg.com/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="/js/swiper/swiper@5.4.1.min.css" rel="stylesheet">
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/animate.min.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+    <link href="https://unpkg.com/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" rel="stylesheet">
+  
+  
+    
+<link rel="stylesheet" href="/js/shareJs/share.min.css">
+
+  
+  <style>
+        @media (max-width: 992px) {
+            #waifu {
+                display: none;
+            }
+        }
+    </style>
+    <script defer src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+    
+    
+    <!-- 依赖于jquery和vue -->
+    <script src="https://unpkg.com/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/vue@2.6.11/dist/vue.min.js"></script>
+
+    <!-- import link -->
+    
+        
+            
+        
+            
+        
+    
+    <!-- import script -->
+    
+        
+            
+        
+            
+        
+    
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+  
+  <!-- 预加载动画 -->
+  
+  
+  <div class="preloader_6" id="loader">
+  <div class="loader"></div>
+</div>
+  <script>
+    var endLoading = function () {
+      document.body.style.overflow = 'auto';
+      document.getElementById('loader').classList.add("loaded");
+    }
+    window.addEventListener('DOMContentLoaded', endLoading);
+  </script>
+
+
+  <body>
+    <!-- 判断是否为暗黑风格 -->
+    <!-- 判断是否为黑夜模式 -->
+<script defer>
+  let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+
+  if (isDark) {
+    $(document.body).addClass('darkModel');
+  }
+</script>
+
+    <!-- 需要在上面加载的js -->
+    <script>
+  function loadScript(src, cb) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var HEAD = document.getElementsByTagName("head")[0] || document.documentElement;
+        var script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        if (cb) {
+          if (JSON.stringify(cb)) {
+            for (let p in cb) {
+              if (p == "onload") {
+                script[p] = () => {
+                  cb[p]()
+                  resolve()
+                }
+              } else {
+                script[p] = cb[p]
+                script.onload = resolve
+              }
+            }
+          } else {
+            script.onload = () => {
+              cb()
+              resolve()
+            };
+          }
+        } else {
+          script.onload = resolve
+        }
+        script.setAttribute("src", src);
+        HEAD.appendChild(script);
+      });
+    });
+  }
+
+  //https://github.com/filamentgroup/loadCSS
+  var loadCSS = function (src) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        var link = document.createElement('link');
+        link.rel = "stylesheet";
+        link.href = src;
+        link.onload = resolve;
+        document.getElementsByTagName("head")[0].appendChild(link);
+      });
+    });
+  };
+
+</script> 
+
+<!-- 轮播图所需要的js -->
+<script src="/js/swiper/swiper.min.js"></script>
+<script src="/js/swiper/vue-awesome-swiper.js"></script>
+<script src="/js/swiper/swiper.animate1.0.3.min.js"></script>
+
+<script type="text/javascript">
+  Vue.use(window.VueAwesomeSwiper)
+</script>
+
+
+  <script src="/js/vue-typed-js/index.js"></script>
+
+
+<!-- 首页的公告滚动插件的js需要重新加载 -->
+<script src="/js/vue-seamless-scroll/index.js"></script>
+
+<!-- 打字机效果js -->
+<script src="https://unpkg.com/typed.js@2.0.11"></script>
+
+
+    <div id="safearea">
+      <main class="main" id="pjax-container">
+        <!-- 头部导航 -->
+        
+<header class="header  " 
+  id="navHeader"
+  style="position: fixed;
+  left: 0; top: 0; z-index: 10;width: 100%;"
+>
+  <div class="header-content">
+    <div class="bars">
+      <div id="appDrawer" class="sidebar-image">
+  <div class="drawer-box-icon">
+    <i class="fas fa-bars" aria-hidden="true" @click="showDialogDrawer"></i>
+  </div>
+  
+  <transition name="fade">
+    <div class="drawer-box_mask" v-cloak style="display: none;" v-show="visible" @click.self="cancelDialogDrawer">
+    </div>
+  </transition>
+  <div class="drawer-box" :class="{'active': visible}">
+    <div class="drawer-box-head bg-color">
+      <img class="drawer-box-head_logo lazyload placeholder" src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="logo">
+      <h3 class="drawer-box-head_title">Enki的小书房</h3>
+      <h5 class="drawer-box-head_desc">多看 多学 多做 多想</h5>
+    </div>
+    
+    <div class="drawer-box-content">
+      <ul class="drawer-box-content_menu">
+        
+        
+          <li class="drawer-box-content_item">
+            <a target="_blank" rel="noopener" href="https://github.com/Enki-Zhang">
+              <i class="fas fa-github" aria-hidden="true"></i>
+              <span>Github</span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDrawer',
+    data: {
+      visible: false,
+      top: 0,
+      openArr: [],
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      isOpen(index) {
+        if (this.openArr.includes(index)) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      openOrCloseMenu(curIndex) {
+        const index = this.openArr.indexOf(curIndex);
+        if (index !== -1) {
+          this.openArr.splice(index, 1);
+        } else {
+          this.openArr.push(curIndex);
+        }
+      },
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'width: 100%; height: 100%;overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      }
+    },
+    created() {}
+  })
+</script>
+
+    </div>
+    <div class="blog-title" id="author-avatar">
+      
+        <div class="avatar">
+          <img src="/medias/logo.png" class="lazyload placeholder" data-srcset="/medias/logo.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="logo">
+        </div>
+      
+      <a href="/" class="logo">Enki的小书房</a>
+    </div>
+    <nav class="navbar">
+      <ul class="menu">
+        
+      </ul>
+      
+      
+        <div id="appSearch">
+  <div class="search"  @click="showDialog()"><i class="fas fa-search" aria-hidden="true"></i></div>
+  <transition name="fade">
+    <div class="message-box_wrapper" style="display: none;" v-cloak v-show="dialogVisible" @click.self="cancelDialogVisible()">
+      <div class="message-box animated bounceInDown">
+        <h2>
+          <span>
+            <i class="fas fa-search" aria-hidden="true"></i>
+            <span class="title">本地搜索</span>
+          </span>
+          <i class="fas fa-times close" pointer style="float:right;" aria-hidden="true" @click.self="cancelDialogVisible()"></i>
+        </h2>
+        <form class="site-search-form">
+          <input type="text"
+            placeholder="请输入关键字"
+            id="local-search-input" 
+            @click="getSearchFile()"
+            class="st-search-input"
+            v-model="searchInput"
+          />
+        </form>
+        <div class="result-wrapper">
+          <div id="local-search-result" class="local-search-result-cls"></div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+<script src="/js/local_search.js"></script>
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appSearch',
+    data: {
+      dialogVisible: false,
+      searchInput: '',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+      window.addEventListener('pjax:complete', () => {
+        this.cancelDialogVisible();
+      })
+    },
+    methods: {
+      showDialog() {
+        this.dialogVisible = true;
+        // 防止页面滚动，只能让弹框滚动
+        this.top = $(document).scrollTop()
+        body.style.cssText = 'overflow: hidden;';
+      },
+      getSearchFile() {
+        if (!this.searchInput) {
+          getSearchFile("/search.xml");
+        }
+      },
+      cancelDialogVisible() {
+        this.dialogVisible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+    },
+    created() {}
+  })
+</script>
+<!-- 解决刷新页面闪烁问题，可以在元素上添加display: none, 或者用vue.extend方法，详情：https://blog.csdn.net/qq_31393401/article/details/81017912 -->
+<!-- 下面是搜索基本写法 -->
+<!-- <script type="text/javascript" id="local.search.active">
+  var inputArea = document.querySelector("#local-search-input");
+  inputArea.onclick   = function(){ getSearchFile(); this.onclick = null }
+  inputArea.onkeydown = function(){ if(event.keyCode == 13) return false }
+</script> -->
+
+      
+
+    </nav>
+  </div>
+  
+    <a target="_blank" rel="noopener" href="https://github.com/Enki-Zhang" class="github-corner color-primary" aria-label="View source on GitHub"><svg width="60" height="60" viewBox="0 0 250 250" style="fill:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+  
+  
+</header>
+        <!-- 内容区域 -->
+        
+<!-- prismjs 代码高亮 -->
+
+
+
+
+<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
+
+
+  <!-- 文章详情页顶部图片和标题 -->
+
+
+
+
+<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
+  background-position: center center;position: relative;background-image:url('https://pic2.zhimg.com/80/v2-29e78b52051ce542adf6d786d61fbd19_1440w.webp')">
+  <div class="post-detail-header-mask"></div>
+  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+  
+  <div class="post-detail-header_info-box">
+    <div class="title-box">
+      <span class="title">
+        项目
+      </span>
+    </div>
+    
+    
+      
+        <span class="post-detail-header_date">
+          <i class="fas fa-calendar"></i> 发表于：2023-08-21 |
+        </span>
+      
+
+      
+
+      
+    
+  </div>
+  
+  
+    <script defer src="/js/bubble/bubble.js"></script>
+  
+</div>
+
+
+
+
+
+<div class="post-detail-content post-row" 
+  style="padding-top: 0px;">
+  <div class="main-content">
+    <article class="post post-detail">
+      <div class="post-content">
+        <h3 id="如何准备项目-写在前面"><a href="#如何准备项目-写在前面" class="headerlink" title="如何准备项目 写在前面"></a>如何准备项目 写在前面</h3><p>首先要明白公司要什么样的人：（招聘的目的）<br>扎实的基础知识。优秀的编程能力（知识变现的能力）。好的学习能力</p>
+<p>做题：先写 todo 搭框架<br>再写步骤，然后写细节</p>
+<p>学习基础，在项目中怎么用，原理，应用和类似应用的区别<br><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PsJb32dS-1IbMLeN-7j_BQ">https://mp.weixin.qq.com/s/PsJb32dS-1IbMLeN-7j_BQ</a></p>
+<p><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/image-38.png" class="lazyload placeholder" data-srcset="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/image-38.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="Alt text"></p>
+<h3 id="自我介绍"><a href="#自我介绍" class="headerlink" title="自我介绍"></a>自我介绍</h3><p>面试官您好，我是 2024 届计算机专业的硕士研究生，本科就读于 安徽工程大学的软件工程专业，硕士就读于 汕头大学的计算机技术 专业。在本科阶段和研究生阶段我获得过多次奖学金并通过了六级考试，同时发表了一篇 sci 论文，在专业知识方面我深入了解过 Java 集合并发编程，MySQL、Redis 等相关的内容，今年的六月到九月我在亚信科技做过 Java 开发实习生的工作（实习经历），所在部门负责中国移动 APP 拉端搜索相关业务的开发，之前还做过一个关于学生购票方面的项目。在简历投递之前我了解到咱们公司是行业领先的企业管理软件及电子商务应用解决方案供应商，拥有强大的创新能力和丰富的业务经验，对此我非常希望能够得到在这里学习和成长的机会，并继续从事 Java 开发方向的工作。那么这里的我的自我介绍完毕。</p>
+<h3 id="讲一下项目的整体，从设计思路、背景、框架、流程、核心技术、完成的工作、哪方面技术做的比较困难或者比较好这些方面来整体讲一下"><a href="#讲一下项目的整体，从设计思路、背景、框架、流程、核心技术、完成的工作、哪方面技术做的比较困难或者比较好这些方面来整体讲一下" class="headerlink" title="讲一下项目的整体，从设计思路、背景、框架、流程、核心技术、完成的工作、哪方面技术做的比较困难或者比较好这些方面来整体讲一下"></a>讲一下项目的整体，从设计思路、背景、框架、流程、核心技术、完成的工作、哪方面技术做的比较困难或者比较好这些方面来整体讲一下</h3><p><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-10-16-22-54-27.png" class="lazyload placeholder" data-srcset="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-10-16-22-54-27.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="asset_img"><br>架构图<br><a target="_blank" rel="noopener" href="https://tianweichang.blog.csdn.net/article/details/120170388?spm=1001.2101.3001.6650.14&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-14-120170388-blog-128361733.235%5Ev38%5Epc_relevant_anti_vip_base&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-14-120170388-blog-128361733.235%5Ev38%5Epc_relevant_anti_vip_base&utm_relevant_index=15">https://tianweichang.blog.csdn.net/article/details/120170388?spm=1001.2101.3001.6650.14&amp;utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-14-120170388-blog-128361733.235%5Ev38%5Epc_relevant_anti_vip_base&amp;depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-14-120170388-blog-128361733.235%5Ev38%5Epc_relevant_anti_vip_base&amp;utm_relevant_index=15</a></p>
+<h2 id="项目描述"><a href="#项目描述" class="headerlink" title="项目描述"></a>项目描述</h2><p>这是一个模拟了高并发场景的抢票系统，它具备登陆和抢购的功能，并在经过几个版本的迭代之后成为支持高并发的抢票系统。为了解决用户抢购场景下的高并发问题。引入了 redis 作为缓存中间件，主要作用是 完成 sessionID 的共享，缓存预热、预减库存等等。针对抢购进行了接口限流 、redis 预减库存，消息队列异步消费，请求路径动态创建等优化。通过 Jmeter 压力测试，系统的 QPS 从 150&#x2F;s 提升到 2000&#x2F;s。</p>
+<h3 id="Redis-预减库存"><a href="#Redis-预减库存" class="headerlink" title="Redis 预减库存"></a>Redis 预减库存</h3><p>主要思路减少对数据库的访问，不需要直接访问数据库，当高并发请求到来的时候，大量的读取数据有可能会导致数据库的崩溃</p>
+<ol>
+<li>系统初始化的时候，将商品库存加载到 Redis 缓存中保存</li>
+<li>收到请求的时候,先在 Redis 中拿到该商品的库存值，进行库存预减，如果减完之后库存不足，直接返回逻辑 Exception 就不需要访问数据库再去减库存了，如果库存值正确，进行下一步<br>将请求入队，立即给前端返回一个值，表示正在排队中，然后进行下单逻辑，后端队列进行下单，前端轮询后端发来的请求，如果秒杀成功，返回秒杀，成功，不成功就返回失败。</li>
+</ol>
+<h3 id="数据一致性"><a href="#数据一致性" class="headerlink" title="数据一致性"></a>数据一致性</h3><ul>
+<li><p>分为更新缓存</p>
+<ul>
+<li>更新数据库后再更新缓存<br>线程 A 将数据库中 1-&gt;2 线程 B 将 2-&gt;3 当线程 A 更新数据库后，此时线程 B 继续尝试更新，但 B 线程更新速度较快使得 A 线程未结束时缓存已经更新为 3,此时 A 线程尝试更新缓存错误的将 3 变更为 2；造成缓存数据不一致</li>
+<li>先更新缓存再更新数据库<br>线程 A 先将缓存改变为 2，此时线程 B 会再线程 A 走到数据库之前进行更新，将缓存改为 3，数据库改为 3，此时线程 A 来到数据库中修改数据为 2,即最终缓存为 2，数据库为 3，数据不一致；</li>
+</ul>
+</li>
+<li><p>删除缓存</p>
+<ul>
+<li>先删除缓存再更新数据库，再查询的时候去更新缓存<br>线程 A 先删除缓存，后去到数据库中还未更新，此时线程 B 已经拿到了旧的数据并更新到了缓存中去，当 A 线程更新数据库完毕后,缓存和数据库已经不一致；</li>
+<li>先删除缓存在更新数据库，在删除缓存<br>称之为延迟双删，在读线程写入到缓存中之后，在删除一次缓存，但有时候第二次删除可能在读线程写入缓存的前面，致使二次删除无效，因此，二次删除需要延迟进行并确保在读请求写入缓存之后进行。</li>
+<li>先更新数据库，再删除缓存，在查询的时候去更新缓存<br>此时在更新数据和查询数据的间隙中可能会出现短暂缓存不一致问题。</li>
+</ul>
+</li>
+</ul>
+<p>应该：写操作执行时先操作数据库在删除缓存 ，当查询时缓存为空需要从数据库中读取并更新缓存<br>先写缓存再写数据库 后写的数据会产生脏数据</p>
+<p><strong>修改内容时间：</strong> 2023 年 12 月 30 日</p>
+<hr>
+<p>下单保证原子性<br>开启 Spring 事务功能</p>
+<ol start="2">
+<li>用户的登陆时登陆失败问题</li>
+</ol>
+<h3 id="Spring-事务失效"><a href="#Spring-事务失效" class="headerlink" title="Spring 事务失效"></a>Spring 事务失效</h3><p>方法不是 public @Transactional 只能用于 public 的方法<br>异常被手动捕获，未抛出不能回滚<br>注解所在的类是否被 spring 管理<br>同一个类中调用其他方法 在类上加上 Transactional 注入自己</p>
+<h3 id="接口限流"><a href="#接口限流" class="headerlink" title="接口限流"></a>接口限流</h3><p>防止同一用户对单个接口进行重复调用，这里我们就需要使用到@AccessLimit 进行流量控制并搭配 springboot 的拦截器使用。</p>
+<h2 id="秒杀系统"><a href="#秒杀系统" class="headerlink" title="秒杀系统"></a>秒杀系统</h2><h3 id="用户登录验证"><a href="#用户登录验证" class="headerlink" title="用户登录验证"></a>用户登录验证</h3><p>JWT 是一种基于 token 的认证流程实现，主要结合 SpringSecurity 生成 token</p>
+<ul>
+<li>客户端向服务器端发送用户名和密码</li>
+<li>服务器端验证通过后，在当前会话（session）中保存相关数据，比如说登录时间、登录 IP 等。</li>
+<li>服务器端向客户端返回一个 session_id，客户端将其保存在 Cookie 中。</li>
+<li>客户端再向服务器端发起请求时，将 session_id 传回给服务器端。</li>
+<li>服务器端拿到 session_id 后，对用户的身份进行鉴定</li>
+</ul>
+<blockquote>
+<p>使用 JWT 和 Session 的区别<br>JWT 需要每次请求的时候验证一次，并且只要 JWT 没有过期，哪怕服务器端重启了，认证仍然有效。<br>Session 在没有过期的情况下是不需要重新对用户信息进行验证的，当服务器端重启后，用户需要重新登录获取新的 Session</p>
+</blockquote>
+<h3 id="登录存活-Http-无状态-用户进行登录后如何完成支付"><a href="#登录存活-Http-无状态-用户进行登录后如何完成支付" class="headerlink" title="登录存活 Http 无状态 用户进行登录后如何完成支付"></a>登录存活 Http 无状态 用户进行登录后如何完成支付</h3><blockquote>
+<p>? 例如登录-&gt;添加购物车-&gt;下单-&gt;结算-&gt;支付，这系列操作都要知道用户的身份才行。但服务器不知道这些请求是有关联的，每次都要问一遍身份信息。</p>
+</blockquote>
+<ul>
+<li>cookie 中</li>
+<li>基于 token 的登录校验：在用户登录时将 token 写到 redis 中，并将 token 返回，前端通过 axios 拦截器将 token 放入到请求头中，当前用户每次请求都会携带请求头信息，服务器在根据请求头对 redis 进行验证。也可以将 token 放在 cookie 中不过 cookie 中并不安全 并且 cookie 中存在大小限制一般是 4kb</li>
+</ul>
+<h2 id="缓存问题"><a href="#缓存问题" class="headerlink" title="缓存问题"></a>缓存问题</h2><h3 id="缓存穿透的解决方案有哪些？"><a href="#缓存穿透的解决方案有哪些？" class="headerlink" title="缓存穿透的解决方案有哪些？"></a>缓存穿透的解决方案有哪些？</h3><p>缓存穿透是指 请求的数据在 redis 和 数据库中都不存在，大量的请求会直接打到数据库中<br>解决的方法：</p>
+<ul>
+<li>缓存 null 值</li>
+<li>布隆过滤</li>
+<li>增强 id 的复杂度，避免被猜测 id 规律</li>
+<li>做好数据的基础格式校验</li>
+<li>加强用户权限校验</li>
+<li>做好热点参数的限流</li>
+</ul>
+<h3 id="缓存击穿问题"><a href="#缓存击穿问题" class="headerlink" title="缓存击穿问题"></a>缓存击穿问题</h3><p>热点 key 失效问题，高并发访问的 key 失效，大量的访问请求达到了数据库<br>方法：</p>
+<ol>
+<li>缓存预热：在项目中先将商品信息在项目启动时便加载到 redis 中；<br>实现方式：<br>秒杀 controller 中实现 InitializingBean 方法会在 Bean 初始化后将商品对应的库存缓存到 redis 中。Springboot 的 Bean 的默认作用域是单例的，因此会在项目启动时加载初始化 Bean</li>
+<li>互斥锁 使用 Redission 互斥锁，每个线程的请求均需要拿到锁，这样保存线程一次只有一个线程来请求数据，不会出现大量请求失效的问题。但是使用互斥锁的项目性能不能保证，会降低系统的吞吐量。</li>
+<li>逻辑过期</li>
+<li>热点 key 永不过期 实际上热点数据是商品的信息，当商品过期也就意味着缓存中的数据没有意义，因此设置热点 key 过期时间和秒杀过期时间一致</li>
+<li>在缓存上实现接口限流<br>在秒杀接口等重要接口上做好限流策略，同时使用缓存预减库存即使判断数据库存，快速失败。</li>
+</ol>
+<h3 id="缓存雪崩问题及解决思路"><a href="#缓存雪崩问题及解决思路" class="headerlink" title="缓存雪崩问题及解决思路"></a>缓存雪崩问题及解决思路</h3><p>缓存雪崩是指在同一时段大量的缓存 key 同时失效或者 Redis 服务宕机，导致大量请求到达数据库，带来巨大压力。</p>
+<p>解决方案：</p>
+<ul>
+<li>每次秒杀请求的路径进行随机初始化，方式用户恶意刷单</li>
+<li>给不同的 Key 的 TTL 添加随机值，</li>
+<li>利用 Redis 集群提高服务的可用性</li>
+<li>给缓存业务添加降级限流策略</li>
+<li>给业务添加多级缓存</li>
+</ul>
+<h3 id="如果-redis-预减库存成功，后边下单失败，怎么保证-redis-和-mysql-的一致性呢"><a href="#如果-redis-预减库存成功，后边下单失败，怎么保证-redis-和-mysql-的一致性呢" class="headerlink" title="如果 redis 预减库存成功，后边下单失败，怎么保证 redis 和 mysql 的一致性呢"></a>如果 redis 预减库存成功，后边下单失败，怎么保证 redis 和 mysql 的一致性呢</h3><p>mq 事务性消息，保证同时成功失败</p>
+<h3 id="登录使用-JWT"><a href="#登录使用-JWT" class="headerlink" title="登录使用 JWT"></a>登录使用 JWT</h3><p><strong>JWT</strong>:<br>以 json 为载体将信息进行安全封装并传递</p>
+<ul>
+<li>作用：JWT 最常见的场景就是授权认证，一旦用户登录，后续每个请求都将包含 JWT,系统在每次处理用户请求的之前，都要先进行 JWT 安全校验，通过之后再进行处理。<br>组成：<code>&quot;token&quot;:  &quot;Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNjkyNjkwNTY2LCJleHAiOjE2OTI2OTIzNjZ9.jL468EdvkxQHuCo3V2ydkTWeR8dbfoP1rAvIVlHXQPUCIqP-dQ2HSqPRPv9PXszhRE4ku7B3A7vxiI4llZyJCw&quot;,</code>由.分割为三部分当用户下次在进行登陆是携带 token 并后台解析进行判断。<br>生成的 token 直接存放在前端<br>优势：自然是服务端不需要维护一个登陆表了，节省空间，特别是用户多的情况<br>无状态<br>缺点：<br>因为是无状态的不能够随时注销，这样点 session 可以<br><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-21-18-08-42.png" class="lazyload placeholder" data-srcset="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-21-18-08-42.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="asset_img"><br>登陆：<br>自定义登陆接口 认证通过生成 JWT 将用户信息存入 Redis<br>自定义 user DetailService 中实现数据库<br>校验：<br>定义 JWT 认证过滤器<br>获取 token<br>将 token 存入到客户端中的，需要客户端保存好就行，无论什么保持方式，甚至你让用户写纸条揣兜里都可以！</li>
+</ul>
+<h3 id="项目中的-AOP-思想的体现"><a href="#项目中的-AOP-思想的体现" class="headerlink" title="项目中的 AOP 思想的体现"></a>项目中的 AOP 思想的体现</h3><p>使用过滤器和拦截器以及 log 日志记录</p>
+<h3 id="RabbitMq-异步下单"><a href="#RabbitMq-异步下单" class="headerlink" title="RabbitMq 异步下单"></a>RabbitMq 异步下单</h3><p>执行流程：</p>
+<ol>
+<li>系统初始化将商品数量加载到 Redis 中</li>
+<li>后端收到秒杀请求后，先在 redis 中预减库存，提前判断如果库存数量不足则返回秒杀失败，从而直接截断了后续请求。</li>
+<li>否则判断这个秒杀订单是否形成，判断是否已经秒杀到了，避免一个账户秒杀多个商品</li>
+<li>秒杀单形成并且库存充足无重复秒杀，将秒杀请求封装后放入消息队列，同时返回前端秒杀标识 ，前端接收到数据后，显示排队中，并根据商品 id 轮询请求服务器（200ms 轮询一次。</li>
+<li>后端 RabbitMQ 监听秒杀 MIAOSHA_QUEUE 的这个名字的通道，如果有消息过来就获取到传入的信息，执行真正的秒杀之前，要判断数据库的库存，判断是否重复秒杀，然后执行秒杀事务（秒杀事务是一个原子操作：库存减 1，下订单、写入订单详情）</li>
+</ol>
+<p><strong>秒杀中出现的问题</strong><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-18-16-51-58.png" class="lazyload placeholder" data-srcset="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-18-16-51-58.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="asset_img"></p>
+<p>执行秒杀事务的时候，先生成订单详情，然后生成秒杀订单，为了进一步确保秒杀过程中一个用户只能秒杀一件商品，可以给秒杀订单表 miaosha_order 添加一个唯一索引，如果再次插入相同的 user_id 与 goods_id，那么将不会被允许，从而在事务中插入失败而回滚：</p>
+<h3 id="秒杀库存如何防止超卖"><a href="#秒杀库存如何防止超卖" class="headerlink" title="秒杀库存如何防止超卖"></a>秒杀库存如何防止超卖</h3><p>扣减库存时候，要保证数据库中的字段值不能为负数，</p>
+<ol>
+<li>通常在扣减库存的场景下使用行级锁，通过数据库引擎本身对记录加锁的控制，保证数据库的更新的安全性，并且通过 where 语句的条件，保证库存不会被减到 0 以下。意思是在 sql 语句对数据库进行操作时候进行控制。</li>
+<li>通过对库存字段设置为无符号型 那么出现负数则报错。</li>
+</ol>
+<h4 id="秒杀的-ABA-问题"><a href="#秒杀的-ABA-问题" class="headerlink" title="秒杀的 ABA 问题"></a>秒杀的 ABA 问题</h4><h3 id="秒杀系统的设计"><a href="#秒杀系统的设计" class="headerlink" title="秒杀系统的设计"></a>秒杀系统的设计</h3><p>1.秒杀页面静态，将活动页面缓存到 redis 中，用户浏览商品等常规操作不会请求到服务端。只有到了秒杀时间点且用户点了秒杀按钮才允许访问服务端，这样处理能过滤掉绝大多数的无效请求</p>
+<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><p>将参与秒杀的商品缓存到 redis 中，并设置内存标记每个商品是否有库存，当用户点击秒杀按钮是前端发送请求，后端根据每位用户生成唯一的秒杀路径，并存入到 redis 中，前端将路径进行拼接为新的 url，发送给后端并进行路径校验，进行秒杀，先查询内存标记有库存在查询 redis 进行预减，当 redis 库存小于 0 后，返回失败，否则将请求放入到消息队列中进行排队，从队列中取出订单并更新数据库，创建订单并完成秒杀。</p>
+<h3 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h3><ul>
+<li>接口限流<br>拦截器拦截请求，用户每点击一次请求按钮，都会在用户 id 的缓存请求 key 中记录访问次数，查看是否有接口限流的注解，得到限流信息，并提取 request 的请求地址和用户 id 和访问路径组合为 key 作为用户的唯一标示符，value 为访问次数，通过查询访问次数是否合法来决定是否对请求进行放行，</li>
+</ul>
+<h3 id="分布式-session-实现"><a href="#分布式-session-实现" class="headerlink" title="分布式 session 实现"></a>分布式 session 实现</h3><p>用户登录成功之后，给这个用户生成一个 sessionId(用 token 来标识这个用户)，并写到 cookie 中传递给客户端；然后客户端在随后的访问中，都在 cookie 中传递这个 token，服务端拿到这个 token 之后，就根据这个 token 来取得对应的 session 信息（token 利用 uuid 生成）</p>
+<h3 id="登录密码的加盐加密"><a href="#登录密码的加盐加密" class="headerlink" title="登录密码的加盐加密"></a>登录密码的加盐加密</h3><p>防止查表法和彩虹表攻击 在密码中混入随机字符（加盐）生成随机盐值混入密码中，使得每次相同的密码得到不同的哈希值，盐值和密码应该放在服务器中存放在用户对应的数据库中</p>
+<h3 id="接口设计"><a href="#接口设计" class="headerlink" title="接口设计"></a>接口设计</h3><ul>
+<li>参数校验<br>GET 请求参数会在 URL 中 使用 requestParam&#x2F;PathVariable 传递参数<br>POST、PUT 向服务器提交数据 参数在请求体中使用 requestBody 传递参数</li>
+</ul>
+<h3 id="流量削峰"><a href="#流量削峰" class="headerlink" title="流量削峰"></a>流量削峰</h3><ul>
+<li>消息队列</li>
+<li>用户答题 填写验证码 延缓请求，起到对请求流量进行削峰的作用，从而让系统能够更好地支持瞬时的流量高峰</li>
+<li></li>
+</ul>
+<h3 id="系统缓存"><a href="#系统缓存" class="headerlink" title="系统缓存"></a>系统缓存</h3><ul>
+<li>页面缓存+URL 缓存+对象缓存<br>页面缓存 减少服务器压力 直接访问 redis</li>
+<li>用户信息缓存 更新用户需要保证数据一致性问题 先更新数据库在修改 redis</li>
+</ul>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>缓存一致性问题<br>先更新数据库在更新缓存<br>修改 token 关联的对象以及 id 关联的对象，先更新数据库后删除缓存，不能直接删除 token，删除之后就不能登录了，再将 token 以及对应的用户信息一起再写回缓存里面去</p>
+<ul>
+<li><p>缓存穿透 对这些不存在的数据缓存一个空数据，对这类请求进行过滤</p>
+</li>
+<li><p>缓存击穿 使用互斥锁，只有拿到这把互斥锁的线程可以进数据库请求数据，其他线程等待，待该线程查到数据存入缓存后其他线程直接使用缓存中的数据</p>
+</li>
+<li><p>缓存雪崩 为了防止缓存在同一时间大面积过期导致的缓存雪崩，可以通过观察用户行为，合理设置缓存过期时间来实现；为了防止缓存服务器宕机出现的缓存雪崩，可以使用分布式缓存 及时更新用户缓存</p>
+</li>
+<li><p>消息队列 用户的请求，服务器接收后，首先写入消息队列，秒杀业务<br>假如消息队列长度超过最大数量，则直接抛弃用户请求或跳转到错误页面。</p>
+</li>
+</ul>
+<h3 id="唯一-ID-一人一单"><a href="#唯一-ID-一人一单" class="headerlink" title="唯一 ID 一人一单"></a>唯一 ID 一人一单</h3><p>在分布式情况下使用 setnx 操作对下单进行加锁，并在<br>使用 redis 的 setnx(只有在键不存在时才会执行存储操作)，同时增加过期时间防止死锁，当线程进行操作是判断是否有其他线程获取锁，没有则执行，否则等待</p>
+<ul>
+<li>问题<br>存在分布式锁误删问题，当 a 线程阻塞并是的分布式锁超时删除，B 线程拿到锁后 a 线程会将锁进行误删，此时需要在线程中加入线程标识，每次删除锁需要对线程进行判断防止误删。最后使用 Lua 脚本对加锁和解锁做原子操作</li>
+</ul>
+<hr>
+<h3 id="如何解决超卖问题"><a href="#如何解决超卖问题" class="headerlink" title="如何解决超卖问题"></a>如何解决超卖问题</h3><p>关键在与扣减库存是否多线程出问题：</p>
+<ol>
+<li>sql 语句扣减库存时候使用乐观锁办法，判断库存数量是否&gt;0,加上行级锁但性能较低，该如何解决。不推荐使用</li>
+<li>利用 redis 的 incr、decr 的原子性 + 异步队列<br>内存标记并预减库存<br>超卖现象是多线程安全问题，使用乐观锁</li>
+</ol>
+<h4 id="预减库存"><a href="#预减库存" class="headerlink" title="预减库存 **"></a>预减库存 **</h4><p>使用 Redis 预减库存主要是为了做什么呢,就是它能解决什么问题<br>主要目的减少对数据库的访问,可以拦截卖完了之后多余的请求，防止多个请求不断达到数据库造成压力，同时不需要考虑库存数据一致性<br>实现思路：</p>
+<ol>
+<li>先将商品信息加载到 Redis 缓存中</li>
+<li>当收到秒杀请求时，在访问 Redis 之前先在内存标记中获取对应商品的库存数量，做到不需要对 Redis 进行访问就得到了库存，减少了高并发下的 Redis 压力，再判断 Redis 中的缓存商品数量预减并判断是否足够，不足则直接返回异常，并标记内存库存不足。</li>
+<li>否则将订单信息发送到消息队列中，并返回前端成功标志，之后队列消费依次创建秒杀订单完成秒杀，前端进行轮询判断是否秒杀成功。</li>
+</ol>
+<h3 id="减库存出现的数据不一致问题"><a href="#减库存出现的数据不一致问题" class="headerlink" title="减库存出现的数据不一致问题"></a>减库存出现的数据不一致问题</h3><p>先删除缓存，再更新数据库 会出现脏数据<br>如果不采用给缓存设置过期时间策略，该数据永远都是脏数据。<br><strong>应该先操作数据库再删除缓存</strong><br>采用延迟双删的思路</p>
+<h4 id="高并发-减少数据库访问"><a href="#高并发-减少数据库访问" class="headerlink" title="高并发 减少数据库访问"></a>高并发 减少数据库访问</h4><ul>
+<li><p>预减少库存，秒杀地址隐藏，使用内存标记</p>
+</li>
+<li><p>redis 的预见库存 防止大量的请求，请求到数据库中<br>先对每个商品进行 hashMap 内存标记，标记是否还有库存剩余，扣减库存时候 先查询内存标记，如果为 FALSE 直接返回，不需要查数据库查询 redis 的商品库存，先对该商品进行减少，库存数小于 0 是则不需要访问数据库 直接返回失败</p>
+</li>
+</ul>
+<h3 id="接口地址隐藏-防止根据秒杀的链接提前秒杀"><a href="#接口地址隐藏-防止根据秒杀的链接提前秒杀" class="headerlink" title="接口地址隐藏 防止根据秒杀的链接提前秒杀"></a>接口地址隐藏 防止根据秒杀的链接提前秒杀</h3><p>只有秒杀时候再将秒杀的 url 地址通过 UUID 拼接数字，随机生成地址并缓存在 redis 中并发给前端，前端请求过来后验证秒杀的路径，通过再执行秒杀。</p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>实现分布式情况下多线程互斥效果，为了防止超卖和重复下单 当线程过来请求<br>利用 SetNx 添加过期时间防止死锁，但是过期时间如何评估，<br>分布式锁误删：<br>（a 线程阻塞后，超时释放锁，b 线程拿到锁后 a 线程继续执行到删除锁操作造成误删）利用 UUID+线程标识 标定当前线程 需要删除锁时进行判断<br>当 a 要删除锁时到期了，致使线程阻塞，可以使用 lua 脚本保证删除操作的原子性</p>
+<p><strong>问题</strong><br>Sentnx 不可重入 不能重复调用<br>redis 分布式锁无法自动续期<br>解决：<br>使用 Redisson 实现分布式锁 可以不断的重入<br>但是 Redissson 默认释放时间是 30s，如果 30S 加锁业务没有完成，那么在 30-10S 时间进行一次时间延长。一直到锁释放完成<br><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-28-20-24-10.png" class="lazyload placeholder" data-srcset="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-28-20-24-10.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="asset_img"><br>watchDog 是一个当前线程启动的后台线程，每隔十秒会检查一次，当前客户端在默认时间内一直持有锁就需要进行延长，<br>Redisss 实现可重入锁，<br>利用底层中的 voaltile 的 state 变量记录重入状态，每一次加锁都会进行记录+1，每释放一次 state-1 直到 state&#x3D;&#x3D;0，释放锁<br><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-28-20-30-26.png" class="lazyload placeholder" data-srcset="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-28-20-30-26.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="asset_img"></p>
+<h3 id="如何防止重复下单"><a href="#如何防止重复下单" class="headerlink" title="如何防止重复下单"></a>如何防止重复下单</h3><p>如何判断重复订单：<br>用户在秒杀页面对同一个秒杀按钮多次点击</p>
+<ol>
+<li>使用自定义接口注解，规定在 5 秒内只能访问秒杀接口 5 次</li>
+<li>每次的订单请求都会先查询数据库，订单有唯一索引（用户 id+商品 id）,当重复订单落库时数据库会报错</li>
+<li>使用分布式锁只有获取到锁的线程才能够下单，未获取到锁则为重复下单<br>之后在判断是否</li>
+</ol>
+<p>不断查询数据库 性能比较低<br>需要放在 redis 中使用 set&lt;good_id,userID&gt; 集合保存已经下过商品订单的 userID，当再次下同一个商品时去判断该用户是否存在</p>
+<h3 id="为什么要异步下单"><a href="#为什么要异步下单" class="headerlink" title="为什么要异步下单"></a>为什么要异步下单</h3><p>将消费和生产步骤解耦<br>将下单部分拆分开来 减少业务耗时<br>经过 redis 完成预减库存，防止重复消费（分布式锁），和抢单操作后<br>将下单业务放在消息队列中，异步完成下单过程</p>
+<h3 id="数据不一致问题"><a href="#数据不一致问题" class="headerlink" title="数据不一致问题"></a>数据不一致问题</h3><p>（延迟双删）<br>问题存在与 MySQL 和 redis 的数据不一致</p>
+<p>先更新缓存还是数据库<br>先更新缓存，那么数据库中可能是旧数据，当缓存失效后查询数据库便可能得到旧数据<br>先更新数据库，那么缓存中可能是旧数据，当缓存失效后查询数据库就一直是新数据。当更新缓存阻塞时，其他线程依旧会获取旧数据。<br>但当在并发条件下，频繁进行读多写少环境下，缓存不断更新会出现阻塞等问题使得缓存更新出现问题</p>
+<p>在修改数据库时先把缓存删除，当查询缓存发现缓存不存在时从数据库中更新写入缓存。</p>
+<p>延迟双删：让写请求去删除两次缓存，从而达到一个刷脏数据的效果，更新完数据库后线程休眠一段时间之后在删除缓存，其中延迟删除的时间应该略大于写操作时间</p>
+<h3 id="如何保证下单功能和减库存事务的一致性：库存扣减成功但是订单生成失败"><a href="#如何保证下单功能和减库存事务的一致性：库存扣减成功但是订单生成失败" class="headerlink" title="如何保证下单功能和减库存事务的一致性：库存扣减成功但是订单生成失败"></a>如何保证下单功能和减库存事务的一致性：库存扣减成功但是订单生成失败</h3><p>使用 Spring 事务@Transactional 更新库存成功后在生成订单 或者使用 lua 脚本.将减库存与生成订单操作组合为一个事务。要么一起成功，要么一起失败。</p>
+<h3 id="追问：Spring-事务-如何失效何时失效"><a href="#追问：Spring-事务-如何失效何时失效" class="headerlink" title="追问：Spring 事务 如何失效何时失效"></a>追问：Spring 事务 如何失效何时失效</h3><p>@Transactional 开启事务，如果执行异常则进行回滚</p>
+<ol>
+<li>方法不是 public ，申明式事务基于 AOP 通过代理模式实现，只有 public 方法才能被访问和调用。使用了 final 修饰</li>
+<li>方法内部调用没有使用代理对象</li>
+<li>类未被 spring 管理</li>
+<li>异常被捕获并处理 事务检测不到异常 无法判断是否回滚</li>
+</ol>
+<h3 id="为什么使用雪花算法"><a href="#为什么使用雪花算法" class="headerlink" title="为什么使用雪花算法"></a>为什么使用雪花算法</h3><p><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-30-13-52-10.png" class="lazyload placeholder" data-srcset="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-08-30-13-52-10.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="asset_img"><br>高并发分布式环境下生成不重复 id，每秒可生成百万个不重复 id。 基于时间戳，以及同一时间戳下序列号自增，基本保证 id 有序递增。 不依赖第三方库或者中间件</p>
+<h3 id="项目中难点"><a href="#项目中难点" class="headerlink" title="项目中难点"></a>项目中难点</h3><ul>
+<li>流量削峰问题</li>
+</ul>
+<h3 id="项目中出现的问题"><a href="#项目中出现的问题" class="headerlink" title="项目中出现的问题"></a>项目中出现的问题</h3><hr>
+<h3 id="如何实现点赞功能"><a href="#如何实现点赞功能" class="headerlink" title="如何实现点赞功能"></a>如何实现点赞功能</h3><p>用户不能无限制点赞，不能简单的将数据库数据+1<br>需求：</p>
+<ul>
+<li>同一个用户只能点赞一次，再次点击则取消点赞</li>
+<li>如果当前用户已经点赞，则点赞按钮高亮显示（前端已实现，判断字段 Blog 类的 isLike 属性）<br><img src="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-09-30-22-06-59.png" class="lazyload placeholder" data-srcset="/articles/2023/08/21/%E5%85%AB%E8%82%A1-%E9%A1%B9%E7%9B%AE/2023-09-30-22-06-59.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="asset_img"></li>
+</ul>
+<h3 id="对布隆过滤器的理解"><a href="#对布隆过滤器的理解" class="headerlink" title="对布隆过滤器的理解"></a>对布隆过滤器的理解</h3><p>解决缓存穿透</p>
+<h3 id="替换-ThreadLocal"><a href="#替换-ThreadLocal" class="headerlink" title="替换 ThreadLocal"></a>替换 ThreadLocal</h3><p>ThreadLocal 在多线程存在大量数据访问时可能会造成内存溢出</p>
+<ul>
+<li>MQ 如何包装重复消费问题：</li>
+</ul>
+<h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><h3 id="为什么选择-RabbitMQ"><a href="#为什么选择-RabbitMQ" class="headerlink" title="为什么选择 RabbitMQ"></a>为什么选择 RabbitMQ</h3><p>相对成熟，社区活跃，吞吐量高，使用 ErLang 开发，性能比较好同时有完善的可视化界面</p>
+<h3 id="消息队列的优缺点"><a href="#消息队列的优缺点" class="headerlink" title="消息队列的优缺点"></a>消息队列的优缺点</h3><ul>
+<li>异步处理 - 相比于传统的串行、并行方式，提高了系统吞吐量，和系统响应速度</li>
+<li>应用解耦 - 系统间通过消息通信，不用关心其他系统的处理</li>
+<li>流量削锋 - 可以通过消息队列长度控制请求量；将短时间内的大量请求分成一个时间段来处理，从而提供了请求的缓冲，提高了系统的并发量。<br>缺点：<br>提高了系统的复杂度和维护成本，需要考虑消息丢失，重复消费，消息顺序性和一致性的问题系统的复杂度增大</li>
+</ul>
+<h3 id="消息如何路由"><a href="#消息如何路由" class="headerlink" title="消息如何路由"></a>消息如何路由</h3><h3 id="如何解决消息的顺序问题"><a href="#如何解决消息的顺序问题" class="headerlink" title="如何解决消息的顺序问题"></a>如何解决消息的顺序问题</h3><h3 id="高并发情况下接口幂等的解决方案"><a href="#高并发情况下接口幂等的解决方案" class="headerlink" title="高并发情况下接口幂等的解决方案"></a>高并发情况下接口幂等的解决方案</h3><p>幂等是指: 多次调用方法或者接口不会改变业务状态，可以保证重复调用的结果和单次调用的结果一致。<br>对数据库操作过程中的读取和删除都是天然幂等的，需要注意的是创建和更新操作</p>
+<ul>
+<li>对数据库使用行锁</li>
+<li>redis 使用分布式锁</li>
+</ul>
+<h3 id="如何消息不丢失"><a href="#如何消息不丢失" class="headerlink" title="如何消息不丢失"></a>如何消息不丢失</h3><p>主要通过持久化机制，确保消息不丢，RabbitMQ 持久化机制分为队列持久化、消息持久化、交换器持久化。</p>
+<ul>
+<li><p>RabbitMQ 默认不会持久化到硬盘<br>要想做到消息持久化，必须满足以下三个条件：<br>Exchange 设置持久化<br>Queue 设置持久化<br>Message 持久化发送：发送消息设置发送模式 deliveryMode&#x3D;2，代表持久化消息</p>
+</li>
+<li><p>消息 ACK 机制<br>使用手动 ACK 机制，处理完成手动调用 MQ 的 ACK 方法通知 MQ 删除消息。</p>
+</li>
+</ul>
+<h3 id="什么是延迟队列"><a href="#什么是延迟队列" class="headerlink" title="什么是延迟队列"></a>什么是延迟队列</h3><p>RabbitMQ 延迟队列就是存储延迟消息的队列，延迟消息指的就是消息投递到队列后，消费者不能立刻消费，需要等待一段时间，消费者才能消费消息。重点是定时任务<br>RabbitMQ 原生不支持延迟消息，目前主要通过死信交换机 + 消息 TTL 方案或者使用插件完成</p>
+<h3 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h3><p>当消息在一个队列中变成死信 (dead message) 之后，它能被重新被发送到另一个交换机中，这个交换机就是 DLX，绑定 DLX 的队列就称之为死信队列。<br>导致死信的原因：</p>
+<p>消息被拒（Basic.Reject &#x2F;Basic.Nack) 且 requeue &#x3D; false。<br>消息 TTL 过期。<br>队列满了，无法再添加。</p>
+<h2 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h2><ul>
+<li>分库，分表，分库分表<br>这三个事儿分别是”只分库不分表”、”只分表不分库”、以及”既分库又分表”。</li>
+</ul>
+<p><code>分库是将原本的单库拆分为多个库，分表是将原来的单表拆分为多个表。</code><br>将一个大型的数据库拆分成多个小型数据库，每个小型数据库称为一个分片</p>
+<ul>
+<li><p>分库<br>垂直分库：按照业务拆分的方式称为垂直分片，又称为纵向拆分，它的核心理念是专库专用<br>水平分片：通过某个字段根据某种规则将数据分散的到多个库中去，每个分片只包含数据的一部分。其中满足规则的字段为分片键</p>
+</li>
+<li><p>分表：<br>垂直分片：将表更具业务分到不同的表中。<br>水平分片：将表的字段分到不同的表中</p>
+</li>
+<li><p>应用场景：</p>
+<ul>
+<li>分表的场景：数据量过大或者数据库表对应的磁盘文件过大。</li>
+<li>分库的场景：当数据库的连接不够客户端使用时，可以考虑分库或读写分离。</li>
+<li>分库分表的场景： 高并发写入场景，数据量巨大场景</li>
+</ul>
+</li>
+<li><p>路由表</p>
+</li>
+</ul>
+<h2 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a>责任链模式</h2><p>对象的请求会沿着链式方向进行传递，每个处理对象都会检查能否对请求进行处理，能则处理不能继续进行传递，发送请求的对象不知道谁会处理请求，帮助请求者和处理者之间的解耦。</p>
+<h3 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h3><p>特点是高效地插入和查询，可以用来告诉你 “某样东西一定不存在或者可能存在”。<br>但布隆过滤器不能删除</p>
+<ul>
+<li>原理：<br>布隆过滤器通过多个哈希函数对一个数据信息生成多个哈希值将每个 hash 值指向的 bit 位置置 1，将信息映射到 bit 数组中去。<br>那么可以想象到若需要映射的数量小，对应到的 bit 数组中的位置分散且不冲突，当映射对象多时，会出现部分 bit 位被多个映射对象覆盖，当需要进行查询的时候，若对象散列的值再过滤器中查到则可能存在（因为会的 bit 位会是对应其他对象的），若不能完全对应到则一定不存在。判断存在会误判，但是判断不存在不会误判</li>
+<li>一般意义上的布隆过滤器不支持删除。</li>
+</ul>
+<p>同样的他存储的数据量和准确性都依赖于布隆过滤器的长度，长度小越容易误判。长度太长也会使得效率降低</p>
+<blockquote>
+<p>TPS（Transactions Per Second）是一个衡量系统性能的指标，用于表示系统在单位时间内能够处理的事务数量。<br>QPS（Queries Per Second）是一个衡量系统负载或性能的指标，用于表示系统在单位时间内处理的查询请求数量。</p>
+</blockquote>
+<h3 id="双重校验所提高缓存击穿的性能"><a href="#双重校验所提高缓存击穿的性能" class="headerlink" title="双重校验所提高缓存击穿的性能"></a>双重校验所提高缓存击穿的性能</h3><p>当缓存中没有数据的时候，先获取分布式锁，只有一个线程可以成功，在查询数据库之前先用双重校验锁判断一下 ，此时缓存中是否依旧没有数据，确认后再去查数据库，并写入缓存这样其他线程拿到锁尝试去查数据库时回头看到了缓存数据可以提高效率。</p>
+
+      </div>
+      <div class="post-tags-categories">
+        
+      </div>
+      
+        <div class="copyright">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+    <strong>作者:  </strong>Enki</a>
+    </li>
+    <li class="post-copyright-link">
+    <strong>文章链接:  </strong>
+    <a href="/articles/2023/08/21/八股-项目/" target="_blank" title="项目">http://example.com/articles/2023/08/21/八股-项目/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明:   </strong>
+      本网站所有文章除特别声明外,均采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
+      许可协议。转载请注明出处!
+    </li>
+  </ul>
+<div>
+      
+    </article>
+    <!-- 上一篇文章和下一篇文章 -->
+    
+      <!-- 文章详情页的上一页和下一页 -->
+<div class="post-nav">
+
+
+
+  
+  <div class="post-nav-prev post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="https://pic2.zhimg.com/80/v2-29e78b52051ce542adf6d786d61fbd19_1440w.webp" class="lazyload placeholder" data-srcset="https://pic2.zhimg.com/80/v2-29e78b52051ce542adf6d786d61fbd19_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+    </div>
+    <a href="/articles/2023/08/30/%E5%85%AB%E8%82%A1-%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="post-nav-link">
+      <div class="title">
+        <i class="fas fa-angle-left"></i> 上一篇:
+        <div class="title-text">八股--操作系统</div>
+      </div>
+      
+      <!-- <div class="content">
+        B &#x3D; 8bit1kB &#x3D; 1204BMB &#x3D; 1024B
+进程管理线程– 是进程中的一个
+      </div> -->
+    </a>
+  </div>
+
+
+
+  
+  <div class="post-nav-next post-nav-item">
+    <div class="post-nav-img" style="background-size: cover; 
+      background-position: center center;">
+      <img class="lazyload lazyload placeholder" src="https://picx.zhimg.com/80/v2-85c31120acff76826ab53ea8934ef4bb_1440w.webp" class="lazyload placeholder" data-srcset="https://picx.zhimg.com/80/v2-85c31120acff76826ab53ea8934ef4bb_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" src="" alt="">
+    </div>
+    <a href="/articles/2023/08/20/%E7%BA%BF%E4%B8%8A%E7%AE%80%E5%8E%86/" class="post-nav-link">
+      <div class="title">
+        下一篇: <i class="fas fa-angle-right"></i>
+        <div class="title-text">线上简历</div>
+      </div>
+      <!-- <div class="content">
+        奖学金填写时学历注意是否标注第一学历身份证340823199804043717
+本科学号31607041132016.9
+      </div> -->
+    </a>
+  </div>
+
+</div>
+
+    
+    
+
+    <!-- 打赏 -->
+    
+      <div id="appDonate" class="post-donate">
+  <div id="donate_board" class="donate_bar center" ref="donate">
+    <a id="btn_donate" class="btn_donate" href="javascript:;" title="打赏" @click="showDialogDrawer()"></a>
+  </div>
+  <transition name="fade">
+    <div 
+      class="donate-box-mask"
+      v-cloak 
+      v-show="visible"
+      @click="cancelDialogDrawer()"
+    >
+    </div>
+  </transition>
+  <transition name="bounce">
+    <div class="donate-box" v-cloak v-show="visible">
+      <div class="donate-box_close">
+        <i class="fas fa-times" aria-hidden="true" @click="cancelDialogDrawer" pointer></i>
+      </div>
+      <div class="donate-box_title">
+        <h4>
+          你的赏识是我前进的动力
+        </h4>
+      </div>
+      <div class="donate-box_tab">
+        <div class="Alipay" pointer :class="{'active': tabActive === 'Alipay'}" @click="changeTabActive('Alipay')">
+          支付宝
+        </div>
+        <div class="WeChatpay" pointer :class="{'active': tabActive === 'WeChatpay'}" @click="changeTabActive('WeChatpay')">
+          微信
+        </div>
+      </div>
+      <div class="donate-box_img">
+        <div class="AlipayImg" v-show="tabActive === 'Alipay'">
+          <img src="https://pica.zhimg.com/80/v2-61f99f8dcf899f54cad2a1aa28b21e44_1440w.webp" class="lazyload placeholder" data-srcset="https://pica.zhimg.com/80/v2-61f99f8dcf899f54cad2a1aa28b21e44_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="支付宝打赏" />
+        </div> 
+        <div class="WeChatpayImg" v-show="tabActive === 'WeChatpay'">
+          <img src="https://pic2.zhimg.com/80/v2-29e78b52051ce542adf6d786d61fbd19_1440w.webp" class="lazyload placeholder" data-srcset="https://pic2.zhimg.com/80/v2-29e78b52051ce542adf6d786d61fbd19_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="微信打赏" />
+        </div>
+      </div>
+    </div>
+  </transition>
+</div>
+
+<script>
+  var body = document.body || document.documentElement || window;
+  var vm = new Vue({
+    el: '#appDonate',
+    data: {
+      visible: false,
+      tabActive: 'Alipay',
+      top: 0,
+    },
+    computed: {
+    },
+    mounted() {
+    },
+    methods: {
+      showDialogDrawer() {
+        this.visible = true;
+        // 防止页面滚动，只能让弹框滚动
+        // function getScroll() {
+        //   return {
+        //     left: window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0,
+        //     top: window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+        //   };
+        // }
+        this.top = $(document).scrollTop() // or getScroll().top
+        // console.log('aa', $('.main-content'));
+        body.style.cssText = 'overflow: hidden;';
+      },
+      cancelDialogDrawer() {
+        this.visible = false;
+        body.removeAttribute('style');
+        $(document).scrollTop(this.top)
+      },
+      changeTabActive(name) {
+        this.tabActive = name;
+      }
+    },
+    created() {}
+  })
+</script>
+    
+
+    <!-- 分享 -->
+    
+      <!-- https://github.com/overtrue/share.js -->
+<!-- 文章详情页的分享 -->
+<div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+
+<script defer src="/js/shareJs/social-share.min.js"></script>
+</script>
+
+<style>
+  .social-share {
+    margin: 20px 0;
+  }
+</style>
+
+
+    
+    
+    <!-- 评论 -->
+    <!-- 评论 -->
+
+  <div id="myComment">
+    
+      <div id="gitment-container"></div>
+
+    
+  </div>
+
+
+<!-- 还需要在后面这个地址里设置script, comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
+
+
+  </div>
+
+  <!-- 目录 -->
+  <aside id='l_side'>
+  
+    
+      <section class="widget side_blogger">
+  <div class='content'>
+    
+      
+        <a class='avatar flat-box rectangle' href='/about/'>
+          <img src='https://pic2.zhimg.com/80/v2-42b72d5ebee4b8d8aa70d9687effe87b_1440w.webp'/>
+        </a>
+      
+    
+    
+      <div class='text'>
+        
+          <h2>Enki</h2>
+        
+        
+        
+          <p><span id="jinrishici-sentence">Enki的小书房</span></p>
+          <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+        
+      </div>
+    
+    
+      <div class="social-wrapper">
+        
+          
+            <a href="/atom.xml"
+              class="social fas fa-rss flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+          
+            <a href="mailto:me@xxx.com"
+              class="social fas fa-envelope flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+          
+            <a href="https://github.com/yuang01/hexo-theme-bamboo"
+              class="social fab fa-github flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+          
+            <a href="tencent://AddContact/?fromId=50&amp;fromSubId=1&amp;subcmd=all&amp;uin=你的qq号码"
+              class="social fab fa-qq flat-btn"
+              target="_blank"
+              rel="external nofollow noopener noreferrer">
+              
+            </a>
+          
+        
+      </div>
+    
+  </div>
+</section>
+
+    
+  
+  
+  
+
+  <div class="layout_sticky">    
+    
+      
+<section class="widget side_toc">
+  
+  <header>
+    
+      <i style="color: " class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name' style="color: ">本文目录</span>
+    
+  </header>
+
+
+  <div class='content'>
+    <div class="toc-main">
+      <div class="toc-content">
+        <!-- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%87%86%E5%A4%87%E9%A1%B9%E7%9B%AE-%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-text">如何准备项目 写在前面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E6%88%91%E4%BB%8B%E7%BB%8D"><span class="toc-text">自我介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%B2%E4%B8%80%E4%B8%8B%E9%A1%B9%E7%9B%AE%E7%9A%84%E6%95%B4%E4%BD%93%EF%BC%8C%E4%BB%8E%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF%E3%80%81%E8%83%8C%E6%99%AF%E3%80%81%E6%A1%86%E6%9E%B6%E3%80%81%E6%B5%81%E7%A8%8B%E3%80%81%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E3%80%81%E5%AE%8C%E6%88%90%E7%9A%84%E5%B7%A5%E4%BD%9C%E3%80%81%E5%93%AA%E6%96%B9%E9%9D%A2%E6%8A%80%E6%9C%AF%E5%81%9A%E7%9A%84%E6%AF%94%E8%BE%83%E5%9B%B0%E9%9A%BE%E6%88%96%E8%80%85%E6%AF%94%E8%BE%83%E5%A5%BD%E8%BF%99%E4%BA%9B%E6%96%B9%E9%9D%A2%E6%9D%A5%E6%95%B4%E4%BD%93%E8%AE%B2%E4%B8%80%E4%B8%8B"><span class="toc-text">讲一下项目的整体，从设计思路、背景、框架、流程、核心技术、完成的工作、哪方面技术做的比较困难或者比较好这些方面来整体讲一下</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="toc-text">项目描述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis-%E9%A2%84%E5%87%8F%E5%BA%93%E5%AD%98"><span class="toc-text">Redis 预减库存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-text">数据一致性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-%E4%BA%8B%E5%8A%A1%E5%A4%B1%E6%95%88"><span class="toc-text">Spring 事务失效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E9%99%90%E6%B5%81"><span class="toc-text">接口限流</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F"><span class="toc-text">秒杀系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E9%AA%8C%E8%AF%81"><span class="toc-text">用户登录验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BB%E5%BD%95%E5%AD%98%E6%B4%BB-Http-%E6%97%A0%E7%8A%B6%E6%80%81-%E7%94%A8%E6%88%B7%E8%BF%9B%E8%A1%8C%E7%99%BB%E5%BD%95%E5%90%8E%E5%A6%82%E4%BD%95%E5%AE%8C%E6%88%90%E6%94%AF%E4%BB%98"><span class="toc-text">登录存活 Http 无状态 用户进行登录后如何完成支付</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98"><span class="toc-text">缓存问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="toc-text">缓存穿透的解决方案有哪些？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98"><span class="toc-text">缓存击穿问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%80%9D%E8%B7%AF"><span class="toc-text">缓存雪崩问题及解决思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C-redis-%E9%A2%84%E5%87%8F%E5%BA%93%E5%AD%98%E6%88%90%E5%8A%9F%EF%BC%8C%E5%90%8E%E8%BE%B9%E4%B8%8B%E5%8D%95%E5%A4%B1%E8%B4%A5%EF%BC%8C%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81-redis-%E5%92%8C-mysql-%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E5%91%A2"><span class="toc-text">如果 redis 预减库存成功，后边下单失败，怎么保证 redis 和 mysql 的一致性呢</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BB%E5%BD%95%E4%BD%BF%E7%94%A8-JWT"><span class="toc-text">登录使用 JWT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%AD%E7%9A%84-AOP-%E6%80%9D%E6%83%B3%E7%9A%84%E4%BD%93%E7%8E%B0"><span class="toc-text">项目中的 AOP 思想的体现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RabbitMq-%E5%BC%82%E6%AD%A5%E4%B8%8B%E5%8D%95"><span class="toc-text">RabbitMq 异步下单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%92%E6%9D%80%E5%BA%93%E5%AD%98%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2%E8%B6%85%E5%8D%96"><span class="toc-text">秒杀库存如何防止超卖</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%92%E6%9D%80%E7%9A%84-ABA-%E9%97%AE%E9%A2%98"><span class="toc-text">秒杀的 ABA 问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-text">秒杀系统的设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B"><span class="toc-text">流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%90%E6%B5%81"><span class="toc-text">限流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F-session-%E5%AE%9E%E7%8E%B0"><span class="toc-text">分布式 session 实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BB%E5%BD%95%E5%AF%86%E7%A0%81%E7%9A%84%E5%8A%A0%E7%9B%90%E5%8A%A0%E5%AF%86"><span class="toc-text">登录密码的加盐加密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1"><span class="toc-text">接口设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E5%89%8A%E5%B3%B0"><span class="toc-text">流量削峰</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E7%BC%93%E5%AD%98"><span class="toc-text">系统缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-text">问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%94%AF%E4%B8%80-ID-%E4%B8%80%E4%BA%BA%E4%B8%80%E5%8D%95"><span class="toc-text">唯一 ID 一人一单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%B6%85%E5%8D%96%E9%97%AE%E9%A2%98"><span class="toc-text">如何解决超卖问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A2%84%E5%87%8F%E5%BA%93%E5%AD%98"><span class="toc-text">预减库存 **</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%8F%E5%BA%93%E5%AD%98%E5%87%BA%E7%8E%B0%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98"><span class="toc-text">减库存出现的数据不一致问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E5%B9%B6%E5%8F%91-%E5%87%8F%E5%B0%91%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AE%BF%E9%97%AE"><span class="toc-text">高并发 减少数据库访问</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%9C%B0%E5%9D%80%E9%9A%90%E8%97%8F-%E9%98%B2%E6%AD%A2%E6%A0%B9%E6%8D%AE%E7%A7%92%E6%9D%80%E7%9A%84%E9%93%BE%E6%8E%A5%E6%8F%90%E5%89%8D%E7%A7%92%E6%9D%80"><span class="toc-text">接口地址隐藏 防止根据秒杀的链接提前秒杀</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="toc-text">分布式锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%98%B2%E6%AD%A2%E9%87%8D%E5%A4%8D%E4%B8%8B%E5%8D%95"><span class="toc-text">如何防止重复下单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%BC%82%E6%AD%A5%E4%B8%8B%E5%8D%95"><span class="toc-text">为什么要异步下单</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%8D%E4%B8%80%E8%87%B4%E9%97%AE%E9%A2%98"><span class="toc-text">数据不一致问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%B8%8B%E5%8D%95%E5%8A%9F%E8%83%BD%E5%92%8C%E5%87%8F%E5%BA%93%E5%AD%98%E4%BA%8B%E5%8A%A1%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%9A%E5%BA%93%E5%AD%98%E6%89%A3%E5%87%8F%E6%88%90%E5%8A%9F%E4%BD%86%E6%98%AF%E8%AE%A2%E5%8D%95%E7%94%9F%E6%88%90%E5%A4%B1%E8%B4%A5"><span class="toc-text">如何保证下单功能和减库存事务的一致性：库存扣减成功但是订单生成失败</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%BD%E9%97%AE%EF%BC%9ASpring-%E4%BA%8B%E5%8A%A1-%E5%A6%82%E4%BD%95%E5%A4%B1%E6%95%88%E4%BD%95%E6%97%B6%E5%A4%B1%E6%95%88"><span class="toc-text">追问：Spring 事务 如何失效何时失效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95"><span class="toc-text">为什么使用雪花算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%9A%BE%E7%82%B9"><span class="toc-text">项目中难点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%AD%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">项目中出现的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%82%B9%E8%B5%9E%E5%8A%9F%E8%83%BD"><span class="toc-text">如何实现点赞功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E7%90%86%E8%A7%A3"><span class="toc-text">对布隆过滤器的理解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2-ThreadLocal"><span class="toc-text">替换 ThreadLocal</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RabbitMQ"><span class="toc-text">RabbitMQ</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9-RabbitMQ"><span class="toc-text">为什么选择 RabbitMQ</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-text">消息队列的优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E5%A6%82%E4%BD%95%E8%B7%AF%E7%94%B1"><span class="toc-text">消息如何路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E6%B6%88%E6%81%AF%E7%9A%84%E9%A1%BA%E5%BA%8F%E9%97%AE%E9%A2%98"><span class="toc-text">如何解决消息的顺序问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AB%98%E5%B9%B6%E5%8F%91%E6%83%85%E5%86%B5%E4%B8%8B%E6%8E%A5%E5%8F%A3%E5%B9%82%E7%AD%89%E7%9A%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">高并发情况下接口幂等的解决方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%B6%88%E6%81%AF%E4%B8%8D%E4%B8%A2%E5%A4%B1"><span class="toc-text">如何消息不丢失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97"><span class="toc-text">什么是延迟队列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%BB%E4%BF%A1%E9%98%9F%E5%88%97"><span class="toc-text">死信队列</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8"><span class="toc-text">分库分表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F"><span class="toc-text">责任链模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-text">布隆过滤器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E9%87%8D%E6%A0%A1%E9%AA%8C%E6%89%80%E6%8F%90%E9%AB%98%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%9A%84%E6%80%A7%E8%83%BD"><span class="toc-text">双重校验所提高缓存击穿的性能</span></a></li></ol> -->
+        <div class="toc"></div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- 手机端目录按钮 -->
+<div id="toc-mobile-btn">
+  <i class="fas fa-list-ul" aria-hidden="true"></i>
+</div>
+
+      
+  <section class="widget side_recent_post">
+    
+  <header>
+    
+      <a style="color: " href='/tags/'><i class="fas fa-book fa-fw" aria-hidden="true"></i><span class='name'>最新文章</span></a>
+    
+  </header>
+
+
+    <div class='content'>
+      
+      <!-- hash算法 -->
+      
+      <div class="aside-list">
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/articles/2024/07/30/SpringMVC%E7%AC%94%E8%AE%B0/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">07-30</span>
+                
+              </div>
+              <a class="post-title" href="/articles/2024/07/30/SpringMVC%E7%AC%94%E8%AE%B0/">暂无标题</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/articles/2024/07/30/Redis%E5%AE%9E%E6%88%98%E7%AF%87/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">07-30</span>
+                
+              </div>
+              <a class="post-title" href="/articles/2024/07/30/Redis%E5%AE%9E%E6%88%98%E7%AF%87/">暂无标题</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/articles/2024/07/30/Redis/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">07-30</span>
+                
+              </div>
+              <a class="post-title" href="/articles/2024/07/30/Redis/">暂无标题</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/articles/2024/07/30/Netty04-%E4%BC%98%E5%8C%96%E4%B8%8E%E6%BA%90%E7%A0%81/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">07-30</span>
+                
+              </div>
+              <a class="post-title" href="/articles/2024/07/30/Netty04-%E4%BC%98%E5%8C%96%E4%B8%8E%E6%BA%90%E7%A0%81/">暂无标题</a>
+            </div>
+          </div>
+        
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/articles/2024/07/30/Netty03-%E8%BF%9B%E9%98%B6/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" class="lazyload placeholder" data-srcset="https://pic1.zhimg.com/80/v2-03a22891ccba9bccf6424dfd7cbf4be7_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">07-30</span>
+                
+              </div>
+              <a class="post-title" href="/articles/2024/07/30/Netty03-%E8%BF%9B%E9%98%B6/">暂无标题</a>
+            </div>
+          </div>
+        
+      </div>
+    </div>
+  </section>
+
+    
+  </div>
+</aside>
+
+  <!-- 图片放大 Wrap images with fancybox support -->
+  <script defer src="/js/wrapImage.js"></script>
+</div>
+
+<!-- 文章详情页背景图 -->
+<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
+	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
+	<transition-group tag="ul" :name="names">
+		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
+			<img :src="image" class="bg-swiper-img no-lazy">
+		</li>
+	</transition-group>
+</div>
+<script>
+	var vm = new Vue({
+		el: '#appBgSwiper',
+		data: {
+			names: '' || 'fade' || 'fade', // translate-fade fade
+			mark: 0,
+			img: [],
+			bgColor: '',
+			time: null
+		},
+		methods: {   //添加方法
+			change(i, m) {
+				if (i > m) {
+					// this.names = 'fade';
+				} else if (i < m) {
+					// this.names = 'fade';
+				} else {
+					return;
+				}
+				this.mark = i;
+			},
+			prev() {
+				// this.names = 'fade';
+				this.mark--;
+				if (this.mark === -1) {
+					this.mark = 3;
+					return
+				}
+			},
+			next() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			autoPlay() {
+				// this.names = 'fade';
+				this.mark++;
+				if (this.mark === this.img.length) {
+					this.mark = 0;
+					return
+				}
+			},
+			play() {
+				let bgImgDelay = '' || '180000'
+				let delay = parseInt(bgImgDelay) || 180000;
+				this.time = setInterval(this.autoPlay, delay);
+			},
+			enter() {
+				clearInterval(this.time);
+			},
+			leave() {
+				this.play();
+			}
+		},
+		created() {
+			this.play()
+		},
+		beforeDestroy() {
+			clearInterval(this.time);
+		},
+		mounted() {
+			let prop = '' || '';
+			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
+			if (isImg) {
+				let img = prop.split(',');
+				let configRoot = '/'
+				let arrImg = [];
+				img.forEach(el => {
+					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+					var objExp = new RegExp(Expression);
+
+					if (objExp.test(el)) {
+						// http or https
+						arrImg.push(el);
+					} else {
+						// 非http or https开头
+						// 本地文件
+						let firstStr = el.charAt(0);
+						if (firstStr == '/') {
+							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
+						}
+						el = configRoot + el;
+						arrImg.push(el);
+					}
+				})
+				this.img = arrImg;
+			} else {
+				this.bgColor = prop;
+			}
+		}
+	})
+</script>
+
+<style>
+	.bg-swiper-box {
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bg-swiper-img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+</style>
+
+
+  <script>
+  // https://github.com/theme-next/hexo-theme-next/blob/master/layout/_third-party/math/mathjax.swig
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = 'https://unpkg.com/mathjax@3.0/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    // 文章章节标题不能为 “MathJax” ，否则会报错。
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+
+
+
+  <script>
+  function loadMermaid() {
+    if (document.getElementsByClassName('mermaid').length) {
+      if (window.mermaidJsLoad) mermaid.init()
+      else {
+        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
+          window.mermaidJsLoad = true
+          mermaid.initialize({
+            theme: 'default',
+          })
+          if ('true') {
+            mermaid.init();
+          }
+        })
+      }
+    }
+  };
+  document.addEventListener("DOMContentLoaded", function () {
+    loadMermaid();
+  })
+
+  document.addEventListener('pjax:complete', function () {
+    loadMermaid();
+  })
+  
+</script>
+
+
+      </main>
+    </div>
+
+    <!-- 页脚 -->
+    
+  
+  
+    <!-- 底部鱼儿跳动效果，依赖于jquery-->
+<div id="j-fish-skip" style=" position: relative;height: 153px;width: auto;"></div>
+<script defer>
+  var RENDERER = {
+    POINT_INTERVAL: 5,
+    FISH_COUNT: 3,
+    MAX_INTERVAL_COUNT: 50,
+    INIT_HEIGHT_RATE: .5,
+    THRESHOLD: 50,
+    FISH_COLOR: '',
+    init: function () {
+      this.setFishColor(); this.setParameters(), this.reconstructMethods(), this.setup(), this.bindEvent(), this.render()
+    },
+    setFishColor: function () {
+      let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+      if (isDark) {
+        this.FISH_COLOR = '#222'; // 暗黑色，有时间把这整成一个变量
+      } else {
+        this.FISH_COLOR = '' || 'rgba(66, 185, 133, 0.8)';
+      }
+    },
+    setParameters: function () {
+      this.$window = $(window), this.$container = $("#j-fish-skip"), this.$canvas = $("<canvas />"), this.context = this.$canvas.appendTo(this.$container).get(0).getContext("2d"), this.points = [], this.fishes = [], this.watchIds = []
+    },
+    createSurfacePoints: function () {
+      var t = Math.round(this.width / this.POINT_INTERVAL);
+      this.pointInterval = this.width / (t - 1), this.points.push(new SURFACE_POINT(this, 0));
+      for (var i = 1; i < t; i++) {
+        var e = new SURFACE_POINT(this, i * this.pointInterval),
+          h = this.points[i - 1];
+        e.setPreviousPoint(h), h.setNextPoint(e), this.points.push(e)
+      }
+    },
+    reconstructMethods: function () {
+      this.watchWindowSize = this.watchWindowSize.bind(this), this.jdugeToStopResize = this.jdugeToStopResize.bind(this), this.startEpicenter = this.startEpicenter.bind(this), this.moveEpicenter = this.moveEpicenter.bind(this), this.reverseVertical = this.reverseVertical.bind(this), this.render = this.render.bind(this)
+    },
+    setup: function () {
+      this.points.length = 0, this.fishes.length = 0, this.watchIds.length = 0, this.intervalCount = this.MAX_INTERVAL_COUNT, this.width = this.$container.width(), this.height = this.$container.height(), this.fishCount = this.FISH_COUNT * this.width / 500 * this.height / 500, this.$canvas.attr({
+        width: this.width,
+        height: this.height
+      }), this.reverse = !1, this.fishes.push(new FISH(this)), this.createSurfacePoints()
+    },
+    watchWindowSize: function () {
+      this.clearTimer(), this.tmpWidth = this.$window.width(), this.tmpHeight = this.$window.height(), this.watchIds.push(setTimeout(this.jdugeToStopResize, this.WATCH_INTERVAL))
+    },
+    clearTimer: function () {
+      for (; this.watchIds.length > 0;) clearTimeout(this.watchIds.pop())
+    },
+    jdugeToStopResize: function () {
+      var t = this.$window.width(),
+        i = this.$window.height(),
+        e = t == this.tmpWidth && i == this.tmpHeight;
+      this.tmpWidth = t, this.tmpHeight = i, e && this.setup()
+    },
+    bindEvent: function () {
+      this.$window.on("resize", this.watchWindowSize), this.$container.on("mouseenter", this.startEpicenter), this.$container.on("mousemove", this.moveEpicenter)
+    },
+    getAxis: function (t) {
+      var i = this.$container.offset();
+      return {
+        x: t.clientX - i.left + this.$window.scrollLeft(),
+        y: t.clientY - i.top + this.$window.scrollTop()
+      }
+    },
+    startEpicenter: function (t) {
+      this.axis = this.getAxis(t)
+    },
+    moveEpicenter: function (t) {
+      var i = this.getAxis(t);
+      this.axis || (this.axis = i), this.generateEpicenter(i.x, i.y, i.y - this.axis.y), this.axis = i
+    },
+    generateEpicenter: function (t, i, e) {
+      if (!(i < this.height / 2 - this.THRESHOLD || i > this.height / 2 + this.THRESHOLD)) {
+        var h = Math.round(t / this.pointInterval);
+        h < 0 || h >= this.points.length || this.points[h].interfere(i, e)
+      }
+    },
+    reverseVertical: function () {
+      this.reverse = !this.reverse;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].reverseVertical()
+    },
+    controlStatus: function () {
+      for (var t = 0, i = this.points.length; t < i; t++) this.points[t].updateSelf();
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].updateNeighbors();
+      this.fishes.length < this.fishCount && 0 == --this.intervalCount && (this.intervalCount = this.MAX_INTERVAL_COUNT, this.fishes.push(new FISH(this)))
+    },
+    render: function () {
+      requestAnimationFrame(this.render), this.controlStatus(), this.context.clearRect(0, 0, this.width, this.height), this.context.fillStyle = this.FISH_COLOR;
+      for (var t = 0, i = this.fishes.length; t < i; t++) this.fishes[t].render(this.context);
+      this.context.save(), this.context.globalCompositeOperation = "xor", this.context.beginPath(), this.context.moveTo(0, this.reverse ? 0 : this.height);
+      for (t = 0, i = this.points.length; t < i; t++) this.points[t].render(this.context);
+      this.context.lineTo(this.width, this.reverse ? 0 : this.height), this.context.closePath(), this.context.fill(), this.context.restore()
+    }
+  },
+  SURFACE_POINT = function (t, i) {
+    this.renderer = t, this.x = i, this.init()
+  };
+  SURFACE_POINT.prototype = {
+    SPRING_CONSTANT: .03,
+    SPRING_FRICTION: .9,
+    WAVE_SPREAD: .3,
+    ACCELARATION_RATE: .01,
+    init: function () {
+      this.initHeight = this.renderer.height * this.renderer.INIT_HEIGHT_RATE, this.height = this.initHeight, this.fy = 0, this.force = {
+        previous: 0,
+        next: 0
+      }
+    },
+    setPreviousPoint: function (t) {
+      this.previous = t
+    },
+    setNextPoint: function (t) {
+      this.next = t
+    },
+    interfere: function (t, i) {
+      this.fy = this.renderer.height * this.ACCELARATION_RATE * (this.renderer.height - this.height - t >= 0 ? -1 : 1) * Math.abs(i)
+    },
+    updateSelf: function () {
+      this.fy += this.SPRING_CONSTANT * (this.initHeight - this.height), this.fy *= this.SPRING_FRICTION, this.height += this.fy
+    },
+    updateNeighbors: function () {
+      this.previous && (this.force.previous = this.WAVE_SPREAD * (this.height - this.previous.height)), this.next && (this.force.next = this.WAVE_SPREAD * (this.height - this.next.height))
+    },
+    render: function (t) {
+      this.previous && (this.previous.height += this.force.previous, this.previous.fy += this.force.previous), this.next && (this.next.height += this.force.next, this.next.fy += this.force.next), t.lineTo(this.x, this.renderer.height - this.height)
+    }
+  };
+  var FISH = function (t) {
+    this.renderer = t, this.init()
+  };
+  FISH.prototype = {
+    GRAVITY: .4,
+    init: function () {
+      this.direction = Math.random() < .5, this.x = this.direction ? this.renderer.width + this.renderer.THRESHOLD : -this.renderer.THRESHOLD, this.previousY = this.y, this.vx = this.getRandomValue(4, 10) * (this.direction ? -1 : 1), this.renderer.reverse ? (this.y = this.getRandomValue(1 * this.renderer.height / 10, 4 * this.renderer.height / 10), this.vy = this.getRandomValue(2, 5), this.ay = this.getRandomValue(.05, .2)) : (this.y = this.getRandomValue(6 * this.renderer.height / 10, 9 * this.renderer.height / 10), this.vy = this.getRandomValue(-5, -2), this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1, this.theta = 0, this.phi = 0
+    },
+    getRandomValue: function (t, i) {
+      return t + (i - t) * Math.random()
+    },
+    reverseVertical: function () {
+      this.isOut = !this.isOut, this.ay *= -1
+    },
+    controlStatus: function (t) {
+      this.previousY = this.y, this.x += this.vx, this.y += this.vy, this.vy += this.ay, this.renderer.reverse ? this.y > this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy -= this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(.05, .2)), this.isOut = !1) : this.y < this.renderer.height * this.renderer.INIT_HEIGHT_RATE ? (this.vy += this.GRAVITY, this.isOut = !0) : (this.isOut && (this.ay = this.getRandomValue(-.2, -.05)), this.isOut = !1), this.isOut || (this.theta += Math.PI / 20, this.theta %= 2 * Math.PI, this.phi += Math.PI / 30, this.phi %= 2 * Math.PI), this.renderer.generateEpicenter(this.x + (this.direction ? -1 : 1) * this.renderer.THRESHOLD, this.y, this.y - this.previousY), (this.vx > 0 && this.x > this.renderer.width + this.renderer.THRESHOLD || this.vx < 0 && this.x < -this.renderer.THRESHOLD) && this.init()
+    },
+    render: function (t) {
+      t.save(), t.translate(this.x, this.y), t.rotate(Math.PI + Math.atan2(this.vy, this.vx)), t.scale(1, this.direction ? 1 : -1), t.beginPath(), t.moveTo(-30, 0), t.bezierCurveTo(-20, 15, 15, 10, 40, 0), t.bezierCurveTo(15, -10, -20, -15, -30, 0), t.fill(), t.save(), t.translate(40, 0), t.scale(.9 + .2 * Math.sin(this.theta), 1), t.beginPath(), t.moveTo(0, 0), t.quadraticCurveTo(5, 10, 20, 8), t.quadraticCurveTo(12, 5, 10, 0), t.quadraticCurveTo(12, -5, 20, -8), t.quadraticCurveTo(5, -10, 0, 0), t.fill(), t.restore(), t.save(), t.translate(-3, 0), t.rotate((Math.PI / 3 + Math.PI / 10 * Math.sin(this.phi)) * (this.renderer.reverse ? -1 : 1)), t.beginPath(), this.renderer.reverse ? (t.moveTo(5, 0), t.bezierCurveTo(10, 10, 10, 30, 0, 40), t.bezierCurveTo(-12, 25, -8, 10, 0, 0)) : (t.moveTo(-5, 0), t.bezierCurveTo(-10, -10, -10, -30, 0, -40), t.bezierCurveTo(12, -25, 8, -10, 0, 0)), t.closePath(), t.fill(), t.restore(), t.restore(), this.controlStatus(t)
+    }
+  }, $(function () {
+    RENDERER.init()
+    $('.dark').click(function () {
+      setTimeout(() => {
+        RENDERER.setFishColor();
+        RENDERER.context.fill();
+      });
+    })
+  });
+</script>
+  
+  <div class="footer bg-color">
+    <div class="footer-main">
+      
+        
+          <div class="link">
+            
+          </div>
+        
+      
+        
+          <div class="footer-copyright">
+            <p>Copyright © 2019 - 2020 <a target="_blank" rel="noopener" href="https://github.com/yuang01">yuang01</a> | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/yuang01/theme">Bamboo</a> </p>
+
+          </div>
+        
+      
+        
+          <div class="footer-custom">
+            
+          </div>
+        
+      
+    </div>
+  </div>
+
+
+
+    <!-- 渲染暗黑按钮 -->
+    
+      <div class="dark" onclick="toggleDarkMode()">
+  <div class="dark-content">
+    <i class="fas" id="darkIcon" aria-hidden="true"></i>
+  </div>
+</div>
+
+<script defer>
+  $(function() {
+    // 初始化暗黑模式状态
+    let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+    updateDarkModeIcon(isDark);
+  });
+
+  function toggleDarkMode() {
+    const isDark = $(document.body).hasClass('darkModel');
+    $(document.body).toggleClass('darkModel');
+    localStorage.setItem('dark', !isDark);
+    updateDarkModeIcon(!isDark);
+  }
+
+  function updateDarkModeIcon(isDark) {
+    const iconElement = document.getElementById('darkIcon');
+    if (isDark) {
+      iconElement.classList.remove('fa-moon');
+      iconElement.classList.add('fa-lightbulb');
+    } else {
+      iconElement.classList.remove('fa-lightbulb');
+      iconElement.classList.add('fa-moon');
+    }
+  }
+</script>
+
+    
+    <!-- 渲染回到顶部按钮 -->
+    
+      <div class="goTop top-btn-color" pointer>
+  <i class="fas fa-arrow-up" aria-hidden="true"></i>
+</div>
+<script defer src="/js/goTop.js"></script>
+
+    
+    <!-- 渲染左下角音乐播放器 -->
+    
+
+    <!-- 图片放大 -->
+    
+      <script src="https://unpkg.com/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    
+
+    <!-- 百度解析 -->
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script async>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <!-- 背景彩带 -->
+    
+      <script async type="text/javascript" size="100" alpha='0.4' zIndex="-1" src="/js/ribbon.min.js"></script>
+    
+
+    <script src="/js/utils/index.js"></script>
+    <script src="/js/app.js"></script>
+    
+    <!-- 文章目录所需js -->
+<!-- <link href="/js/tocbot/tocbot.css" rel="stylesheet">
+<script src="/js/tocbot/tocbot.min.js"></script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.min.js"></script>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.18.2/tocbot.css">
+
+<script>
+  var headerEl = 'h2, h3, h4',  //headers 
+    content = '.post-detail',//文章容器
+    idArr = {};  //标题数组以确定是否增加索引id
+  //add #id
+  var option = {
+    // Where to render the table of contents.
+    tocSelector: '.toc',
+    // Where to grab the headings to build the table of contents.
+    contentSelector: content,
+    // Which headings to grab inside of the contentSelector element.
+    headingSelector: headerEl,
+    scrollSmooth: true,
+    scrollSmoothOffset: -70,
+    // headingsOffset: -($(window).height() * 0.4 - 45),
+    headingsOffset: -($(window).height() * 0.4 - 70),
+    // positionFixedSelector: '.toc-main',
+    // positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto',
+    activeLinkClass: 'is-active-link',
+    orderedList: true,
+    collapseDepth: 20,
+    // onClick: function (e) {},
+  }
+  if ($('.toc').length > 0) {
+
+    $(content).children(headerEl).each(function () {
+      //去除空格以及多余标点
+      var headerId = $(this).text().replace(/[\s|\~|`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\_|\+|\=|\||\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?|\：|\，|\。]/g, '');
+
+      headerId = headerId.toLowerCase();
+      if (idArr[headerId]) {
+        //id已经存在
+        $(this).attr('id', headerId + '-' + idArr[headerId]);
+        idArr[headerId]++;
+      }
+      else {
+        //id未存在
+        idArr[headerId] = 1;
+        $(this).attr('id', headerId);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      tocbot.init(option);
+      mobileTocClick();
+    });
+
+  }
+
+  window.tocScrollFn = function () {
+    return bamboo.throttle(function () {
+      findHeadPosition();
+    }, 100)()
+  }
+  window.addEventListener('scroll', tocScrollFn);
+
+  const findHeadPosition = function (top) {
+    if ($('.toc-list').length <= 0) {
+      return false;
+    }
+    setTimeout(() => {  // or DOMContentLoaded 
+      autoScrollToc();
+    }, 0);
+  }
+
+  const autoScrollToc = function () {
+    const $activeItem = document.querySelector('.is-active-link');
+    const $cardToc = document.querySelector('.toc-content');
+    const activePosition = $activeItem.getBoundingClientRect().top
+    const sidebarScrollTop = $cardToc.scrollTop
+    if (activePosition > (document.documentElement.clientHeight - 100)) {
+      $cardToc.scrollTop = sidebarScrollTop + 150
+    }
+    if (activePosition < 150) {
+      $cardToc.scrollTop = sidebarScrollTop - 150
+    }
+  }
+
+  document.addEventListener('pjax:send', function () {
+    if ($('.toc').length) {
+      tocbot.destroy();
+    }
+  });
+
+  document.addEventListener('pjax:complete', function () {
+    if ($('.toc').length) {
+      tocbot.init(option);
+      mobileTocClick();
+    }
+  });
+  
+  // 手机端toc按钮点击出现目录
+  const mobileTocClick = function () {
+    const $cardTocLayout = document.getElementsByClassName('side_toc')[0];
+    const $cardToc = $cardTocLayout.getElementsByClassName('toc-content')[0];
+    let right = '45px';
+    if (window.innerWidth >= 551 && window.innerWidth <= 992) {
+      right = '100px'
+    }
+    const mobileToc = {
+      open: () => {
+        $cardTocLayout.style.cssText = 'animation: toc-open .3s; opacity: 1; right: ' + right
+      },
+
+      close: () => {
+        $cardTocLayout.style.animation = 'toc-close .2s'
+        setTimeout(() => {
+          $cardTocLayout.style.cssText = "opacity:''; animation: ''; right: ''"
+        }, 100)
+      }
+    }
+    document.getElementById('toc-mobile-btn').addEventListener('click', () => {
+      if (window.getComputedStyle($cardTocLayout).getPropertyValue('opacity') === '0') mobileToc.open()
+      else mobileToc.close()
+    })
+
+    $cardToc.addEventListener('click', (e) => {
+      if (window.innerWidth < 992) { // 小于992px的时候
+        mobileToc.close()
+      }
+    })
+  }
+</script>
+
+<style>
+  /* .is-position-fixed {
+    position: sticky !important;
+    top: 74px;
+  }
+
+  .toc-main ul {
+    counter-reset: show-list;
+  }
+
+  .toc-main ul li::before {
+    content: counter(item)".";
+    display: block;
+    position: absolute;
+    left: 12px;
+    top: 0;
+  } */
+</style>
+ 
+
+<!-- 设置导航背景 -->
+<script>
+  let setHeaderClass = () => {
+    const nav = $('#navHeader');
+    const navTop = nav.outerHeight();
+    const winTop = $(window).scrollTop();
+    if(winTop > navTop) {
+      nav.addClass('header-bg-color');
+    }
+    else {
+      nav.removeClass('header-bg-color');
+    }
+  };
+
+  let scrollCollect = () => {
+    return bamboo.throttle(function (e) {
+      setHeaderClass();
+    }, 200)()
+  }
+
+  let initHeaderBg = () => {
+    setHeaderClass();
+  }
+
+  setHeaderClass();
+  window.addEventListener('scroll', scrollCollect);
+
+  document.addEventListener('pjax:send', function () {
+    window.removeEventListener('scroll', scrollCollect)
+  })
+  document.addEventListener('pjax:complete', function () {
+    window.addEventListener('scroll', scrollCollect);
+    setHeaderClass();
+  })
+</script> 
+
+<!-- 渲染issues标签里的内容 -->
+<script>
+  function loadIssuesJS() {
+    if ($(".post-detail").find(".issues-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/issues/index.js');
+  };
+  $(function () {
+    loadIssuesJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof IssuesAPI == "undefined") {
+      loadIssuesJS();
+    }
+  })
+</script>
+
+<!-- 渲染远程json加载的图片标签(getPhotoOnline)里的内容 -->
+<script>
+  function loadPhotoOnlineJS() {
+    if ($(".post-detail").find(".getJsonPhoto-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/getPhotoOnline/index.js');
+  };
+  $(function () {
+    loadPhotoOnlineJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof getPhotoJson == "undefined") {
+      loadPhotoOnlineJS();
+    }
+  })
+</script>
+
+<!-- 渲染远程json加载的talk标签(getTalkOnline)里的内容 -->
+<script>
+  function loadTalkOnlineJS() {
+    if ($(".post-detail").find(".getJsonTalk-api").length == 0) {
+      return;
+    } 
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/waterfall.js/1.0.2/waterfall.min.js'); // 瀑布流插件，https://raphamorim.io/waterfall.js/
+    loadScript('/js/getTalkOnline/index.js');
+  };
+  $(function () {
+    loadTalkOnlineJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof getTalkJson == "undefined") {
+      loadTalkOnlineJS();
+    }
+  })
+</script>
+
+<!-- 渲染远程json加载的site-card标签(getSiteOnline)里的内容 -->
+<script>
+  function loadSiteOnlineJS() {
+    if ($(".post-detail").find(".getJsonSite-api").length == 0) {
+      return;
+    } 
+    loadScript('/js/getSiteOnline/index.js');
+  };
+  $(function () {
+    loadSiteOnlineJS();
+  });
+  document.addEventListener('pjax:complete', function () {
+    if (typeof getSiteJson == "undefined") {
+      loadSiteOnlineJS();
+    }
+  })
+</script>
+
+<!-- 输入框打字特效 -->
+<!-- 输入框打字特效 -->
+
+  <script src="/js/activate-power-mode.js"></script>
+  <script>
+    POWERMODE.colorful = true;  // 打开随机颜色特效
+    POWERMODE.shake = false;    // 关闭输入框抖动
+    document.body.addEventListener('input', POWERMODE);//监听打字事件
+  </script>
+
+
+<!-- markdown代码一键复制功能 -->
+
+  <link rel="stylesheet" href="https://unpkg.com/v-plugs-ayu/lib/ayu.css">
+  <script src="https://unpkg.com/v-plugs-ayu/lib/ayu.umd.min.js"></script>
+  <script src="/js/clipboard/clipboard.min.js"></script>
+  <div id="appCopy">
+  </div>
+  <script data-pjax>
+    var vm = new Vue({
+      el: '#appCopy',
+      data: {
+      },
+      computed: {
+      },
+      mounted() {
+        const that = this;
+        var copy = '复制';
+        /* code */
+        var initCopyCode = function () {
+          var copyHtml = '';
+          copyHtml += '<button class="btn-copy" data-clipboard-snippet="" style="position:absolute;top:0;right:0;z-index:1;">';
+          copyHtml += '<i class="fas fa-copy"></i><span>' + copy + '</span>';
+          copyHtml += '</button>';
+          $(".post-detail pre").not('.gutter pre').wrap("<div class='codeBox' style='position:relative;width:100%;'></div>")
+          $(".post-detail pre").not('.gutter pre').before(copyHtml);
+          new ClipboardJS('.btn-copy', {
+            target: function (trigger) {
+              return trigger.nextElementSibling;
+            }
+          });
+        }
+        initCopyCode();
+        $('.btn-copy').unbind('click').bind('click', function () {
+          doSomething();
+        })
+        $(document).unbind('keypress').bind('keypress', function (e) {
+          if (e.ctrlKey && e.keyCode == 67) {
+            doSomething();
+          }
+        })
+
+        function doSomething() {
+          that.$notify({
+            title: "成功",
+            content: "代码已复制，请遵守相关授权协议。",
+            type: 'success'
+          })
+        }
+      },
+      methods: {
+      },
+      created() { }
+    })
+  </script>
+  
+
+<!-- 图片懒加载 -->
+<script defer src="https://unpkg.com/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazyload",
+    threshold: 0
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    lazyLoadInstance.update();
+  });
+  document.addEventListener('pjax:complete', function () {
+    lazyLoadInstance.update();
+  });
+</script>
+
+
+<!-- 卡片滚动动画 -->
+   
+
+<!-- 评论所需js -->
+
+  
+        <script type="text/javascript">
+  var utteranceComment = {};
+
+  function check_utterance() {
+    let isDark = JSON.parse(localStorage.getItem('dark')) || JSON.parse('false');
+    if (isDark) {
+      utteranceComment.Theme = 'github-dark';
+    } else {
+      utteranceComment.Theme = 'github-light';
+    }
+
+    return document.getElementById("gitment-container");
+  }
+  comment_el = '#gitment-container';
+  load_utterance = function () {
+    if ($(comment_el).length) {
+      // 匿名函数，防止污染全局变量
+      const HEAD = check_utterance();
+
+      var utterances = document.createElement('script');
+      utterances.type = 'text/javascript';
+      utterances.async = true;
+      utterances.setAttribute('issue-term', 'pathname')
+      utterances.setAttribute('theme', utteranceComment.Theme)
+      utterances.setAttribute('repo', '')
+      utterances.crossorigin = 'anonymous';
+      utterances.src = 'https://utteranc.es/client.js';
+      // content 是要插入评论的地方
+      document.getElementById('gitment-container').appendChild(utterances);
+
+    }
+  }
+
+  function dark_utterance() {
+    const HEAD = check_utterance();
+    if (!HEAD) return;
+    const message = {
+      type: 'set-theme',
+      theme: utteranceComment.Theme
+    };
+    const utteranceIframe = document.querySelector('iframe');
+    utteranceIframe.contentWindow.postMessage(message, 'https://utteranc.es');
+  }
+
+  $(document).ready(load_utterance);
+  document.addEventListener('pjax:complete', function () {
+    load_utterance();
+  });
+
+  $('.dark').click(function () {
+    setTimeout(() => {
+      dark_utterance();
+    });
+  })
+
+</script>
+
+<style>
+  .utterances {
+    max-width: inherit !important;
+  }
+</style>
+      
+
+
+<!-- 鼠标点击特效 -->
+<!-- 爱心点击 -->
+
+
+
+
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" data-pjax></script>
+
+
+<!-- 轮播图标签 -->
+<script>
+  var bambooSwiperTag = {};
+  function load_swiper() {
+    if (!document.querySelectorAll(".post-swiper-container")[0]) return;
+    loadCSS("https://unpkg.com/swiper@6/swiper-bundle.min.css")
+    loadScript("https://unpkg.com/swiper@6/swiper-bundle.min.js").then(() => {
+      pjax_swiper();
+    });
+  }
+
+  load_swiper();
+
+  function pjax_swiper() {
+    bambooSwiperTag.swiper = new Swiper('.post-swiper-container', {
+      slidesPerView: 'auto',
+      spaceBetween: 8,
+      centeredSlides: true,
+      loop: true,
+      autoplay: true ? {
+        delay: 3000,
+        stopOnLastSlide: false,
+        disableOnInteraction: false,
+      } : false,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      on:{
+        init: function(){
+          swiperAnimateCache(this); //隐藏动画元素 
+          swiperAnimate(this); //初始化完成开始动画
+        }, 
+        slideChangeTransitionEnd: function(){ 
+          swiperAnimate(this); //每个slide切换结束时也运行当前slide动画
+          //this.slides.eq(this.activeIndex).find('.ani').removeClass('ani'); 动画只展现一次，去除ani类名
+        } 
+      }
+    });
+  }
+
+  document.addEventListener('pjax:complete', function () {
+    if (!document.querySelectorAll(".post-swiper-container")[0]) return;
+    if (typeof bambooSwiperTag.swiper === "undefined") {
+      load_swiper();
+    } else {
+      pjax_swiper();
+    }
+  });
+</script>
+    <!-- pjax -->
+    
+
+<!-- pjax -->
+
+
+  <script src="/js/pjax@0.2.8/index.js"></script>
+  
+    <div class="pjax-animate">
+  
+    <div class="loading-circle"><div id="loader-circle"></div></div>
+    <script>
+      window.ShowLoading = function() {
+        $(".loading-circle").css("display", "block");
+      };
+      window.HideLoading = function() {
+        $(".loading-circle").css("display", "none");
+      }
+    </script>
+  
+	<script>
+    document.addEventListener('pjax:complete', function () {
+      window.HideLoading();
+    })
+    document.addEventListener('pjax:send', function () {
+      window.ShowLoading();
+    })
+    document.addEventListener('pjax:error', function () {
+      window.HideLoading();
+    })
+	</script>
+</div>
+
+  
+
+  <script>
+    var pjax = new Pjax({
+      elements: 'a[href]:not([href^="#"]):not([href="javascript:void(0)"]):not([no-pjax])',   // 拦截正常带链接的 a 标签
+      selectors: ["#pjax-container","title"],                                   // 根据实际需要确认重载区域
+      cacheBust: false,   // url 地址追加时间戳，用以避免浏览器缓存
+      timeout: 5000
+    });
+
+    document.addEventListener('pjax:send', function (e) {
+
+      try {
+        var currentUrl = window.location.pathname;
+        var targetUrl = e.triggerElement.href;
+        var banUrl = [""];
+        if (banUrl[0] != "") {
+          banUrl.forEach(item => {
+            if(currentUrl.indexOf(item) != -1 || targetUrl.indexOf(item) != -1) {
+              window.location.href = targetUrl;
+            }
+          });
+        }
+      } catch (error) {}
+
+      $(window).unbind('resize');
+      $(window).unbind('scroll');
+      $(document).unbind('scroll');
+      $(document).unbind('click');
+      $('body').unbind('click');
+
+    })
+    
+    document.addEventListener('pjax:complete', function () {
+      $('script[data-pjax], .pjax-reload script').each(function () {
+        $(this).parent().append($(this).remove());
+      });
+    });
+
+    document.addEventListener('pjax:error', function (e) {
+      window.location.href = e.triggerElement.href;
+    })
+    
+    // 刷新不从顶部开始
+    document.addEventListener("DOMContentLoaded", function () {
+      history.scrollRestoration = 'auto';
+    })
+  </script>
+
+
+
+  </body>
+</html>
